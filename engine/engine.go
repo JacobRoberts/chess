@@ -8,10 +8,13 @@ type Move struct {
 	piece string // Piece.name
 	begin Square
 	end   Square
+	score int
 }
 
 type Board struct {
-	board [32]Piece // all of the pieces on the board
+	board    [32]Piece // all of the pieces on the board
+	lastmove Move
+	turn     int
 
 	// could possibly run into trouble later when pieces are captured
 	// https://code.google.com/p/go-wiki/wiki/SliceTricks
@@ -54,7 +57,7 @@ func (b *Board) occupied(s *Square) int {
 	return 0
 }
 
-func (p *Piece) legalmoves(b *Board) []Square {
+func (p *Piece) legalMoves(b *Board) []Move {
 	/*
 
 		TODO:
@@ -72,7 +75,7 @@ func (p *Piece) legalmoves(b *Board) []Square {
 		return legal moves
 
 	*/
-	legals := make([]Square, 0)
+	legals := make([]Move, 0)
 	if p.infinite_direction {
 		for _, direction := range p.directions {
 			for i := 1; i < 8; i++ {
@@ -80,10 +83,12 @@ func (p *Piece) legalmoves(b *Board) []Square {
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.color {
 					break
 				} else if b.occupied(&s) == p.color*-1 && p.name != "p" {
-					legals = append(legals, s)
+					m := Move{begin: p.position, end: s, piece: p.name}
+					legals = append(legals, m)
 					break
 				} else {
-					legals = append(legals, s)
+					m := Move{begin: p.position, end: s, piece: p.name}
+					legals = append(legals, m)
 				}
 			}
 		}
@@ -91,7 +96,8 @@ func (p *Piece) legalmoves(b *Board) []Square {
 		for _, direction := range p.directions {
 			s := Square{rank: p.position.rank + direction[0], file: p.position.file + direction[1]}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.name != "p") {
-				legals = append(legals, s)
+				m := Move{begin: p.position, end: s, piece: p.name}
+				legals = append(legals, m)
 			}
 		}
 	}
@@ -100,11 +106,34 @@ func (p *Piece) legalmoves(b *Board) []Square {
 		for _, val := range captures {
 			capture := Square{rank: p.position.rank + val[0], file: p.position.file + val[0]}
 			if b.occupied(&capture) == p.color*-1 {
-				legals = append(legals, capture)
+				m := Move{begin: p.position, end: capture, piece: p.name}
+				legals = append(legals, m)
 			}
 		}
 	}
 	return legals
+}
+
+func (b *Board) evalBoard() int {
+	return 0
+}
+
+func (b *Board) legalMoves() []Move {
+	// returns legal moves from all pieces whose turn it is
+	legals := make([]Move, 0)
+	for _, p := range b.board {
+		if p.color == b.turn {
+			for _, m := range p.legalMoves(b) {
+				legals = append(legals, m)
+			}
+		}
+	}
+	return legals
+}
+
+func (b *Board) newGen() int {
+	// not touching this one yet...
+	return 0
 }
 
 /*

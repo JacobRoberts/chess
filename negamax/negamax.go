@@ -20,7 +20,7 @@ func (b *Board) NegaMax(depth int) *Move {
 }
 func (b *Board) NegaMaxChild(depth int) int {
 	if b.isOver() || depth == 0 {
-		return b.aiEvalBoard()
+		return b.EvalBoard()
 	}
 	score := -999
 	var childscore int
