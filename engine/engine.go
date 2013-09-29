@@ -17,7 +17,7 @@ type Move struct {
 }
 
 type Board struct {
-	Board    [32]Piece // all of the pieces on the board
+	Board    []Piece // all of the pieces on the board
 	Lastmove Move
 	Turn     int
 
@@ -42,16 +42,14 @@ func (b *Board) Move(m *Move) error {
 	var piecefound bool
 	var pieceindex int
 	var capture bool
-	var capturedpiece Piece
+	var capturedpiece int
 	for i, p := range b.Board {
-		if !p.captured {
-			if m.begin == p.position && m.piece == p.Name {
-				pieceindex = i
-				piecefound = true
-			} else if m.end == p.position {
-				capture = true
-				capturedpiece = p
-			}
+		if m.begin == p.position && m.piece == p.Name {
+			pieceindex = i
+			piecefound = true
+		} else if m.end == p.position {
+			capture = true
+			capturedpiece = i
 		}
 	}
 	if !piecefound {
@@ -61,7 +59,7 @@ func (b *Board) Move(m *Move) error {
 	p := b.Board[pieceindex]
 	legals := p.legalMoves(b)
 	for _, move := range legals {
-		if m == move {
+		if *m == move {
 			legal = true
 			p.position = move.end
 		}
@@ -70,7 +68,9 @@ func (b *Board) Move(m *Move) error {
 		return errors.New("func Move: illegal move")
 	}
 	if capture {
-		capturedpiece.captured = true
+		// https://code.google.com/p/go-wiki/wiki/SliceTricks
+		// a[i], a = a[len(a)-1], a[:len(a)-1]
+		b.Board[capturedpiece], b.Board = b.Board[len(b.Board)-1], b.Board[:len(b.Board)-1]
 	}
 	return nil
 }
@@ -185,7 +185,6 @@ func (b *Board) SetUpPieces() {
 		Resets a given board to the starting position
 
 	*/
-	pieceindex := 0
 	pawnrows := [2]int{2, 7}
 	for _, rank := range pawnrows {
 		for file := 1; file <= 8; file++ {
@@ -195,8 +194,7 @@ func (b *Board) SetUpPieces() {
 			} else {
 				piece.color = -1
 			}
-			b.Board[pieceindex] = piece
-			pieceindex += 1
+			b.Board = append(b.Board, piece)
 		}
 	}
 	piecerows := [2]int{1, 8}
@@ -214,26 +212,21 @@ func (b *Board) SetUpPieces() {
 		}
 		for _, file := range rookfiles {
 			piece := Piece{position: Square{rank: rank, file: file}, Name: "r", color: color, can_castle: true, directions: [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, infinite_direction: true}
-			b.Board[pieceindex] = piece
-			pieceindex += 1
+			b.Board = append(b.Board, piece)
 		}
 		for _, file := range knightfiles {
 			piece := Piece{position: Square{rank: rank, file: file}, Name: "n", color: color, directions: [][2]int{{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}}}
-			b.Board[pieceindex] = piece
-			pieceindex += 1
+			b.Board = append(b.Board, piece)
 		}
 		for _, file := range bishopfiles {
 			piece := Piece{position: Square{rank: rank, file: file}, Name: "b", color: color, directions: [][2]int{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}, infinite_direction: true}
-			b.Board[pieceindex] = piece
-			pieceindex += 1
+			b.Board = append(b.Board, piece)
 		}
 		queen := Piece{position: Square{rank: rank, file: queenfile}, Name: "q", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, infinite_direction: true}
-		b.Board[pieceindex] = queen
-		pieceindex += 1
+		b.Board = append(b.Board, queen)
 
 		king := Piece{position: Square{rank: rank, file: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
-		b.Board[pieceindex] = king
-		pieceindex += 1
+		b.Board = append(b.Board, king)
 	}
 }
 
