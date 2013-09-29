@@ -2,7 +2,7 @@ package negamax
 
 func (b *Board) NegaMax(depth int) *Move {
 	if b.isOver() || depth == 0 {
-		move := b.lastmove.copyMove()
+		move := b.Lastmove.copyMove()
 		move.score = b.EvalBoard()
 		return move
 	}
@@ -12,7 +12,7 @@ func (b *Board) NegaMax(depth int) *Move {
 		childmove := board.NegaMaxChild(depth - 1)
 		childmove.score *= -1
 		if childmove.score > move.score {
-			move = *board.lastmove.copyMove()
+			move = *board.Lastmove.copyMove()
 			move.score = childmove.score
 		}
 	}

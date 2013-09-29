@@ -1,20 +1,24 @@
 package engine
 
+import (
+	"fmt"
+)
+
 type Square struct {
 	rank, file int
 }
 
 type Move struct {
-	piece string // Piece.name
+	piece string // Piece.Name
 	begin Square
 	end   Square
 	score int
 }
 
 type Board struct {
-	board    [32]Piece // all of the pieces on the board
-	lastmove Move
-	turn     int
+	Board    [32]Piece // all of the pieces on the board
+	Lastmove Move
+	Turn     int
 
 	// could possibly run into trouble later when pieces are captured
 	// https://code.google.com/p/go-wiki/wiki/SliceTricks
@@ -23,8 +27,8 @@ type Board struct {
 type Piece struct {
 	position   Square
 	color      int    // 1 : white , -1 : black
-	name       string // p, n, b, r, q, k
-	can_castle bool   // rooks and kings
+	Name       string // p, n, b, r, q, k
+	can_castle bool   // rooks and kings. default true, set to false when piece makes a non-castle move
 
 	can_en_passant  bool // only applicable
 	can_double_move bool // for pawns
@@ -49,7 +53,7 @@ func (b *Board) occupied(s *Square) int {
 	if !(1 <= s.file && s.file <= 8 && 1 <= s.rank && s.rank <= 8) {
 		return -2
 	}
-	for _, p := range b.board {
+	for _, p := range b.Board {
 		if p.position.file == s.file && p.position.rank == s.rank {
 			return p.color
 		}
@@ -82,12 +86,12 @@ func (p *Piece) legalMoves(b *Board) []Move {
 				s := Square{rank: p.position.rank + direction[0]*i, file: p.position.file + direction[1]*i}
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.color {
 					break
-				} else if b.occupied(&s) == p.color*-1 && p.name != "p" {
-					m := Move{begin: p.position, end: s, piece: p.name}
+				} else if b.occupied(&s) == p.color*-1 && p.Name != "p" {
+					m := Move{begin: p.position, end: s, piece: p.Name}
 					legals = append(legals, m)
 					break
 				} else {
-					m := Move{begin: p.position, end: s, piece: p.name}
+					m := Move{begin: p.position, end: s, piece: p.Name}
 					legals = append(legals, m)
 				}
 			}
@@ -95,18 +99,18 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	} else {
 		for _, direction := range p.directions {
 			s := Square{rank: p.position.rank + direction[0], file: p.position.file + direction[1]}
-			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.name != "p") {
-				m := Move{begin: p.position, end: s, piece: p.name}
+			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.Name != "p") {
+				m := Move{begin: p.position, end: s, piece: p.Name}
 				legals = append(legals, m)
 			}
 		}
 	}
-	if p.name == "p" {
+	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
 			capture := Square{rank: p.position.rank + val[0], file: p.position.file + val[0]}
 			if b.occupied(&capture) == p.color*-1 {
-				m := Move{begin: p.position, end: capture, piece: p.name}
+				m := Move{begin: p.position, end: capture, piece: p.Name}
 				legals = append(legals, m)
 			}
 		}
@@ -114,15 +118,15 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	return legals
 }
 
-func (b *Board) evalBoard() int {
+func (b *Board) EvalBoard() int {
 	return 0
 }
 
 func (b *Board) legalMoves() []Move {
 	// returns legal moves from all pieces whose turn it is
 	legals := make([]Move, 0)
-	for _, p := range b.board {
-		if p.color == b.turn {
+	for _, p := range b.Board {
+		if p.color == b.Turn {
 			for _, m := range p.legalMoves(b) {
 				legals = append(legals, m)
 			}
@@ -131,9 +135,74 @@ func (b *Board) legalMoves() []Move {
 	return legals
 }
 
-func (b *Board) newGen() int {
+func (b *Board) NewGen() int {
 	// not touching this one yet...
 	return 0
+}
+
+func (b *Board) SetUpPieces() {
+	/*
+		Resets a given board to the starting position
+
+	*/
+	pieceindex := 0
+	pawnrows := [2]int{2, 7}
+	for _, rank := range pawnrows {
+		for file := 1; file <= 8; file++ {
+			piece := Piece{position: Square{rank: rank, file: file}, Name: "p", can_double_move: true, directions: [][2]int{{0, 1}}}
+			if rank == 2 {
+				piece.color = 1
+			} else {
+				piece.color = -1
+			}
+			b.Board[pieceindex] = piece
+			pieceindex += 1
+		}
+	}
+	piecerows := [2]int{1, 8}
+	rookfiles := [2]int{1, 8}
+	knightfiles := [2]int{2, 7}
+	bishopfiles := [2]int{3, 6}
+	queenfile := 4
+	kingfile := 5
+	for _, rank := range piecerows {
+		var color int
+		if rank == 1 {
+			color = 1
+		} else {
+			color = -1
+		}
+		for _, file := range rookfiles {
+			piece := Piece{position: Square{rank: rank, file: file}, Name: "r", color: color, can_castle: true, directions: [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, infinite_direction: true}
+			b.Board[pieceindex] = piece
+			pieceindex += 1
+		}
+		for _, file := range knightfiles {
+			piece := Piece{position: Square{rank: rank, file: file}, Name: "n", color: color, directions: [][2]int{{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}}}
+			b.Board[pieceindex] = piece
+			pieceindex += 1
+		}
+		for _, file := range bishopfiles {
+			piece := Piece{position: Square{rank: rank, file: file}, Name: "b", color: color, directions: [][2]int{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}, infinite_direction: true}
+			b.Board[pieceindex] = piece
+			pieceindex += 1
+		}
+		queen := Piece{position: Square{rank: rank, file: queenfile}, Name: "q", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, infinite_direction: true}
+		b.Board[pieceindex] = queen
+		pieceindex += 1
+
+		king := Piece{position: Square{rank: rank, file: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
+		b.Board[pieceindex] = king
+		pieceindex += 1
+	}
+}
+
+func (b *Board) PrintBoard() {
+	boardarr := [8][8]string{}
+	for _, piece := range b.Board {
+		boardarr[piece.position.rank-1][piece.position.file-1] = piece.Name
+	}
+	fmt.Println(boardarr)
 }
 
 /*
