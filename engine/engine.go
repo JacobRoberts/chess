@@ -13,7 +13,6 @@ type Move struct {
 	piece      string // Piece.Name
 	begin, end Square
 	score      int
-	captured   bool
 }
 
 type Board struct {
