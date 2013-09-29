@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -9,10 +10,10 @@ type Square struct {
 }
 
 type Move struct {
-	piece string // Piece.Name
-	begin Square
-	end   Square
-	score int
+	piece      string // Piece.Name
+	begin, end Square
+	score      int
+	captured   bool
 }
 
 type Board struct {
@@ -35,6 +36,43 @@ type Piece struct {
 
 	directions         [][2]int // slice of {0 or 1, 0 or 1} indicating how piece moves
 	infinite_direction bool     // if piece can move as far as it wants in given direction
+}
+
+func (b *Board) Move(m *Move) error {
+	var piecefound bool
+	var pieceindex int
+	var capture bool
+	var capturedpiece Piece
+	for i, p := range b.Board {
+		if !p.captured {
+			if m.begin == p.position && m.piece == p.Name {
+				pieceindex = i
+				piecefound = true
+			} else if m.end == p.position {
+				capture = true
+				capturedpiece = p
+			}
+		}
+	}
+	if !piecefound {
+		return errors.New("func Move: invalid piece")
+	}
+	var legal bool
+	p := b.Board[pieceindex]
+	legals := p.legalMoves(b)
+	for _, move := range legals {
+		if m == move {
+			legal = true
+			p.position = move.end
+		}
+	}
+	if !legal {
+		return errors.New("func Move: illegal move")
+	}
+	if capture {
+		capturedpiece.captured = true
+	}
+	return nil
 }
 
 func (b *Board) occupied(s *Square) int {
@@ -67,6 +105,8 @@ func (p *Piece) legalMoves(b *Board) []Move {
 		TODO:
 			en passant
 			castling
+
+		Returns all legal moves for a given piece
 
 		if piece can move as many squares as it chooses:
 			check each direction until it hits another piece or the end of the board
@@ -122,7 +162,7 @@ func (b *Board) EvalBoard() int {
 	return 0
 }
 
-func (b *Board) legalMoves() []Move {
+func (b *Board) allLegalMoves() []Move {
 	// returns legal moves from all pieces whose turn it is
 	legals := make([]Move, 0)
 	for _, p := range b.Board {
