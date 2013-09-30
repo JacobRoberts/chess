@@ -6,13 +6,13 @@ import (
 )
 
 type Square struct {
-	rank, file int
+	Rank, File int
 }
 
 type Move struct {
-	piece      string // Piece.Name
-	begin, end Square
-	score      int
+	Piece      string // Piece.Name
+	Begin, End Square
+	Score      int
 }
 
 type Board struct {
@@ -43,10 +43,10 @@ func (b *Board) Move(m *Move) error {
 	var capture bool
 	var capturedpiece int
 	for i, p := range b.Board {
-		if m.begin == p.position && m.piece == p.Name {
+		if m.Begin == p.position && m.Piece == p.Name {
 			pieceindex = i
 			piecefound = true
-		} else if m.end == p.position {
+		} else if m.End == p.position {
 			capture = true
 			capturedpiece = i
 		}
@@ -60,7 +60,7 @@ func (b *Board) Move(m *Move) error {
 	for _, move := range legals {
 		if *m == move {
 			legal = true
-			p.position = move.end
+			p.position = move.End
 		}
 	}
 	if !legal {
@@ -87,11 +87,11 @@ func (b *Board) occupied(s *Square) int {
 		return 0
 
 	*/
-	if !(1 <= s.file && s.file <= 8 && 1 <= s.rank && s.rank <= 8) {
+	if !(1 <= s.File && s.File <= 8 && 1 <= s.Rank && s.Rank <= 8) {
 		return -2
 	}
 	for _, p := range b.Board {
-		if p.position.file == s.file && p.position.rank == s.rank {
+		if p.position.File == s.File && p.position.Rank == s.Rank {
 			return p.color
 		}
 	}
@@ -122,24 +122,24 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.infinite_direction {
 		for _, direction := range p.directions {
 			for i := 1; i < 8; i++ {
-				s := Square{rank: p.position.rank + direction[0]*i, file: p.position.file + direction[1]*i}
+				s := Square{Rank: p.position.Rank + direction[0]*i, File: p.position.File + direction[1]*i}
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.color {
 					break
 				} else if b.occupied(&s) == p.color*-1 && p.Name != "p" {
-					m := Move{begin: p.position, end: s, piece: p.Name}
+					m := Move{Begin: p.position, End: s, Piece: p.Name}
 					legals = append(legals, m)
 					break
 				} else {
-					m := Move{begin: p.position, end: s, piece: p.Name}
+					m := Move{Begin: p.position, End: s, Piece: p.Name}
 					legals = append(legals, m)
 				}
 			}
 		}
 	} else {
 		for _, direction := range p.directions {
-			s := Square{rank: p.position.rank + direction[0], file: p.position.file + direction[1]}
+			s := Square{Rank: p.position.Rank + direction[0], File: p.position.File + direction[1]}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.Name != "p") {
-				m := Move{begin: p.position, end: s, piece: p.Name}
+				m := Move{Begin: p.position, End: s, Piece: p.Name}
 				legals = append(legals, m)
 			}
 		}
@@ -147,9 +147,9 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
-			capture := Square{rank: p.position.rank + val[0], file: p.position.file + val[0]}
+			capture := Square{Rank: p.position.Rank + val[0], File: p.position.File + val[0]}
 			if b.occupied(&capture) == p.color*-1 {
-				m := Move{begin: p.position, end: capture, piece: p.Name}
+				m := Move{Begin: p.position, End: capture, Piece: p.Name}
 				legals = append(legals, m)
 			}
 		}
@@ -184,10 +184,11 @@ func (b *Board) SetUpPieces() {
 		Resets a given board to the starting position
 
 	*/
+	b.Board = make([]Piece, 0)
 	pawnrows := [2]int{2, 7}
 	for _, rank := range pawnrows {
 		for file := 1; file <= 8; file++ {
-			piece := Piece{position: Square{rank: rank, file: file}, Name: "p", can_double_move: true, directions: [][2]int{{0, 1}}}
+			piece := Piece{position: Square{Rank: rank, File: file}, Name: "p", can_double_move: true, directions: [][2]int{{0, 1}}}
 			if rank == 2 {
 				piece.color = 1
 			} else {
@@ -210,21 +211,21 @@ func (b *Board) SetUpPieces() {
 			color = -1
 		}
 		for _, file := range rookfiles {
-			piece := Piece{position: Square{rank: rank, file: file}, Name: "r", color: color, can_castle: true, directions: [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, infinite_direction: true}
+			piece := Piece{position: Square{Rank: rank, File: file}, Name: "r", color: color, can_castle: true, directions: [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, infinite_direction: true}
 			b.Board = append(b.Board, piece)
 		}
 		for _, file := range knightfiles {
-			piece := Piece{position: Square{rank: rank, file: file}, Name: "n", color: color, directions: [][2]int{{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}}}
+			piece := Piece{position: Square{Rank: rank, File: file}, Name: "n", color: color, directions: [][2]int{{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}}}
 			b.Board = append(b.Board, piece)
 		}
 		for _, file := range bishopfiles {
-			piece := Piece{position: Square{rank: rank, file: file}, Name: "b", color: color, directions: [][2]int{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}, infinite_direction: true}
+			piece := Piece{position: Square{Rank: rank, File: file}, Name: "b", color: color, directions: [][2]int{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}, infinite_direction: true}
 			b.Board = append(b.Board, piece)
 		}
-		queen := Piece{position: Square{rank: rank, file: queenfile}, Name: "q", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, infinite_direction: true}
+		queen := Piece{position: Square{Rank: rank, File: queenfile}, Name: "q", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, infinite_direction: true}
 		b.Board = append(b.Board, queen)
 
-		king := Piece{position: Square{rank: rank, file: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
+		king := Piece{position: Square{Rank: rank, File: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
 		b.Board = append(b.Board, king)
 	}
 }
@@ -232,52 +233,12 @@ func (b *Board) SetUpPieces() {
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
-		boardarr[piece.position.rank-1][piece.position.file-1] = piece.Name
+		boardarr[piece.position.Rank-1][piece.position.File-1] = piece.Name
 	}
-	fmt.Println(boardarr)
-}
-
-/*
-
-My first instinct when designing the engine
-
-I decided working with one global piece struct would be easier than making a struct for each individual piece
-
-I might be wrong about that, so I'm saving this code for now as an example of what I could do
-
-----
-
-type piece interface {
-	legalmoves() []Square
-}
-
-type Pawn struct {
-	can_en_passant  bool
-	can_double_move bool
-	color           int
-	position        Square
-}
-
-func (p *Pawn) legalmoves(b *Board) []Square {
-	legals := make(Square, 0)
-	onesquare := Square{rank: p.position.rank + 1, file: p.position.file}
-	if !b.occupied(onesquare) == 0 {
-		legals = append(legals, onesquare)
-		if p.can_double_move {
-			twosquares := Square{rank: p.position.rank + 2, file: p.position.file}
-			if b.occupied(twosquares) == 0 {
-				legals = append(legals, twosquares)
-			}
+	for y := 0; y < 8; y++ {
+		for x := 0; x < 8; x++ {
+			fmt.Printf("%s ", boardarr[y][x])
 		}
+		fmt.Println()
 	}
-	captures := [2][2]int{{1, -1}, {1, 1}}
-	for _, val := range captures {
-		capture := Square{rank: p.position.rank + val[0], file: p.position.file + val[0]}
-		if b.occupied(capture) == p.color*-1 {
-			legals = append(legals, capture)
-		}
-	}
-	return legals
 }
-
-*/

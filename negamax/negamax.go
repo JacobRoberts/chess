@@ -3,17 +3,17 @@ package negamax
 func (b *Board) NegaMax(depth int) *Move {
 	if b.isOver() || depth == 0 {
 		move := b.Lastmove.copyMove()
-		move.score = b.EvalBoard()
+		move.Score = b.EvalBoard()
 		return move
 	}
 	var move Move
-	move.score = -999
+	move.Score = -999
 	for _, board := range b.NewGen() {
 		childmove := board.NegaMaxChild(depth - 1)
-		childmove.score *= -1
-		if childmove.score > move.score {
+		childmove.Score *= -1
+		if childmove.Score > move.Score {
 			move = *board.Lastmove.copyMove()
-			move.score = childmove.score
+			move.Score = childmove.Score
 		}
 	}
 	return &move
