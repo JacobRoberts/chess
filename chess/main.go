@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func parseMove(input string) (engine.Move, error) {
+func parseMove(input string) (*engine.Move, error) {
 	/*
 
 		Parses a user input string in form:
@@ -24,7 +24,7 @@ func parseMove(input string) (engine.Move, error) {
 
 	m := engine.Move{}
 	if len(input) != 6 {
-		return m, errors.New("func parseMove: invalid move length")
+		return &m, errors.New("func parseMove: invalid move length")
 	}
 	input = strings.ToLower(input)
 	indiv := strings.Split(input, "") // should look like {"n" "c" "7" "-" "d" "5"}
@@ -38,7 +38,7 @@ func parseMove(input string) (engine.Move, error) {
 		}
 	}
 	if !ispiece {
-		return m, errors.New("func parseMove: invalid piece")
+		return &m, errors.New("func parseMove: invalid piece")
 	}
 	file_to_int := make(map[string]int)
 	file_to_int["a"], file_to_int["b"], file_to_int["c"], file_to_int["d"], file_to_int["e"], file_to_int["f"], file_to_int["g"], file_to_int["h"] = 1, 2, 3, 4, 5, 6, 7, 8
@@ -46,26 +46,35 @@ func parseMove(input string) (engine.Move, error) {
 		rank, _ := strconv.Atoi(indiv[2])
 		m.Begin.File, m.Begin.Rank = beginfile, rank
 	} else {
-		return m, errors.New("func parseMove: invalid piece location")
+		return &m, errors.New("func parseMove: invalid piece location")
 	}
 	if endfile, ok := file_to_int[indiv[4]]; ok {
 		rank, _ := strconv.Atoi(indiv[5])
 		m.End.File, m.End.Rank = endfile, rank
 	} else {
-		return m, errors.New("func parseMove: invalid piece destination")
+		return &m, errors.New("func parseMove: invalid piece destination")
 	}
-	return m, nil
+	return &m, nil
 }
 
 func main() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
 	board.PrintBoard()
+	color_names := make(map[int]string)
+	color_names[1], color_names[-1] = "White", "Black"
 	for {
 		var m string
-		fmt.Printf("Player Move\nEnter move in form: nc7-d5\n?  ")
+		fmt.Printf("%s Move\nEnter move in form: nc7-d5\n?  ", color_names[board.Turn])
 		fmt.Scanln(&m)
-		move, err := parseMove(m)
-		fmt.Println(move, err)
+		if move, err := parseMove(m); err == nil {
+			if err := board.Move(move); err == nil {
+				board.PrintBoard()
+			} else {
+				fmt.Println(err)
+			}
+		} else {
+			fmt.Println(err)
+		}
 	}
 }

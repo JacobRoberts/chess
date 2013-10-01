@@ -43,10 +43,10 @@ func (b *Board) Move(m *Move) error {
 	var capture bool
 	var capturedpiece int
 	for i, p := range b.Board {
-		if m.Begin == p.position && m.Piece == p.Name {
+		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
 			pieceindex = i
 			piecefound = true
-		} else if m.End == p.position {
+		} else if m.End == p.position && p.color == b.Turn*-1 {
 			capture = true
 			capturedpiece = i
 		}
@@ -61,16 +61,22 @@ func (b *Board) Move(m *Move) error {
 		if *m == move {
 			legal = true
 			p.position = move.End
+			break
 		}
 	}
 	if !legal {
 		return errors.New("func Move: illegal move")
 	}
 	if capture {
-		// https://code.google.com/p/go-wiki/wiki/SliceTricks
-		// a[i], a = a[len(a)-1], a[:len(a)-1]
-		b.Board[capturedpiece], b.Board = b.Board[len(b.Board)-1], b.Board[:len(b.Board)-1]
+		newboard := b.Board[:capturedpiece]
+		for i := capturedpiece + 1; i < len(b.Board); i++ {
+			newboard = append(newboard, b.Board[i])
+		}
+		b.Board = newboard
 	}
+	p.can_double_move = false
+	p.can_castle = false
+	b.Turn *= -1
 	return nil
 }
 
@@ -122,7 +128,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.infinite_direction {
 		for _, direction := range p.directions {
 			for i := 1; i < 8; i++ {
-				s := Square{Rank: p.position.Rank + direction[0]*i, File: p.position.File + direction[1]*i}
+				s := Square{Rank: p.position.Rank + direction[1]*i, File: p.position.File + direction[0]*i}
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.color {
 					break
 				} else if b.occupied(&s) == p.color*-1 && p.Name != "p" {
@@ -137,7 +143,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 		}
 	} else {
 		for _, direction := range p.directions {
-			s := Square{Rank: p.position.Rank + direction[0], File: p.position.File + direction[1]}
+			s := Square{Rank: p.position.Rank + direction[1], File: p.position.File + direction[0]}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.Name != "p") {
 				m := Move{Begin: p.position, End: s, Piece: p.Name}
 				legals = append(legals, m)
@@ -147,9 +153,16 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
-			capture := Square{Rank: p.position.Rank + val[0], File: p.position.File + val[0]}
+			capture := Square{Rank: p.position.Rank + val[1], File: p.position.File + val[0]}
 			if b.occupied(&capture) == p.color*-1 {
 				m := Move{Begin: p.position, End: capture, Piece: p.Name}
+				legals = append(legals, m)
+			}
+		}
+		if p.can_double_move {
+			s := Square{Rank: p.position.Rank + 2*p.color, File: p.position.File}
+			if b.occupied(&s) == 0 {
+				m := Move{Begin: p.position, End: s, Piece: p.Name}
 				legals = append(legals, m)
 			}
 		}
@@ -187,13 +200,14 @@ func (b *Board) SetUpPieces() {
 	b.Board = make([]Piece, 0)
 	pawnrows := [2]int{2, 7}
 	for _, rank := range pawnrows {
+		var color int
+		if rank == 2 {
+			color = 1
+		} else {
+			color = -1
+		}
 		for file := 1; file <= 8; file++ {
-			piece := Piece{position: Square{Rank: rank, File: file}, Name: "p", can_double_move: true, directions: [][2]int{{0, 1}}}
-			if rank == 2 {
-				piece.color = 1
-			} else {
-				piece.color = -1
-			}
+			piece := Piece{position: Square{Rank: rank, File: file}, Name: "p", color: color, can_double_move: true, directions: [][2]int{{0, 1 * color}}}
 			b.Board = append(b.Board, piece)
 		}
 	}
