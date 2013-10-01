@@ -43,13 +43,13 @@ func parseMove(input string) (*engine.Move, error) {
 	file_to_int["a"], file_to_int["b"], file_to_int["c"], file_to_int["d"], file_to_int["e"], file_to_int["f"], file_to_int["g"], file_to_int["h"] = 1, 2, 3, 4, 5, 6, 7, 8
 	if beginfile, ok := file_to_int[indiv[1]]; ok {
 		rank, _ := strconv.Atoi(indiv[2])
-		m.Begin.File, m.Begin.Rank = beginfile, rank
+		m.Begin.X, m.Begin.Y = beginfile, rank
 	} else {
 		return &m, errors.New("func parseMove: invalid piece location")
 	}
 	if endfile, ok := file_to_int[indiv[4]]; ok {
 		rank, _ := strconv.Atoi(indiv[5])
-		m.End.File, m.End.Rank = endfile, rank
+		m.End.X, m.End.Y = endfile, rank
 	} else {
 		return &m, errors.New("func parseMove: invalid piece destination")
 	}

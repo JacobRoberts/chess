@@ -6,7 +6,7 @@ import (
 )
 
 type Square struct {
-	Rank, File int
+	Y, X int
 }
 
 type Move struct {
@@ -60,7 +60,7 @@ func (b *Board) Move(m *Move) error {
 	for _, move := range legals {
 		if *m == move {
 			legal = true
-			p.position = move.End
+			b.Board[pieceindex].position = move.End
 			break
 		}
 	}
@@ -96,11 +96,11 @@ func (b *Board) occupied(s *Square) int {
 		return 0
 
 	*/
-	if !(1 <= s.File && s.File <= 8 && 1 <= s.Rank && s.Rank <= 8) {
+	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
 		return -2
 	}
 	for _, p := range b.Board {
-		if p.position.File == s.File && p.position.Rank == s.Rank {
+		if p.position.X == s.X && p.position.Y == s.Y {
 			return p.color
 		}
 	}
@@ -111,7 +111,6 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	/*
 
 		TODO:
-			en passant
 			castling
 
 		Returns all legal moves for a given piece
@@ -123,6 +122,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 
 		if the piece is a pawn:
 			check if it can capture diagonally
+			check if it can en passant
 
 		return legal moves
 
@@ -131,7 +131,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.infinite_direction {
 		for _, direction := range p.directions {
 			for i := 1; i < 8; i++ {
-				s := Square{Rank: p.position.Rank + direction[1]*i, File: p.position.File + direction[0]*i}
+				s := Square{Y: p.position.Y + direction[1]*i, X: p.position.X + direction[0]*i}
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.color {
 					break
 				} else if b.occupied(&s) == p.color*-1 && p.Name != "p" {
@@ -146,7 +146,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 		}
 	} else {
 		for _, direction := range p.directions {
-			s := Square{Rank: p.position.Rank + direction[1], File: p.position.File + direction[0]}
+			s := Square{Y: p.position.Y + direction[1], X: p.position.X + direction[0]}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.Name != "p") {
 				m := Move{Begin: p.position, End: s, Piece: p.Name}
 				legals = append(legals, m)
@@ -156,17 +156,31 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
-			capture := Square{Rank: p.position.Rank + val[1]*p.color, File: p.position.File + val[0]}
+			capture := Square{Y: p.position.Y + val[1]*p.color, X: p.position.X + val[0]}
 			if b.occupied(&capture) == p.color*-1 {
 				m := Move{Begin: p.position, End: capture, Piece: p.Name}
 				legals = append(legals, m)
 			}
 		}
 		if p.can_double_move {
-			s := Square{Rank: p.position.Rank + 2*p.color, File: p.position.File}
+			s := Square{Y: p.position.Y + 2*p.color, X: p.position.X}
 			if b.occupied(&s) == 0 {
 				m := Move{Begin: p.position, End: s, Piece: p.Name}
 				legals = append(legals, m)
+			}
+		} else {
+			en_passants := [2][2]int{{1, 0}, {-1, 0}}
+			for _, piece := range b.Board {
+				if piece.Name == "p" && piece.color == p.color*-1 {
+					for _, s := range en_passants {
+						adjacentsquare := Square{Y: p.position.Y + s[1], X: p.position.X + s[0]}
+						if piece.position == adjacentsquare && piece.can_en_passant == true {
+							capturesquare := Square{Y: p.position.Y + 1*p.color, X: p.position.X + s[0]}
+							m := Move{Begin: p.position, End: capturesquare, Piece: p.Name}
+							legals = append(legals, m)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -210,7 +224,7 @@ func (b *Board) SetUpPieces() {
 			color = -1
 		}
 		for file := 1; file <= 8; file++ {
-			piece := Piece{position: Square{Rank: rank, File: file}, Name: "p", color: color, can_double_move: true, directions: [][2]int{{0, 1 * color}}}
+			piece := Piece{position: Square{Y: rank, X: file}, Name: "p", color: color, can_double_move: true, directions: [][2]int{{0, 1 * color}}}
 			b.Board = append(b.Board, piece)
 		}
 	}
@@ -228,21 +242,21 @@ func (b *Board) SetUpPieces() {
 			color = -1
 		}
 		for _, file := range rookfiles {
-			piece := Piece{position: Square{Rank: rank, File: file}, Name: "r", color: color, can_castle: true, directions: [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, infinite_direction: true}
+			piece := Piece{position: Square{Y: rank, X: file}, Name: "r", color: color, can_castle: true, directions: [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}, infinite_direction: true}
 			b.Board = append(b.Board, piece)
 		}
 		for _, file := range knightfiles {
-			piece := Piece{position: Square{Rank: rank, File: file}, Name: "n", color: color, directions: [][2]int{{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}}}
+			piece := Piece{position: Square{Y: rank, X: file}, Name: "n", color: color, directions: [][2]int{{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}}}
 			b.Board = append(b.Board, piece)
 		}
 		for _, file := range bishopfiles {
-			piece := Piece{position: Square{Rank: rank, File: file}, Name: "b", color: color, directions: [][2]int{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}, infinite_direction: true}
+			piece := Piece{position: Square{Y: rank, X: file}, Name: "b", color: color, directions: [][2]int{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}}, infinite_direction: true}
 			b.Board = append(b.Board, piece)
 		}
-		queen := Piece{position: Square{Rank: rank, File: queenfile}, Name: "q", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, infinite_direction: true}
+		queen := Piece{position: Square{Y: rank, X: queenfile}, Name: "q", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, infinite_direction: true}
 		b.Board = append(b.Board, queen)
 
-		king := Piece{position: Square{Rank: rank, File: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
+		king := Piece{position: Square{Y: rank, X: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
 		b.Board = append(b.Board, king)
 	}
 }
@@ -250,11 +264,15 @@ func (b *Board) SetUpPieces() {
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
-		boardarr[piece.position.Rank-1][piece.position.File-1] = piece.Name
+		boardarr[piece.position.Y-1][piece.position.X-1] = piece.Name
 	}
-	for y := 8; y > 0; y++ {
+	for y := 7; y >= 0; y-- {
 		for x := 0; x < 8; x++ {
-			fmt.Printf("%s ", boardarr[y][x])
+			if boardarr[y][x] == "" {
+				fmt.Printf("  ")
+			} else {
+				fmt.Printf("%s ", boardarr[y][x])
+			}
 		}
 		fmt.Println()
 	}
