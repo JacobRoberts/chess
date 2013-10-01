@@ -76,6 +76,9 @@ func (b *Board) Move(m *Move) error {
 	}
 	p.can_double_move = false
 	p.can_castle = false
+	for _, p := range b.Board {
+		p.can_en_passant = false
+	}
 	b.Turn *= -1
 	return nil
 }
@@ -153,7 +156,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
-			capture := Square{Rank: p.position.Rank + val[1], File: p.position.File + val[0]}
+			capture := Square{Rank: p.position.Rank + val[1]*p.color, File: p.position.File + val[0]}
 			if b.occupied(&capture) == p.color*-1 {
 				m := Move{Begin: p.position, End: capture, Piece: p.Name}
 				legals = append(legals, m)
@@ -249,7 +252,7 @@ func (b *Board) PrintBoard() {
 	for _, piece := range b.Board {
 		boardarr[piece.position.Rank-1][piece.position.File-1] = piece.Name
 	}
-	for y := 0; y < 8; y++ {
+	for y := 8; y > 0; y++ {
 		for x := 0; x < 8; x++ {
 			fmt.Printf("%s ", boardarr[y][x])
 		}

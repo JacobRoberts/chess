@@ -2,7 +2,6 @@ package main
 
 import (
 	"chess/engine"
-	//"fmt"
 	//"chess/negamax"
 	"errors"
 	"fmt"
