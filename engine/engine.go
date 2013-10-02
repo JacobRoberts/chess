@@ -173,9 +173,13 @@ func (p *Piece) legalMoves(b *Board) []Move {
 			for _, val := range en_passants {
 				s := Square{Y: p.position.Y, X: p.position.X + val[0]}
 				if b.occupied(&s) == p.color*-1 {
-					capturesquare := Square{Y: p.position.Y + 1*p.color, X: p.position.X + val[0]}
-					m := Move{Begin: p.position, End: capturesquare, Piece: p.Name}
-					legals = append(legals, m)
+					for _, piece := range b.Board {
+						if piece.position == s && piece.can_en_passant == true {
+							capturesquare := Square{Y: p.position.Y + 1*p.color, X: p.position.X + val[0]}
+							m := Move{Begin: p.position, End: capturesquare, Piece: p.Name}
+							legals = append(legals, m)
+						}
+					}
 				}
 			}
 		}
