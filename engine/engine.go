@@ -55,8 +55,8 @@ func (b *Board) Move(m *Move) error {
 		return errors.New("func Move: invalid piece")
 	}
 	var legal bool
-	p := b.Board[pieceindex]
-	legals := p.legalMoves(b)
+	legals := b.Board[pieceindex].legalMoves(b)
+	fmt.Println(legals)
 	for _, move := range legals {
 		if *m == move {
 			legal = true
@@ -74,10 +74,10 @@ func (b *Board) Move(m *Move) error {
 		}
 		b.Board = newboard
 	}
-	p.can_double_move = false
-	p.can_castle = false
-	for _, p := range b.Board {
-		p.can_en_passant = false
+	b.Board[pieceindex].can_double_move = false
+	b.Board[pieceindex].can_castle = false
+	for i, _ := range b.Board {
+		b.Board[i].can_en_passant = false
 	}
 	b.Turn *= -1
 	return nil
@@ -170,16 +170,12 @@ func (p *Piece) legalMoves(b *Board) []Move {
 			}
 		} else {
 			en_passants := [2][2]int{{1, 0}, {-1, 0}}
-			for _, piece := range b.Board {
-				if piece.Name == "p" && piece.color == p.color*-1 {
-					for _, s := range en_passants {
-						adjacentsquare := Square{Y: p.position.Y + s[1], X: p.position.X + s[0]}
-						if piece.position == adjacentsquare && piece.can_en_passant == true {
-							capturesquare := Square{Y: p.position.Y + 1*p.color, X: p.position.X + s[0]}
-							m := Move{Begin: p.position, End: capturesquare, Piece: p.Name}
-							legals = append(legals, m)
-						}
-					}
+			for _, val := range en_passants {
+				s := Square{Y: p.position.Y, X: p.position.X + val[0]}
+				if b.occupied(&s) == p.color*-1 {
+					capturesquare := Square{Y: p.position.Y + 1*p.color, X: p.position.X + val[0]}
+					m := Move{Begin: p.position, End: capturesquare, Piece: p.Name}
+					legals = append(legals, m)
 				}
 			}
 		}
