@@ -56,7 +56,6 @@ func (b *Board) Move(m *Move) error {
 	}
 	var legal bool
 	legals := b.Board[pieceindex].legalMoves(b)
-	fmt.Println(legals)
 	for _, move := range legals {
 		if *m == move {
 			legal = true
@@ -156,7 +155,7 @@ func (p *Piece) legalMoves(b *Board) []Move {
 	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
-			capture := Square{Y: p.position.Y + val[1]*p.color, X: p.position.X + val[0]}
+			capture := Square{Y: p.position.Y + val[0]*p.color, X: p.position.X + val[1]}
 			if b.occupied(&capture) == p.color*-1 {
 				m := Move{Begin: p.position, End: capture, Piece: p.Name}
 				legals = append(legals, m)
