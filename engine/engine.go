@@ -19,9 +19,6 @@ type Board struct {
 	Board    []Piece // all of the pieces on the board
 	Lastmove Move
 	Turn     int
-
-	// could possibly run into trouble later when pieces are captured
-	// https://code.google.com/p/go-wiki/wiki/SliceTricks
 }
 
 type Piece struct {
@@ -60,6 +57,21 @@ func (b *Board) Move(m *Move) error {
 		if *m == move {
 			legal = true
 			b.Board[pieceindex].position = move.End
+			if b.Check(b.Turn) {
+				if capture {
+					newboard := b.Board[:capturedpiece]
+					for i := capturedpiece + 1; i < len(b.Board); i++ {
+						newboard = append(newboard, b.Board[i])
+					}
+					newboardptr := &Board{Board: newboard, Lastmove: b.Lastmove, Turn: b.Turn}
+					if newboardptr.Check(b.Turn) {
+						return errors.New("func Move: king in check")
+					}
+				} else {
+					b.Board[pieceindex].position = move.Begin
+					return errors.New("func Move: king in check")
+				}
+			}
 			break
 		}
 	}
@@ -190,18 +202,18 @@ func (b *Board) EvalBoard() int {
 	return 0
 }
 
-func (b *Board) allLegalMoves() []Move {
-	// returns legal moves from all pieces whose turn it is
-	legals := make([]Move, 0)
-	for _, p := range b.Board {
-		if p.color == b.Turn {
-			for _, m := range p.legalMoves(b) {
-				legals = append(legals, m)
-			}
-		}
-	}
-	return legals
-}
+// func (b *Board) allLegalMoves() []Move {
+// 	// returns legal moves from all pieces whose turn it is
+// 	legals := make([]Move, 0)
+// 	for _, p := range b.Board {
+// 		if p.color == b.Turn {
+// 			for _, m := range p.legalMoves(b) {
+// 				legals = append(legals, m)
+// 			}
+// 		}
+// 	}
+// 	return legals
+// }
 
 func (b *Board) NewGen() int {
 	// not touching this one yet...
@@ -258,6 +270,29 @@ func (b *Board) SetUpPieces() {
 		king := Piece{position: Square{Y: rank, X: kingfile}, Name: "k", color: color, directions: [][2]int{{1, 1}, {1, 0}, {1, -1}, {0, 1}, {0, -1}, {-1, 1}, {-1, 0}, {-1, -1}}, can_castle: true}
 		b.Board = append(b.Board, king)
 	}
+}
+
+func (b *Board) Check(color int) bool {
+	// checks if a king is in check
+	// pass the color of the king that you want to check
+	// returns true if king in check / false if not
+	var kingsquare Square
+	for _, piece := range b.Board {
+		if piece.Name == "k" && piece.color == color {
+			kingsquare = piece.position
+			break
+		}
+	}
+	for _, piece := range b.Board {
+		if piece.color == color*-1 {
+			for _, move := range piece.legalMoves(b) {
+				if move.End == kingsquare {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 func (b *Board) PrintBoard() {
