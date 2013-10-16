@@ -52,26 +52,26 @@ func (b *Board) Move(m *Move) error {
 		return errors.New("func Move: invalid piece")
 	}
 	var legal bool
-	legals := b.Board[pieceindex].legalMoves(b)
+	legals := b.Board[pieceindex].legalMoves(b, true)
 	for _, move := range legals {
 		if *m == move {
 			legal = true
 			b.Board[pieceindex].position = move.End
-			if b.Check(b.Turn) {
-				if capture {
-					newboard := b.Board[:capturedpiece]
-					for i := capturedpiece + 1; i < len(b.Board); i++ {
-						newboard = append(newboard, b.Board[i])
-					}
-					newboardptr := &Board{Board: newboard, Lastmove: b.Lastmove, Turn: b.Turn}
-					if newboardptr.Check(b.Turn) {
-						return errors.New("func Move: king in check")
-					}
-				} else {
-					b.Board[pieceindex].position = move.Begin
-					return errors.New("func Move: king in check")
-				}
-			}
+			// if b.isCheck(b.Turn) {
+			// 	if capture {
+			// 		newboard := b.Board[:capturedpiece]
+			// 		for i := capturedpiece + 1; i < len(b.Board); i++ {
+			// 			newboard = append(newboard, b.Board[i])
+			// 		}
+			// 		newboardptr := &Board{Board: newboard, Lastmove: b.Lastmove, Turn: b.Turn}
+			// 		if newboardptr.isCheck(b.Turn) {
+			// 			return errors.New("func Move: king in check")
+			// 		}
+			// 	} else {
+			// 		b.Board[pieceindex].position = move.Begin
+			// 		return errors.New("func Move: king in check")
+			// 	}
+			// }
 			break
 		}
 	}
@@ -118,7 +118,27 @@ func (b *Board) occupied(s *Square) int {
 	return 0
 }
 
-func (p *Piece) legalMoves(b *Board) []Move {
+func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
+
+	// OUTSTANDING BUG:
+	//  captured pieces are still thought to give check
+
+	var pieceindex int
+	for i, p := range b.Board {
+		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
+			pieceindex = i
+			break
+		}
+	}
+	b.Board[pieceindex].position = m.End
+	if !b.isCheck(b.Turn) {
+		s = append(s, *m)
+	}
+	b.Board[pieceindex].position = m.Begin
+	return s
+}
+
+func (p *Piece) legalMoves(b *Board, check bool) []Move {
 	/*
 
 		TODO:
@@ -147,11 +167,19 @@ func (p *Piece) legalMoves(b *Board) []Move {
 					break
 				} else if b.occupied(&s) == p.color*-1 && p.Name != "p" {
 					m := Move{Begin: p.position, End: s, Piece: p.Name}
-					legals = append(legals, m)
+					if check {
+						legals = appendIfNotCheck(b, &m, legals)
+					} else {
+						legals = append(legals, m)
+					}
 					break
 				} else {
 					m := Move{Begin: p.position, End: s, Piece: p.Name}
-					legals = append(legals, m)
+					if check {
+						legals = appendIfNotCheck(b, &m, legals)
+					} else {
+						legals = append(legals, m)
+					}
 				}
 			}
 		}
@@ -160,7 +188,11 @@ func (p *Piece) legalMoves(b *Board) []Move {
 			s := Square{Y: p.position.Y + direction[1], X: p.position.X + direction[0]}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.Name != "p") {
 				m := Move{Begin: p.position, End: s, Piece: p.Name}
-				legals = append(legals, m)
+				if check {
+					legals = appendIfNotCheck(b, &m, legals)
+				} else {
+					legals = append(legals, m)
+				}
 			}
 		}
 	}
@@ -170,14 +202,22 @@ func (p *Piece) legalMoves(b *Board) []Move {
 			capture := Square{Y: p.position.Y + val[0]*p.color, X: p.position.X + val[1]}
 			if b.occupied(&capture) == p.color*-1 {
 				m := Move{Begin: p.position, End: capture, Piece: p.Name}
-				legals = append(legals, m)
+				if check {
+					legals = appendIfNotCheck(b, &m, legals)
+				} else {
+					legals = append(legals, m)
+				}
 			}
 		}
 		if p.can_double_move {
 			s := Square{Y: p.position.Y + 2*p.color, X: p.position.X}
 			if b.occupied(&s) == 0 {
 				m := Move{Begin: p.position, End: s, Piece: p.Name}
-				legals = append(legals, m)
+				if check {
+					legals = appendIfNotCheck(b, &m, legals)
+				} else {
+					legals = append(legals, m)
+				}
 			}
 		} else {
 			en_passants := [2][2]int{{1, 0}, {-1, 0}}
@@ -188,7 +228,11 @@ func (p *Piece) legalMoves(b *Board) []Move {
 						if piece.position == s && piece.can_en_passant == true {
 							capturesquare := Square{Y: p.position.Y + 1*p.color, X: p.position.X + val[0]}
 							m := Move{Begin: p.position, End: capturesquare, Piece: p.Name}
-							legals = append(legals, m)
+							if check {
+								legals = appendIfNotCheck(b, &m, legals)
+							} else {
+								legals = append(legals, m)
+							}
 						}
 					}
 				}
@@ -207,7 +251,7 @@ func (b *Board) EvalBoard() int {
 // 	legals := make([]Move, 0)
 // 	for _, p := range b.Board {
 // 		if p.color == b.Turn {
-// 			for _, m := range p.legalMoves(b) {
+// 			for _, m := range p.legalMoves(b, true) {
 // 				legals = append(legals, m)
 // 			}
 // 		}
@@ -272,7 +316,7 @@ func (b *Board) SetUpPieces() {
 	}
 }
 
-func (b *Board) Check(color int) bool {
+func (b *Board) isCheck(color int) bool {
 	// checks if a king is in check
 	// pass the color of the king that you want to check
 	// returns true if king in check / false if not
@@ -285,13 +329,20 @@ func (b *Board) Check(color int) bool {
 	}
 	for _, piece := range b.Board {
 		if piece.color == color*-1 {
-			for _, move := range piece.legalMoves(b) {
+			for _, move := range piece.legalMoves(b, false) {
 				if move.End == kingsquare {
 					return true
 				}
 			}
 		}
 	}
+	return false
+}
+
+func (b *Board) isCheckMate(color int) bool {
+	// checks if a king is in checkmate
+	// pass the color of the king that you want to check
+	// returns true if king in checkmate / false if not
 	return false
 }
 
