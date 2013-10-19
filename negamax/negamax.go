@@ -13,7 +13,7 @@ import (
 
 */
 
-// first-level negamax search function
+// First-level negamax search function.
 func NegaMax(b *engine.Board, depth int) *engine.Move {
 	if b.IsOver() || depth == 0 {
 		move := b.Lastmove.CopyMove()
@@ -33,8 +33,8 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 	return &move
 }
 
-// child-level negamax search function
-// unlike NegaMax(), only returns score, not full move
+// Child-level negamax search function.
+// Unlike NegaMax(), only returns score, not full move.
 func NegaMaxChild(b *engine.Board, depth int) int {
 	if b.IsOver() || depth == 0 {
 		return b.EvalBoard()

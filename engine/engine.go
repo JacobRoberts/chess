@@ -38,11 +38,16 @@ type Piece struct {
 	infinite_direction bool     // if piece can move as far as it wants in given direction
 }
 
-// modifies a board in-place
-// returns an error without modifying board if illegal move
-// removes a captured piece entirely from board
-// changes the turn of the board once move is successfully completed
+// Modifies a board in-place.
+// Returns an error without modifying board if illegal move.
+// Removes a captured piece entirely from board.
+// Changes the turn of the board once move is successfully completed.
 func (b *Board) Move(m *Move) error {
+	/*
+		TODO:
+			castling
+
+	*/
 	var piecefound bool
 	var pieceindex int
 	var capture bool
@@ -90,9 +95,9 @@ func (b *Board) Move(m *Move) error {
 	return nil
 }
 
-// returns the color of the piece that occupies a given square
-// if the square is empty, returns 0
-// if the square is outside of the bounds of the board, returns -2
+// Returns the color of the piece that occupies a given square.
+// If the square is empty, returns 0.
+// If the square is outside of the bounds of the board, returns -2.
 func (b *Board) occupied(s *Square) int {
 	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
 		return -2
@@ -105,13 +110,14 @@ func (b *Board) occupied(s *Square) int {
 	return 0
 }
 
-// used by legalMoves function
-// appends a move to a slice if the move doesn't place the mover in check
+// Used by legalMoves function.
+// Appends a move to a slice if the move doesn't place the mover in check.
 func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
+	/*
+		TODO:
+			captured pieces are still thought to give check
 
-	// OUTSTANDING BUG:
-	//  captured pieces are still thought to give check
-
+	*/
 	var pieceindex int
 	for i, p := range b.Board {
 		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
@@ -127,9 +133,9 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 	return s
 }
 
-// returns all legal moves for a given piece
+// Returns all legal moves for a given piece.
 // checkcheck is true when:
-//     moves that would place the player in check are not returned
+//     moves that would place the player in check are not returned.
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 	/*
 
@@ -234,7 +240,8 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 			en_passants := [2][2]int{{1, 0}, {-1, 0}}
 			for _, val := range en_passants {
 				s := Square{
-					Y: p.position.Y, X: p.position.X + val[0],
+					Y: p.position.Y,
+					X: p.position.X + val[0],
 				}
 				if b.occupied(&s) == p.color*-1 {
 					for _, piece := range b.Board {
@@ -262,34 +269,22 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 	return legals
 }
 
-// used by the AI to give a score to a given board
-func (b *Board) EvalBoard() int {
-	return 0
+// Returns all legal moves available to the player whose turn it is.
+func (b *Board) allLegalMoves() []Move {
+	legals := make([]Move, 0)
+	for _, p := range b.Board {
+		if p.color == b.Turn {
+			for _, m := range p.legalMoves(b, true) {
+				legals = append(legals, m)
+			}
+		}
+	}
+	return legals
 }
 
-// func (b *Board) allLegalMoves() []Move {
-// 	// returns legal moves from all pieces whose turn it is
-// 	legals := make([]Move, 0)
-// 	for _, p := range b.Board {
-// 		if p.color == b.Turn {
-// 			for _, m := range p.legalMoves(b, true) {
-// 				legals = append(legals, m)
-// 			}
-// 		}
-// 	}
-// 	return legals
-// }
-
-// returns all boards that can result from a legal move on a given board
-// will return *[]Board
-func (b *Board) NewGen() int {
-	// not touching this one yet...
-	return 0
-}
-
-// checks if a king is in check
-// pass the color of the king that you want to check
-// returns true if king in check / false if not
+// Checks if a king is in check.
+// Pass the color of the king that you want to check.
+// Returns true if king in check / false if not.
 func (b *Board) isCheck(color int) bool {
 	var kingsquare Square
 	for _, piece := range b.Board {
@@ -310,13 +305,13 @@ func (b *Board) isCheck(color int) bool {
 	return false
 }
 
-// checks if a king is in checkmate
-// returns true if king in checkmate / false if not
+// Checks if a king is in checkmate.
+// Returns true if king in checkmate / false if not.
 func (b *Board) isCheckMate() bool {
 	return false
 }
 
-// prints the board to the console in a human-readable format
+// Prints the board to the console in a human-readable format.
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
@@ -334,7 +329,7 @@ func (b *Board) PrintBoard() {
 	}
 }
 
-// resets a given board to its starting position
+// Resets a given board to its starting position.
 func (b *Board) SetUpPieces() {
 	// for readability, this should be the last function in the file
 	b.Board = make([]Piece, 0)
