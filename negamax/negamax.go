@@ -1,25 +1,42 @@
 package negamax
 
-func (b *Board) NegaMax(depth int) *Move {
-	if b.isOver() || depth == 0 {
-		move := b.Lastmove.copyMove()
+import (
+	"chess/engine"
+)
+
+/*
+	Currently undefined functions:
+		*engine.Move.CopyMove()
+		*engine.Board.EvalBoard()
+		*engine.Board.IsOver()
+		*engine.Board.NewGen()
+
+*/
+
+// first-level negamax search function
+func NegaMax(b *engine.Board, depth int) *engine.Move {
+	if b.IsOver() || depth == 0 {
+		move := b.Lastmove.CopyMove()
 		move.Score = b.EvalBoard()
 		return move
 	}
-	var move Move
+	var move engine.Move
 	move.Score = -999
 	for _, board := range b.NewGen() {
 		childmove := board.NegaMaxChild(depth - 1)
 		childmove.Score *= -1
 		if childmove.Score > move.Score {
-			move = *board.Lastmove.copyMove()
+			move = *board.Lastmove.CopyMove()
 			move.Score = childmove.Score
 		}
 	}
 	return &move
 }
-func (b *Board) NegaMaxChild(depth int) int {
-	if b.isOver() || depth == 0 {
+
+// child-level negamax search function
+// unlike NegaMax(), only returns score, not full move
+func NegaMaxChild(b *engine.Board, depth int) int {
+	if b.IsOver() || depth == 0 {
 		return b.EvalBoard()
 	}
 	score := -999
