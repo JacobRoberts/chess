@@ -16,9 +16,8 @@ import (
 func parseMove(input string, turn int) (*engine.Move, error) {
 	m := engine.Move{}
 	if input[:3] == "0-0" {
-		var kingstart engine.Square
+		var kingstart, kingend engine.Square
 		kingstart.X = 5
-		var kingend engine.Square
 		if turn == 1 {
 			kingstart.Y = 1
 			kingend.Y = 1
@@ -31,7 +30,7 @@ func parseMove(input string, turn int) (*engine.Move, error) {
 		} else if input == "0-0-0" {
 			kingend.X = 3
 		} else {
-			return m, errors.New("func parseMove: castle believed to be attempted, invalid syntax")
+			return &m, errors.New("func parseMove: castle believed to be attempted, invalid syntax")
 		}
 		m.Begin = kingstart
 		m.End = kingend
@@ -83,7 +82,7 @@ func main() {
 		var m string
 		fmt.Printf("%s Move\nEnter move in form: nc7-d5\n?  ", color_names[board.Turn])
 		fmt.Scanln(&m)
-		if move, err := parseMove(m); err == nil {
+		if move, err := parseMove(m, board.Turn); err == nil {
 			if err := board.Move(move); err == nil {
 				board.PrintBoard()
 			} else {
