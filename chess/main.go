@@ -9,19 +9,35 @@ import (
 	"strings"
 )
 
-func parseMove(input string) (*engine.Move, error) {
-	/*
-
-		Parses a user input string in form:
-			<piece><file><rank>-<file><rank>
-		into a Move struct
-
-		returns an error if invalid piece entered or invalid file entered
-		does not raise error yet if invalid rank entered. TODO.
-
-	*/
-
+// Parses a user input string in form:
+// 	<piece><file><rank>-<file><rank>
+// into a Move struct
+// returns an error if invalid piece entered or invalid file entered
+func parseMove(input string, turn int) (*engine.Move, error) {
 	m := engine.Move{}
+	if input[:3] == "0-0" {
+		var kingstart engine.Square
+		kingstart.X = 5
+		var kingend engine.Square
+		if turn == 1 {
+			kingstart.Y = 1
+			kingend.Y = 1
+		} else {
+			kingstart.Y = 8
+			kingend.Y = 8
+		}
+		if input == "0-0" {
+			kingend.X = 7
+		} else if input == "0-0-0" {
+			kingend.X = 3
+		} else {
+			return m, errors.New("func parseMove: castle believed to be attempted, invalid syntax")
+		}
+		m.Begin = kingstart
+		m.End = kingend
+		m.Piece = "k"
+		return &m, nil
+	}
 	if len(input) != 6 {
 		return &m, errors.New("func parseMove: invalid move length")
 	}
@@ -56,6 +72,7 @@ func parseMove(input string) (*engine.Move, error) {
 	return &m, nil
 }
 
+// handles user interface
 func main() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
