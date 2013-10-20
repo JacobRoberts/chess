@@ -80,11 +80,7 @@ func (b *Board) Move(m *Move) error {
 		return errors.New("func Move: illegal move")
 	}
 	if capture {
-		newboard := b.Board[:capturedpiece]
-		for i := capturedpiece + 1; i < len(b.Board); i++ {
-			newboard = append(newboard, b.Board[i])
-		}
-		b.Board = newboard
+		removePieceFromBoard(b, capturedpiece)
 	}
 	b.Board[pieceindex].can_double_move = false
 	b.Board[pieceindex].can_castle = false
@@ -93,6 +89,14 @@ func (b *Board) Move(m *Move) error {
 	}
 	b.Turn *= -1
 	return nil
+}
+
+func removePieceFromBoard(b *Board, pieceindex int) {
+	newboard := b.Board[:pieceindex]
+	for i := pieceindex + 1; i < len(b.Board); i++ {
+		newboard = append(newboard, b.Board[i])
+	}
+	b.Board = newboard
 }
 
 // Returns the color of the piece that occupies a given square.
