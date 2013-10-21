@@ -38,12 +38,120 @@ type Piece struct {
 	infinite_direction bool     // if piece can move as far as it wants in given direction
 }
 
+func removePieceFromBoard(b *Board, pieceindex int) {
+	newboard := b.Board[:pieceindex]
+	for i := pieceindex + 1; i < len(b.Board); i++ {
+		newboard = append(newboard, b.Board[i])
+	}
+	b.Board = newboard
+}
+
+// Returns the color of the piece that occupies a given square.
+// If the square is empty, returns 0.
+// If the square is outside of the bounds of the board, returns -2.
+func (b *Board) occupied(s *Square) int {
+	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
+		return -2
+	}
+	for _, p := range b.Board {
+		if p.position.X == s.X && p.position.Y == s.Y {
+			return p.color
+		}
+	}
+	return 0
+}
+
+// Used by legalMoves function.
+// Appends a move to a slice if the move doesn't place the mover in check.
+func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
+	/*
+		TODO:
+			captured pieces are still thought to give check
+
+	*/
+	var pieceindex int
+	for i, p := range b.Board {
+		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
+			pieceindex = i
+			break
+		}
+	}
+	b.Board[pieceindex].position = m.End
+	if !b.isCheck(b.Turn) {
+		s = append(s, *m)
+	}
+	b.Board[pieceindex].position = m.Begin
+	return s
+}
+
+// Returns all legal moves available to the player whose turn it is.
+func (b *Board) allLegalMoves() []Move {
+	legals := make([]Move, 0)
+	for _, p := range b.Board {
+		if p.color == b.Turn {
+			for _, m := range p.legalMoves(b, true) {
+				legals = append(legals, m)
+			}
+		}
+	}
+	return legals
+}
+
+// Checks if a king is in check.
+// Pass the color of the king that you want to check.
+// Returns true if king in check / false if not.
+func (b *Board) isCheck(color int) bool {
+	var kingsquare Square
+	for _, piece := range b.Board {
+		if piece.Name == "k" && piece.color == color {
+			kingsquare = piece.position
+			break
+		}
+	}
+	for _, piece := range b.Board {
+		if piece.color == color*-1 {
+			for _, move := range piece.legalMoves(b, false) {
+				if move.End == kingsquare {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+// Checks if a king is in checkmate.
+// Returns true if king in checkmate / false if not.
+func (b *Board) isCheckMate() bool {
+	return false
+}
+
+// Prints the board to the console in a human-readable format.
+func (b *Board) PrintBoard() {
+	boardarr := [8][8]string{}
+	for _, piece := range b.Board {
+		boardarr[piece.position.Y-1][piece.position.X-1] = piece.Name
+	}
+	for y := 7; y >= 0; y-- {
+		for x := 0; x < 8; x++ {
+			if boardarr[y][x] == "" {
+				fmt.Printf("  ")
+			} else {
+				fmt.Printf("%s ", boardarr[y][x])
+			}
+		}
+		fmt.Println()
+	}
+}
+
 // Modifies a board in-place.
 // Returns an error without modifying board if illegal move.
 // Removes a captured piece entirely from board.
 // Changes the turn of the board once move is successfully completed.
 func (b *Board) Move(m *Move) error {
 	/*
+		for readability, this should be towards the end of the file
+
 		TODO:
 			castling
 
@@ -91,60 +199,16 @@ func (b *Board) Move(m *Move) error {
 	return nil
 }
 
-func removePieceFromBoard(b *Board, pieceindex int) {
-	newboard := b.Board[:pieceindex]
-	for i := pieceindex + 1; i < len(b.Board); i++ {
-		newboard = append(newboard, b.Board[i])
-	}
-	b.Board = newboard
-}
-
-// Returns the color of the piece that occupies a given square.
-// If the square is empty, returns 0.
-// If the square is outside of the bounds of the board, returns -2.
-func (b *Board) occupied(s *Square) int {
-	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
-		return -2
-	}
-	for _, p := range b.Board {
-		if p.position.X == s.X && p.position.Y == s.Y {
-			return p.color
-		}
-	}
-	return 0
-}
-
-// Used by legalMoves function.
-// Appends a move to a slice if the move doesn't place the mover in check.
-func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
-	/*
-		TODO:
-			captured pieces are still thought to give check
-
-	*/
-	var pieceindex int
-	for i, p := range b.Board {
-		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
-			pieceindex = i
-			break
-		}
-	}
-	b.Board[pieceindex].position = m.End
-	if !b.isCheck(b.Turn) {
-		s = append(s, *m)
-	}
-	b.Board[pieceindex].position = m.Begin
-	return s
-}
-
 // Returns all legal moves for a given piece.
 // checkcheck is true when:
 //     moves that would place the player in check are not returned.
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 	/*
+		for readability, this should be towards the end of the file
 
 		TODO:
 			castling
+
 
 	*/
 	legals := make([]Move, 0)
@@ -271,66 +335,6 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 		}
 	}
 	return legals
-}
-
-// Returns all legal moves available to the player whose turn it is.
-func (b *Board) allLegalMoves() []Move {
-	legals := make([]Move, 0)
-	for _, p := range b.Board {
-		if p.color == b.Turn {
-			for _, m := range p.legalMoves(b, true) {
-				legals = append(legals, m)
-			}
-		}
-	}
-	return legals
-}
-
-// Checks if a king is in check.
-// Pass the color of the king that you want to check.
-// Returns true if king in check / false if not.
-func (b *Board) isCheck(color int) bool {
-	var kingsquare Square
-	for _, piece := range b.Board {
-		if piece.Name == "k" && piece.color == color {
-			kingsquare = piece.position
-			break
-		}
-	}
-	for _, piece := range b.Board {
-		if piece.color == color*-1 {
-			for _, move := range piece.legalMoves(b, false) {
-				if move.End == kingsquare {
-					return true
-				}
-			}
-		}
-	}
-	return false
-}
-
-// Checks if a king is in checkmate.
-// Returns true if king in checkmate / false if not.
-func (b *Board) isCheckMate() bool {
-	return false
-}
-
-// Prints the board to the console in a human-readable format.
-func (b *Board) PrintBoard() {
-	boardarr := [8][8]string{}
-	for _, piece := range b.Board {
-		boardarr[piece.position.Y-1][piece.position.X-1] = piece.Name
-	}
-	for y := 7; y >= 0; y-- {
-		for x := 0; x < 8; x++ {
-			if boardarr[y][x] == "" {
-				fmt.Printf("  ")
-			} else {
-				fmt.Printf("%s ", boardarr[y][x])
-			}
-		}
-		fmt.Println()
-	}
 }
 
 // Resets a given board to its starting position.
