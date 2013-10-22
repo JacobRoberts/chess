@@ -70,6 +70,70 @@ func TestOccupied(t *testing.T) {
 	}
 }
 
+func TestIsCheck(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "k",
+				position: Square{
+					Y: 1,
+					X: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			Piece{
+				Name: "k",
+				position: Square{
+					Y: 8,
+					X: 8,
+				},
+				color: -1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			Piece{
+				Name: "r",
+				position: Square{
+					Y: 1,
+					X: 8,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				},
+				infinite_direction: true,
+			},
+		},
+	}
+	if check := board.isCheck(1); check == true {
+		t.Errorf("False positive when determining check")
+	}
+	if check := board.isCheck(-1); check == false {
+		t.Errorf("False negative when determining check")
+	}
+}
+
 func TestLegalMoves(t *testing.T) {
 	board := &Board{
 		Board: []Piece{
@@ -79,8 +143,7 @@ func TestLegalMoves(t *testing.T) {
 					Y: 1,
 					X: 2,
 				},
-				color:      1,
-				can_castle: true,
+				color: 1,
 				directions: [][2]int{
 					{1, 0},
 					{-1, 0},
