@@ -351,8 +351,11 @@ func (b *Board) SetUpPieces() {
 		}
 		for file := 1; file <= 8; file++ {
 			piece := Piece{
-				Name:            "p",
-				position:        Square{Y: rank, X: file},
+				Name: "p",
+				position: Square{
+					Y: rank,
+					X: file,
+				},
 				color:           color,
 				can_double_move: true,
 				directions: [][2]int{
