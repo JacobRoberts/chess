@@ -1,6 +1,7 @@
 package engine
 
 import (
+	//"fmt"
 	"testing"
 )
 
@@ -66,5 +67,148 @@ func TestOccupied(t *testing.T) {
 	}
 	if out := b.occupied(nonsquare); out != -2 {
 		t.Errorf("expected -2, got %d", out)
+	}
+}
+
+func TestLegalMoves(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "r",
+				position: Square{
+					Y: 1,
+					X: 2,
+				},
+				color:      1,
+				can_castle: true,
+				directions: [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				},
+				infinite_direction: true,
+			},
+			Piece{
+				Name: "p",
+				position: Square{
+					Y: 2,
+					X: 2,
+				},
+				color:           1,
+				can_double_move: true,
+				directions: [][2]int{
+					{0, 1},
+				},
+			},
+			Piece{
+				Name: "n",
+				position: Square{
+					Y: 1,
+					X: 5,
+				},
+				color: -1,
+				directions: [][2]int{
+					{1, 2},
+					{-1, 2},
+					{1, -2},
+					{-1, -2},
+					{2, 1},
+					{-2, 1},
+					{2, -1},
+					{-2, -1},
+				},
+			},
+			Piece{
+				Name: "p",
+				position: Square{
+					Y: 3,
+					X: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{0, 1},
+				},
+			},
+			Piece{
+				Name: "p",
+				position: Square{
+					Y: 3,
+					X: 3,
+				},
+				color: -1,
+				directions: [][2]int{
+					{0, -1},
+				},
+			},
+		},
+	}
+	rookmoves := make([]Move, 0)
+	for x := 1; x <= 5; x++ {
+		if x != 2 {
+			m := Move{
+				Piece: "r",
+				Begin: Square{
+					Y: 1,
+					X: 2,
+				},
+				End: Square{
+					Y: 1,
+					X: x,
+				},
+			}
+			rookmoves = append(rookmoves, m)
+		}
+	}
+	rooklegalmoves := board.Board[0].legalMoves(board, false)
+	//fmt.Println("Manual rook moves: ", rookmoves)
+	//fmt.Println("Automated rook moves: ", rooklegalmoves)
+	if len(rooklegalmoves) != len(rookmoves) {
+		t.Errorf("Size of rook legal moves do not match, %d generated manually vs %d generated automatically", len(rookmoves), len(rooklegalmoves))
+	}
+	pawnmoves := make([]Move, 0)
+	m := Move{
+		Piece: "p",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 3,
+			X: 2,
+		},
+	}
+	pawnmoves = append(pawnmoves, m)
+	m = Move{
+		Piece: "p",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 3,
+			X: 3,
+		},
+	}
+	pawnmoves = append(pawnmoves, m)
+	m = Move{
+		Piece: "p",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 4,
+			X: 2,
+		},
+	}
+	pawnmoves = append(pawnmoves, m)
+	pawnlegalmoves := board.Board[1].legalMoves(board, false)
+	//fmt.Println("Manual pawn moves: ", pawnmoves)
+	//fmt.Println("Automated pawn moves: ", pawnlegalmoves)
+	for i, m := range pawnmoves {
+		if m != pawnlegalmoves[i] {
+			t.Errorf("Pawn legal moves failure")
+		}
 	}
 }
