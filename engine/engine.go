@@ -39,6 +39,7 @@ type Piece struct {
 }
 
 func removePieceFromBoard(b *Board, pieceindex int) {
+	// testing implemented
 	newboard := b.Board[:pieceindex]
 	for i := pieceindex + 1; i < len(b.Board); i++ {
 		newboard = append(newboard, b.Board[i])
@@ -51,6 +52,7 @@ func removePieceFromBoard(b *Board, pieceindex int) {
 // If the square is outside of the bounds of the board, returns -2.
 func (b *Board) occupied(s *Square) int {
 	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
+		// testing implemented
 		return -2
 	}
 	for _, p := range b.Board {
@@ -85,22 +87,23 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 }
 
 // Returns all legal moves available to the player whose turn it is.
-func (b *Board) allLegalMoves() []Move {
-	legals := make([]Move, 0)
-	for _, p := range b.Board {
-		if p.color == b.Turn {
-			for _, m := range p.legalMoves(b, true) {
-				legals = append(legals, m)
-			}
-		}
-	}
-	return legals
-}
+// func (b *Board) allLegalMoves() []Move {
+// 	legals := make([]Move, 0)
+// 	for _, p := range b.Board {
+// 		if p.color == b.Turn {
+// 			for _, m := range p.legalMoves(b, true) {
+// 				legals = append(legals, m)
+// 			}
+// 		}
+// 	}
+// 	return legals
+// }
 
 // Checks if a king is in check.
 // Pass the color of the king that you want to check.
 // Returns true if king in check / false if not.
 func (b *Board) isCheck(color int) bool {
+	// testing implemented
 	var kingsquare Square
 	for _, piece := range b.Board {
 		if piece.Name == "k" && piece.color == color {
@@ -150,6 +153,8 @@ func (b *Board) PrintBoard() {
 // Changes the turn of the board once move is successfully completed.
 func (b *Board) Move(m *Move) error {
 	/*
+		testing implemented
+
 		for readability, this should be towards the end of the file
 
 		TODO:
@@ -204,6 +209,8 @@ func (b *Board) Move(m *Move) error {
 //     moves that would place the player in check are not returned.
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 	/*
+		testing implemented
+
 		for readability, this should be towards the end of the file
 
 		TODO:
