@@ -13,6 +13,7 @@ import (
 		isCheck
 		Move
 		legalMoves
+		appendIfNotCheck
 
 */
 
@@ -142,6 +143,112 @@ func TestIsCheck(t *testing.T) {
 	}
 	if check := board.isCheck(-1); check == false {
 		t.Errorf("False negative when determining check")
+	}
+}
+
+func TestAppendIfNotCheck(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "b",
+				position: Square{
+					Y: 2,
+					X: 2,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, -1},
+					{-1, 1},
+					{-1, -1},
+				},
+				infinite_direction: true,
+			},
+			Piece{
+				Name: "k",
+				position: Square{
+					Y: 1,
+					X: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			Piece{
+				Name: "q",
+				position: Square{
+					Y: 4,
+					X: 4,
+				},
+				color: -1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+				infinite_direction: true,
+			},
+		},
+		Turn: 1,
+	}
+	legalmoves := make([]Move, 0)
+	checkmove := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 1,
+			X: 3,
+		},
+	}
+	legalmoves = appendIfNotCheck(board, checkmove, legalmoves)
+	if len(legalmoves) != 0 {
+		t.Error("Move that placed user in check added to slice")
+	}
+	okmove := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 3,
+			X: 3,
+		},
+	}
+	legalmoves = appendIfNotCheck(board, okmove, legalmoves)
+	if len(legalmoves) != 1 {
+		t.Error("Move that did not place user in check not added to slice")
+	}
+	capturemove := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 4,
+			X: 4,
+		},
+	}
+	legalmoves = appendIfNotCheck(board, capturemove, legalmoves)
+	if len(legalmoves) != 2 {
+		t.Error("Capturing the attcking piece still placed the user in check")
 	}
 }
 
