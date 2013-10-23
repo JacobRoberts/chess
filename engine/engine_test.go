@@ -5,6 +5,17 @@ import (
 	"testing"
 )
 
+/*
+
+	Functions with working testing in place:
+		removePieceFromBoard
+		occupied
+		isCheck
+		Move
+		legalMoves
+
+*/
+
 func TestRemovePieceFromBoard(t *testing.T) {
 	in := Board{
 		Board: []Piece{
@@ -131,6 +142,110 @@ func TestIsCheck(t *testing.T) {
 	}
 	if check := board.isCheck(-1); check == false {
 		t.Errorf("False negative when determining check")
+	}
+}
+
+func TestMove(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "r",
+				position: Square{
+					Y: 1,
+					X: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				},
+				infinite_direction: true,
+			},
+			Piece{
+				Name: "n",
+				position: Square{
+					Y: 1,
+					X: 2,
+				},
+				color: -1,
+				directions: [][2]int{
+					{1, 2},
+					{-1, 2},
+					{1, -2},
+					{-1, -2},
+					{2, 1},
+					{-2, 1},
+					{2, -1},
+					{-2, -1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	m := &Move{
+		Piece: "r",
+		Begin: Square{
+			Y: 1,
+			X: 1,
+		},
+		End: Square{
+			Y: 1,
+			X: 2,
+		},
+	}
+	if err := board.Move(m); err != nil {
+		t.Error("Got an unexpected error making a legal capture: ", err)
+	}
+	out := []Piece{
+		Piece{
+			Name: "r",
+			position: Square{
+				Y: 1,
+				X: 2,
+			},
+			color: 1,
+			directions: [][2]int{
+				{1, 0},
+				{-1, 0},
+				{0, 1},
+				{0, -1},
+			},
+			infinite_direction: true,
+		},
+	}
+	if !(len(board.Board) == 1 && board.Board[0].position == out[0].position) {
+		t.Error("Expected: ", out, "\nGot: ", board.Board)
+	}
+	board.Turn = 1
+	m = &Move{
+		Piece: "r",
+		Begin: Square{
+			Y: 8,
+			X: 8,
+		},
+		End: Square{
+			Y: 7,
+			X: 8,
+		},
+	}
+	if err := board.Move(m); err == nil {
+		t.Error("Accessing an invalid piece did not return an error")
+	}
+	m = &Move{
+		Piece: "r",
+		Begin: Square{
+			Y: 1,
+			X: 2,
+		},
+		End: Square{
+			Y: 4,
+			X: 4,
+		},
+	}
+	if err := board.Move(m); err == nil {
+		t.Error("Attempting an illegal move did not return an error")
 	}
 }
 
