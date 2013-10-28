@@ -38,16 +38,6 @@ type Piece struct {
 	infinite_direction bool     // if piece can move as far as it wants in given direction
 }
 
-// Removes a piece at a given index from a given board.
-// func removePieceFromBoard(b *Board, pieceindex int) {
-// 	// testing implemented
-// 	newboard := b.Board[:pieceindex]
-// 	for i := pieceindex + 1; i < len(b.Board); i++ {
-// 		newboard = append(newboard, b.Board[i])
-// 	}
-// 	b.Board = newboard
-// }
-
 // Returns the color of the piece that occupies a given square.
 // If the square is empty, returns 0.
 // If the square is outside of the bounds of the board, returns -2.
@@ -67,13 +57,7 @@ func (b *Board) occupied(s *Square) int {
 // Used by legalMoves function.
 // Appends a move to a slice if the move doesn't place the mover in check.
 func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
-	/*
-		testing implemented
-
-		TODO:
-			captured pieces are still thought to give check
-
-	*/
+	// testing implemented
 	var pieceindex int
 	var capture bool
 	var capturedpieceposition Square
@@ -103,19 +87,6 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 	}
 	return s
 }
-
-// Returns all legal moves available to the player whose turn it is.
-// func (b *Board) allLegalMoves() []Move {
-// 	legals := make([]Move, 0)
-// 	for _, p := range b.Board {
-// 		if p.color == b.Turn {
-// 			for _, m := range p.legalMoves(b, true) {
-// 				legals = append(legals, m)
-// 			}
-// 		}
-// 	}
-// 	return legals
-// }
 
 // Checks if a king is in check.
 // Pass the color of the king that you want to check.
@@ -179,6 +150,7 @@ func (b *Board) Move(m *Move) error {
 
 		TODO:
 			castling
+			pawns captured by en passant remain on the board
 
 	*/
 	var piecefound bool
@@ -516,3 +488,32 @@ func (b *Board) SetUpPieces() {
 		b.Board = append(b.Board, king)
 	}
 }
+
+/*
+
+	Functions that I don't need right now but might need later
+
+*/
+
+// Removes a piece at a given index from a given board.
+// func removePieceFromBoard(b *Board, pieceindex int) {
+// 	// testing implemented
+// 	newboard := b.Board[:pieceindex]
+// 	for i := pieceindex + 1; i < len(b.Board); i++ {
+// 		newboard = append(newboard, b.Board[i])
+// 	}
+// 	b.Board = newboard
+// }
+
+// Returns all legal moves available to the player whose turn it is.
+// func (b *Board) allLegalMoves() []Move {
+// 	legals := make([]Move, 0)
+// 	for _, p := range b.Board {
+// 		if p.color == b.Turn {
+// 			for _, m := range p.legalMoves(b, true) {
+// 				legals = append(legals, m)
+// 			}
+// 		}
+// 	}
+// 	return legals
+// }
