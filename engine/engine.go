@@ -38,6 +38,7 @@ type Piece struct {
 	infinite_direction bool     // if piece can move as far as it wants in given direction
 }
 
+// Removes a piece at a given index from a given board.
 // func removePieceFromBoard(b *Board, pieceindex int) {
 // 	// testing implemented
 // 	newboard := b.Board[:pieceindex]
@@ -218,9 +219,14 @@ func (b *Board) Move(m *Move) error {
 		}
 	}
 	b.Board[pieceindex].can_double_move = false
-	b.Board[pieceindex].can_castle = false
+	if m.Piece == "k" || m.Piece == "r" {
+		b.Board[pieceindex].can_castle = false
+	}
 	for i, _ := range b.Board {
 		b.Board[i].can_en_passant = false
+	}
+	if m.Piece == "p" && m.Begin.Y-m.End.Y == 2*-b.Board[pieceindex].color {
+		b.Board[pieceindex].can_en_passant = true
 	}
 	b.Turn *= -1
 	return nil
@@ -347,7 +353,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 					for _, piece := range b.Board {
 						if piece.position == s && piece.can_en_passant == true {
 							capturesquare := Square{
-								Y: p.position.Y + 1*p.color,
+								Y: p.position.Y + p.color,
 								X: p.position.X + val[0],
 							}
 							m := Move{

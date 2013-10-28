@@ -1,7 +1,6 @@
 package engine
 
 import (
-	//"fmt"
 	"testing"
 )
 
@@ -464,8 +463,6 @@ func TestLegalMoves(t *testing.T) {
 		}
 	}
 	rooklegalmoves := board.Board[0].legalMoves(board, false)
-	//fmt.Println("Manual rook moves: ", rookmoves)
-	//fmt.Println("Automated rook moves: ", rooklegalmoves)
 	if len(rooklegalmoves) != len(rookmoves) {
 		t.Errorf("Size of rook legal moves do not match, %d generated manually vs %d generated automatically", len(rookmoves), len(rooklegalmoves))
 	}
@@ -507,11 +504,54 @@ func TestLegalMoves(t *testing.T) {
 	}
 	pawnmoves = append(pawnmoves, m)
 	pawnlegalmoves := board.Board[1].legalMoves(board, false)
-	//fmt.Println("Manual pawn moves: ", pawnmoves)
-	//fmt.Println("Automated pawn moves: ", pawnlegalmoves)
 	for i, m := range pawnmoves {
 		if m != pawnlegalmoves[i] {
 			t.Errorf("Pawn legal moves failure")
 		}
+	}
+	capturedpiece := Piece{
+		position: Square{
+			X: 0,
+			Y: 0,
+		},
+		Name:  "p",
+		color: 1,
+		directions: [][2]int{
+			{0, 1},
+		},
+	}
+	if moves := capturedpiece.legalMoves(board, false); len(moves) != 0 {
+		t.Error("Captured piece has legal moves")
+	}
+	board = &Board{
+		Board: []Piece{
+			Piece{
+				Name: "p",
+				position: Square{
+					X: 2,
+					Y: 5,
+				},
+				color: -1,
+				directions: [][2]int{
+					{0, -1},
+				},
+				can_en_passant: true,
+			},
+			Piece{
+				Name: "p",
+				position: Square{
+					X: 3,
+					Y: 5,
+				},
+				color: 1,
+				directions: [][2]int{
+					{0, 1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	if numlegalmoves := len(board.Board[1].legalMoves(board, false)); numlegalmoves != 2 {
+		t.Error("En passant not recognized as legal move")
 	}
 }
