@@ -17,37 +17,37 @@ import (
 
 */
 
-func TestRemovePieceFromBoard(t *testing.T) {
-	in := Board{
-		Board: []Piece{
-			Piece{
-				Name: "k",
-			},
-			Piece{
-				Name: "b",
-			},
-			Piece{
-				Name: "n",
-			},
-		},
-	}
-	out := Board{
-		Board: []Piece{
-			Piece{
-				Name: "k",
-			},
-			Piece{
-				Name: "n",
-			},
-		},
-	}
-	removePieceFromBoard(&in, 1)
-	for i, p := range in.Board {
-		if p.Name != out.Board[i].Name {
-			t.Errorf("removePieceFromBoard failure: was expecting piece name %s, got %s", out.Board[i].Name, p.Name)
-		}
-	}
-}
+// func TestRemovePieceFromBoard(t *testing.T) {
+// 	in := Board{
+// 		Board: []Piece{
+// 			Piece{
+// 				Name: "k",
+// 			},
+// 			Piece{
+// 				Name: "b",
+// 			},
+// 			Piece{
+// 				Name: "n",
+// 			},
+// 		},
+// 	}
+// 	out := Board{
+// 		Board: []Piece{
+// 			Piece{
+// 				Name: "k",
+// 			},
+// 			Piece{
+// 				Name: "n",
+// 			},
+// 		},
+// 	}
+// 	removePieceFromBoard(&in, 1)
+// 	for i, p := range in.Board {
+// 		if p.Name != out.Board[i].Name {
+// 			t.Errorf("removePieceFromBoard failure: was expecting piece name %s, got %s", out.Board[i].Name, p.Name)
+// 		}
+// 	}
+// }
 
 func TestOccupied(t *testing.T) {
 	b := &Board{}
@@ -321,8 +321,26 @@ func TestMove(t *testing.T) {
 			},
 			infinite_direction: true,
 		},
+		Piece{
+			Name: "n",
+			position: Square{
+				Y: 0,
+				X: 0,
+			},
+			color: -1,
+			directions: [][2]int{
+				{1, 2},
+				{-1, 2},
+				{1, -2},
+				{-1, -2},
+				{2, 1},
+				{-2, 1},
+				{2, -1},
+				{-2, -1},
+			},
+		},
 	}
-	if !(len(board.Board) == 1 && board.Board[0].position == out[0].position) {
+	if !(len(board.Board) == len(out) && board.Board[0].position == out[0].position && board.Board[1].position.X == 0) {
 		t.Error("Expected: ", out, "\nGot: ", board.Board)
 	}
 	board.Turn = 1
