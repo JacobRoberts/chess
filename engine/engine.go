@@ -5,18 +5,6 @@ import (
 	"fmt"
 )
 
-// x, y coordinates in board
-type Square struct {
-	Y, X int
-}
-
-// piece name + beginning and ending squares
-type Move struct {
-	Piece      string // Piece.Name
-	Begin, End Square
-	Score      int
-}
-
 // array of all pieces on a given board
 type Board struct {
 	Board    []Piece // all of the pieces on the board
@@ -36,6 +24,18 @@ type Piece struct {
 
 	directions         [][2]int // slice of {0 or 1, 0 or 1} indicating how piece moves
 	infinite_direction bool     // if piece can move as far as it wants in given direction
+}
+
+// piece name + beginning and ending squares
+type Move struct {
+	Piece      string // Piece.Name
+	Begin, End Square
+	Score      int
+}
+
+// x, y coordinates in board
+type Square struct {
+	Y, X int
 }
 
 // Returns the color of the piece that occupies a given square.
