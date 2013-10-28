@@ -38,14 +38,14 @@ type Piece struct {
 	infinite_direction bool     // if piece can move as far as it wants in given direction
 }
 
-func removePieceFromBoard(b *Board, pieceindex int) {
-	// testing implemented
-	newboard := b.Board[:pieceindex]
-	for i := pieceindex + 1; i < len(b.Board); i++ {
-		newboard = append(newboard, b.Board[i])
-	}
-	b.Board = newboard
-}
+// func removePieceFromBoard(b *Board, pieceindex int) {
+// 	// testing implemented
+// 	newboard := b.Board[:pieceindex]
+// 	for i := pieceindex + 1; i < len(b.Board); i++ {
+// 		newboard = append(newboard, b.Board[i])
+// 	}
+// 	b.Board = newboard
+// }
 
 // Returns the color of the piece that occupies a given square.
 // If the square is empty, returns 0.
@@ -67,22 +67,39 @@ func (b *Board) occupied(s *Square) int {
 // Appends a move to a slice if the move doesn't place the mover in check.
 func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 	/*
+		testing implemented
+
 		TODO:
 			captured pieces are still thought to give check
 
 	*/
 	var pieceindex int
+	var capture bool
+	var capturedpieceposition Square
+	var capturedpieceindex int
 	for i, p := range b.Board {
-		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
+		if p.position == m.Begin && p.Name == m.Piece && p.color == b.Turn {
 			pieceindex = i
-			break
+		} else if p.position == m.End && p.color == b.Turn*-1 {
+			capture = true
+			capturedpieceposition = p.position
+			capturedpieceindex = i
 		}
 	}
 	b.Board[pieceindex].position = m.End
+	if capture {
+		b.Board[capturedpieceindex].position = Square{
+			X: 0,
+			Y: 0,
+		}
+	}
 	if !b.isCheck(b.Turn) {
 		s = append(s, *m)
 	}
 	b.Board[pieceindex].position = m.Begin
+	if capture {
+		b.Board[capturedpieceindex].position = capturedpieceposition
+	}
 	return s
 }
 
@@ -133,7 +150,9 @@ func (b *Board) isCheckMate() bool {
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
-		boardarr[piece.position.Y-1][piece.position.X-1] = piece.Name
+		if piece.position.X != 0 {
+			boardarr[piece.position.Y-1][piece.position.X-1] = piece.Name
+		}
 	}
 	for y := 7; y >= 0; y-- {
 		for x := 0; x < 8; x++ {
@@ -193,7 +212,10 @@ func (b *Board) Move(m *Move) error {
 		return errors.New("func Move: illegal move")
 	}
 	if capture {
-		removePieceFromBoard(b, capturedpiece)
+		b.Board[capturedpiece].position = Square{
+			X: 0,
+			Y: 0,
+		}
 	}
 	b.Board[pieceindex].can_double_move = false
 	b.Board[pieceindex].can_castle = false
@@ -219,6 +241,9 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 
 	*/
 	legals := make([]Move, 0)
+	if p.position.X == 0 && p.position.Y == 0 {
+		return legals
+	}
 	if p.infinite_direction {
 		for _, direction := range p.directions {
 			for i := 1; i < 8; i++ {
