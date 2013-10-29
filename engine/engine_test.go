@@ -281,7 +281,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 		},
 	}
 	legalmoves = make([]Move, 0)
-	appendIfNotCheck(board, m, legalmoves)
+	legalmoves = appendIfNotCheck(board, m, legalmoves)
 	if len(legalmoves) == 0 {
 		t.Error("Capturing the attacking piece still places user in check")
 	}
@@ -632,6 +632,33 @@ func TestLegalMoves(t *testing.T) {
 	}
 	if numlegalmoves := len(board.Board[1].legalMoves(board, false)); numlegalmoves != 2 {
 		t.Error("En passant not recognized as legal move")
+	}
+	board = &Board{
+		Board: []Piece{
+			Piece{
+				Name: "q",
+				position: Square{
+					X: 0,
+					Y: 0,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+				infinite_direction: true,
+			},
+		},
+		Turn: 1,
+	}
+	if numlegalmoves := len(board.Board[0].legalMoves(board, false)); numlegalmoves != 0 {
+		t.Error("Captured piece returns legal moves")
 	}
 }
 
