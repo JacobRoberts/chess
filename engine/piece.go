@@ -59,8 +59,6 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 
 		TODO:
 			castling
-
-
 	*/
 	legals := make([]Move, 0)
 	if p.position.X == 0 && p.position.Y == 0 {
