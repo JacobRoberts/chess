@@ -8,7 +8,7 @@ type Square struct {
 // Returns the color of the piece that occupies a given square.
 // If the square is empty, returns 0.
 // If the square is outside of the bounds of the board, returns -2.
-func (s *Square) occupied(b *Board) int {
+func (b *Board) occupied(s *Square) int {
 	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
 		// testing implemented
 		return -2
