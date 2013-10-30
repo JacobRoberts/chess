@@ -77,8 +77,8 @@ func (b *Board) SetUpPieces() {
 			piece := Piece{
 				Name: "p",
 				position: Square{
-					Y: rank,
 					X: file,
+					Y: rank,
 				},
 				color:           color,
 				can_double_move: true,
@@ -106,8 +106,8 @@ func (b *Board) SetUpPieces() {
 			piece := Piece{
 				Name: "r",
 				position: Square{
-					Y: rank,
 					X: file,
+					Y: rank,
 				},
 				color:      color,
 				can_castle: true,
@@ -125,8 +125,8 @@ func (b *Board) SetUpPieces() {
 			piece := Piece{
 				Name: "n",
 				position: Square{
-					Y: rank,
 					X: file,
+					Y: rank,
 				},
 				color: color,
 				directions: [][2]int{
@@ -146,8 +146,8 @@ func (b *Board) SetUpPieces() {
 			piece := Piece{
 				Name: "b",
 				position: Square{
-					Y: rank,
 					X: file,
+					Y: rank,
 				},
 				color: color,
 				directions: [][2]int{
@@ -163,8 +163,8 @@ func (b *Board) SetUpPieces() {
 		queen := Piece{
 			Name: "q",
 			position: Square{
-				Y: rank,
 				X: queenfile,
+				Y: rank,
 			},
 			color: color,
 			directions: [][2]int{
@@ -183,8 +183,8 @@ func (b *Board) SetUpPieces() {
 		king := Piece{
 			Name: "k",
 			position: Square{
-				Y: rank,
 				X: kingfile,
+				Y: rank,
 			},
 			color: color,
 			directions: [][2]int{

@@ -68,8 +68,8 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 		for _, direction := range p.directions {
 			for i := 1; i < 8; i++ {
 				s := Square{
-					Y: p.position.Y + direction[1]*i,
 					X: p.position.X + direction[0]*i,
+					Y: p.position.Y + direction[1]*i,
 				}
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.color {
 					break
@@ -102,8 +102,8 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 	} else {
 		for _, direction := range p.directions {
 			s := Square{
-				Y: p.position.Y + direction[1],
 				X: p.position.X + direction[0],
+				Y: p.position.Y + direction[1],
 			}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.color*-1 && p.Name != "p") {
 				m := Move{
@@ -123,8 +123,8 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
 			capture := Square{
-				Y: p.position.Y + val[0]*p.color,
 				X: p.position.X + val[1],
+				Y: p.position.Y + val[0]*p.color,
 			}
 			if b.occupied(&capture) == p.color*-1 {
 				m := Move{
@@ -141,8 +141,8 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 		}
 		if p.can_double_move {
 			s := Square{
-				Y: p.position.Y + 2*p.color,
 				X: p.position.X,
+				Y: p.position.Y + 2*p.color,
 			}
 			if b.occupied(&s) == 0 {
 				m := Move{
@@ -160,15 +160,15 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 			en_passants := [2][2]int{{1, 0}, {-1, 0}}
 			for _, val := range en_passants {
 				s := Square{
-					Y: p.position.Y,
 					X: p.position.X + val[0],
+					Y: p.position.Y,
 				}
 				if b.occupied(&s) == p.color*-1 {
 					for _, piece := range b.Board {
 						if piece.position == s && piece.can_en_passant == true {
 							capturesquare := Square{
-								Y: p.position.Y + p.color,
 								X: p.position.X + val[0],
+								Y: p.position.Y + p.color,
 							}
 							m := Move{
 								Begin: p.position,

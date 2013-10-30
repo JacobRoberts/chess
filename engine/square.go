@@ -2,7 +2,7 @@ package engine
 
 // x, y coordinates in board
 type Square struct {
-	Y, X int
+	X, Y int
 }
 
 // Returns the color of the piece that occupies a given square.
