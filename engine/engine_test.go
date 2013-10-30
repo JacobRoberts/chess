@@ -12,7 +12,7 @@ import (
 		Move
 		legalMoves
 		appendIfNotCheck
-
+		castleHander
 */
 
 func TestOccupied(t *testing.T) {
