@@ -443,12 +443,14 @@ func TestMove(t *testing.T) {
 		},
 		End: Square{
 			X: 2,
-			Y: 4,
+			Y: 6,
 		},
 	}
-	board.Move(m)
-	if numpieces := len(board.Board); numpieces != 1 {
-		t.Errorf("After en passant, %d pieces remained on the board. Expected 1.", numpieces)
+	if err := board.Move(m); err != nil {
+		t.Error("En passant unexpected error: ", err)
+	}
+	if board.Board[0].position.X != 0 || board.Board[0].position.Y != 0 {
+		t.Error("After en passant, captured piece not taken off board. Position is ", board.Board[0].position)
 	}
 }
 

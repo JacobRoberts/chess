@@ -57,6 +57,15 @@ func (b *Board) Move(m *Move) error {
 	if !legal {
 		return errors.New("func Move: illegal move")
 	}
+	if !capture && m.Piece == "p" && (m.Begin.X-m.End.X == 1 || m.End.X-m.Begin.X == 1) {
+		capture = true
+		for i, p := range b.Board {
+			if p.position.X == m.End.X && p.position.Y == m.Begin.Y {
+				capturedpiece = i
+				break
+			}
+		}
+	}
 	if capture {
 		b.Board[capturedpiece].position = Square{
 			X: 0,
