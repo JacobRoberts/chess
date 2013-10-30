@@ -11,6 +11,20 @@ type Move struct {
 	Score      int
 }
 
+func maxInt(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
+
+func minInt(x, y int) int {
+	if x > y {
+		return y
+	}
+	return x
+}
+
 // Modifies a board in-place.
 // Returns an error without modifying board if illegal move.
 // Removes a captured piece entirely from board.
@@ -20,12 +34,13 @@ func (b *Board) Move(m *Move) error {
 		testing implemented
 
 		for readability, this should be towards the end of the file
-
-		TODO:
-			castling
-			pawns captured by en passant remain on the board
-
 	*/
+
+	if m.Piece == "k" && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
+		err := b.castleHandler(m)
+		return err
+	}
+
 	var piecefound bool
 	var pieceindex int
 	var capture bool
@@ -57,6 +72,8 @@ func (b *Board) Move(m *Move) error {
 	if !legal {
 		return errors.New("func Move: illegal move")
 	}
+
+	// en passant
 	if !capture && m.Piece == "p" && (m.Begin.X-m.End.X == 1 || m.End.X-m.Begin.X == 1) {
 		capture = true
 		for i, p := range b.Board {
@@ -66,6 +83,7 @@ func (b *Board) Move(m *Move) error {
 			}
 		}
 	}
+
 	if capture {
 		b.Board[capturedpiece].position = Square{
 			X: 0,
@@ -83,5 +101,57 @@ func (b *Board) Move(m *Move) error {
 		b.Board[pieceindex].can_en_passant = true
 	}
 	b.Turn *= -1
+	return nil
+}
+
+func (b *Board) castleHandler(m *Move) error {
+	if b.isCheck(b.Turn) {
+		return errors.New("func castleHandler: king is in check")
+	}
+
+	var kingindex int
+	var rookindex int
+	var rookfound bool
+	for i, p := range b.Board {
+		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
+			kingindex = i
+		} else if p.Name == "r" && ((m.End.X == 7 && p.position.X == 8) || (m.End.X == 3 && p.position.X == 1)) {
+			if b.Turn == 1 && p.position.Y == 1 {
+				rookfound = true
+				rookindex = i
+			} else if b.Turn == -1 && p.position.Y == 8 {
+				rookfound = true
+				rookindex = i
+			}
+		}
+		if rookfound && kingindex > 0 {
+			break
+		}
+	}
+	if !b.Board[kingindex].can_castle {
+		return errors.New("func castleHandler: king has already moved")
+	}
+	if !rookfound {
+		return errors.New("func castleHandler: no rook in position to castle to given side")
+	}
+	if !b.Board[rookindex].can_castle {
+		return errors.New("func castleHandler: rook has already moved")
+	}
+	for i := minInt(b.Board[rookindex].position.X, b.Board[kingindex].position.X) + 1; i < maxInt(b.Board[rookindex].position.X, b.Board[kingindex].position.X); i++ {
+		s := &Square{
+			X: i,
+			Y: b.Board[kingindex].position.Y,
+		}
+		if b.occupied(s) != 0 {
+			return errors.New("func castleHandler: castle path is blocked")
+		}
+	}
+	b.Board[kingindex].position = m.End
+	if m.End.X == 7 {
+		b.Board[rookindex].position.X = 6
+	}
+	if m.End.X == 3 {
+		b.Board[rookindex].position.X = 4
+	}
 	return nil
 }

@@ -664,6 +664,63 @@ func TestLegalMoves(t *testing.T) {
 	}
 }
 
+func TestCastleHander(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "k",
+				position: Square{
+					X: 5,
+					Y: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+				can_castle: true,
+			},
+			Piece{
+				Name: "r",
+				position: Square{
+					X: 8,
+					Y: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				},
+				infinite_direction: true,
+				can_castle:         true,
+			},
+		},
+		Turn: 1,
+	}
+	m := &Move{
+		Piece: "k",
+		Begin: Square{
+			X: 5,
+			Y: 1,
+		},
+		End: Square{
+			X: 7,
+			Y: 1,
+		},
+	}
+	if err := board.castleHandler(m); err != nil {
+		t.Error("Error when making a legal castle: ", err)
+	}
+}
+
 /*
 
 	Obsolete test functions
