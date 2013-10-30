@@ -38,6 +38,16 @@ func (b *Board) isCheck(color int) bool {
 // Checks if a king is in checkmate.
 // Returns true if king in checkmate / false if not.
 func (b *Board) isCheckMate() bool {
+	var kingindex int
+	for i, p := range b.Board {
+		if p.Name == "k" && p.color == b.Turn {
+			kingindex = i
+			break
+		}
+	}
+	if len(b.Board[i].legalMoves(b, true) == 0) {
+		return true
+	}
 	return false
 }
 
