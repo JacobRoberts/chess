@@ -702,6 +702,21 @@ func TestCastleHander(t *testing.T) {
 				infinite_direction: true,
 				can_castle:         true,
 			},
+			Piece{
+				Name: "b",
+				position: Square{
+					X: 6,
+					Y: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, -1},
+					{-1, 1},
+					{-1, -1},
+				},
+				infinite_direction: true,
+			},
 		},
 		Turn: 1,
 	}
@@ -716,6 +731,35 @@ func TestCastleHander(t *testing.T) {
 			Y: 1,
 		},
 	}
+	if err := board.castleHandler(m); err == nil {
+		t.Error("Castle allowed through blocking piece")
+	}
+	board.Board[2].color = -1
+	board.Board[2].position.Y = 2
+	if err := board.castleHandler(m); err == nil {
+		t.Error("Castle allowed when king in check")
+	}
+	board.Board[2].position.X = 5
+	board.Board[2].position.Y = 3
+	if err := board.castleHandler(m); err == nil {
+		t.Error("Castle allowed when king placed in check")
+	}
+	board.Board[2].color = 1
+	board.Board[0].can_castle = false
+	if err := board.castleHandler(m); err == nil {
+		t.Error("Castle allowed after king moved")
+	}
+	board.Board[0].can_castle = true
+	board.Board[1].can_castle = false
+	if err := board.castleHandler(m); err == nil {
+		t.Error("Castle allowed after rook move")
+	}
+	board.Board[1].can_castle = true
+	board.Board[1].position.Y = 2
+	if err := board.castleHandler(m); err == nil {
+		t.Error("Castle allowed when rook out of position")
+	}
+	board.Board[1].position.Y = 1
 	if err := board.castleHandler(m); err != nil {
 		t.Error("Error when making a legal castle: ", err)
 	}

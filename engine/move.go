@@ -38,6 +38,7 @@ func (b *Board) Move(m *Move) error {
 
 	if m.Piece == "k" && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
 		err := b.castleHandler(m)
+		b.Turn *= -1
 		return err
 	}
 
@@ -147,6 +148,10 @@ func (b *Board) castleHandler(m *Move) error {
 		}
 	}
 	b.Board[kingindex].position = m.End
+	if b.isCheck(b.Turn) {
+		b.Board[kingindex].position = m.Begin
+		return errors.New("func castleHandler: castle places user in check")
+	}
 	if m.End.X == 7 {
 		b.Board[rookindex].position.X = 6
 	}
