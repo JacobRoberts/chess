@@ -35,9 +35,22 @@ func (b *Board) isCheck(color int) bool {
 	return false
 }
 
-// Checks if a king is in checkmate.
-// Returns true if king in checkmate / false if not.
-func (b *Board) isCheckMate() bool {
+// Returns all legal moves available to the player whose turn it is.
+func (b *Board) allLegalMoves() []Move {
+	legals := make([]Move, 0)
+	for _, p := range b.Board {
+		if p.color == b.Turn {
+			for _, m := range p.legalMoves(b, true) {
+				legals = append(legals, m)
+			}
+		}
+	}
+	return legals
+}
+
+// Checks if the game has ended.
+// Returns 2 if white wins, -2 if black wins, 1 if it's stalemate, 0 if the game is still going.
+func (b *Board) IsOver() int {
 	var kingindex int
 	for i, p := range b.Board {
 		if p.Name == "k" && p.color == b.Turn {
@@ -46,9 +59,14 @@ func (b *Board) isCheckMate() bool {
 		}
 	}
 	if len(b.Board[kingindex].legalMoves(b, true)) == 0 {
-		return true
+		if b.isCheck(b.Turn) {
+			return -2 * b.Turn
+		}
+		if len(b.allLegalMoves()) == 0 {
+			return 1
+		}
 	}
-	return false
+	return 0
 }
 
 // Prints the board to the console in a human-readable format.
@@ -227,17 +245,4 @@ func (b *Board) SetUpPieces() {
 // 		newboard = append(newboard, b.Board[i])
 // 	}
 // 	b.Board = newboard
-// }
-
-// Returns all legal moves available to the player whose turn it is.
-// func (b *Board) allLegalMoves() []Move {
-// 	legals := make([]Move, 0)
-// 	for _, p := range b.Board {
-// 		if p.color == b.Turn {
-// 			for _, m := range p.legalMoves(b, true) {
-// 				legals = append(legals, m)
-// 			}
-// 		}
-// 	}
-// 	return legals
 // }
