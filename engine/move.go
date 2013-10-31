@@ -33,7 +33,9 @@ func (b *Board) Move(m *Move) error {
 	//for readability, this should be towards the end of the file
 	if m.Piece == "k" && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
 		err := b.castleHandler(m)
-		b.Turn *= -1
+		if err == nil {
+			b.Turn *= -1
+		}
 		return err
 	}
 
