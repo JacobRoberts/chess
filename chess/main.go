@@ -88,6 +88,16 @@ func main() {
 			} else {
 				fmt.Println(err)
 			}
+			if result := board.IsOver(); result != 0 {
+				if result == 2 {
+					fmt.Println("white wins")
+				} else if result == -2 {
+					fmt.Println("black wins")
+				} else if result == 1 {
+					fmt.Println("stalemate")
+				}
+				break
+			}
 		} else {
 			fmt.Println(err)
 		}
