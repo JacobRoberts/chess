@@ -13,7 +13,75 @@ import (
 		legalMoves
 		appendIfNotCheck
 		castleHander
+		IsOver
 */
+
+func TestIsOver(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "k",
+				position: Square{
+					X: 1,
+					Y: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			Piece{
+				Name: "q",
+				position: Square{
+					X: 2,
+					Y: 2,
+				},
+				color: -1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+				infinite_direction: true,
+			},
+			Piece{
+				Name: "r",
+				position: Square{
+					X: 8,
+					Y: 2,
+				},
+				color: -1,
+				directions: [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				},
+				infinite_direction: true,
+			},
+		},
+		Turn: 1,
+	}
+	if result := board.IsOver(); result != -2 {
+		t.Errorf("Expected black wins, got a result of %d", result)
+	}
+	board.Board[1].position.Y = 3
+	if result := board.IsOver(); result != 1 {
+		t.Errorf("Expected stalemate, got a result of %d", result)
+	}
+}
 
 func TestOccupied(t *testing.T) {
 	b := &Board{}
