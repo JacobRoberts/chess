@@ -15,7 +15,6 @@ type Board struct {
 // Pass the color of the king that you want to check.
 // Returns true if king in check / false if not.
 func (b *Board) isCheck(color int) bool {
-	// testing implemented
 	var kingsquare Square
 	for _, piece := range b.Board {
 		if piece.Name == "k" && piece.color == color {

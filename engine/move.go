@@ -30,12 +30,7 @@ func minInt(x, y int) int {
 // Removes a captured piece entirely from board.
 // Changes the turn of the board once move is successfully completed.
 func (b *Board) Move(m *Move) error {
-	/*
-		testing implemented
-
-		for readability, this should be towards the end of the file
-	*/
-
+	//for readability, this should be towards the end of the file
 	if m.Piece == "k" && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
 		err := b.castleHandler(m)
 		b.Turn *= -1

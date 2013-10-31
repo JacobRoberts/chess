@@ -17,7 +17,6 @@ type Piece struct {
 // Used by legalMoves function.
 // Appends a move to a slice if the move doesn't place the mover in check.
 func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
-	// testing implemented
 	var pieceindex int
 	var capture bool
 	var capturedpieceposition Square
@@ -53,8 +52,6 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 //     moves that would place the player in check are not returned.
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 	/*
-		testing implemented
-
 		for readability, this should be towards the end of the file
 
 		TODO:
