@@ -6,19 +6,14 @@ import (
 
 /*
 	Currently undefined functions:
-		*engine.Move.CopyMove()
 		*engine.Board.EvalBoard()
-		*engine.Board.IsOver()
-		*engine.Board.NewGen()
-
 */
 
 // First-level negamax search function.
 func NegaMax(b *engine.Board, depth int) *engine.Move {
 	if b.IsOver() || depth == 0 {
-		move := b.Lastmove.CopyMove()
-		move.Score = b.EvalBoard()
-		return move
+		b.Lastmove.Score = b.EvalBoard()
+		return b.Lastmove
 	}
 	var move engine.Move
 	move.Score = -999
@@ -26,8 +21,7 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 		childmove := board.NegaMaxChild(depth - 1)
 		childmove.Score *= -1
 		if childmove.Score > move.Score {
-			move = *board.Lastmove.CopyMove()
-			move.Score = childmove.Score
+			board.Lastmove.Score = childmove.Score
 		}
 	}
 	return &move
