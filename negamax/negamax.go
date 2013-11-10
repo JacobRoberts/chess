@@ -4,21 +4,16 @@ import (
 	"chess/engine"
 )
 
-/*
-	Currently undefined functions:
-		*engine.Board.EvalBoard()
-*/
-
 // First-level negamax search function.
 func NegaMax(b *engine.Board, depth int) *engine.Move {
-	if b.IsOver() || depth == 0 {
-		b.Lastmove.Score = b.EvalBoard()
-		return b.Lastmove
+	if b.IsOver() != 0 || depth == 0 {
+		b.Lastmove.Score = EvalBoard(b)
+		return &b.Lastmove
 	}
 	var move engine.Move
 	move.Score = -999
 	for _, board := range b.NewGen() {
-		childmove := board.NegaMaxChild(depth - 1)
+		childmove := NegaMaxChild(board, depth-1)
 		childmove.Score *= -1
 		if childmove.Score > move.Score {
 			board.Lastmove.Score = childmove.Score
@@ -29,14 +24,14 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 
 // Child-level negamax search function.
 // Unlike NegaMax(), only returns score, not full move.
-func NegaMaxChild(b *engine.Board, depth int) int {
-	if b.IsOver() || depth == 0 {
-		return b.EvalBoard()
+func NegaMaxChild(b *engine.Board, depth int) float64 {
+	if b.IsOver() != 0 || depth == 0 {
+		return EvalBoard(b)
 	}
-	score := -999
-	var childscore int
+	var score float64 = -999
+	var childscore float64
 	for _, board := range b.NewGen() {
-		childscore = -board.NegaMaxChild(depth - 1)
+		childscore = -NegaMaxChild(board, depth-1)
 		if childscore > score {
 			score = childscore
 		}
