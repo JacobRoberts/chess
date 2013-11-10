@@ -35,6 +35,7 @@ func (b *Board) Move(m *Move) error {
 		err := b.castleHandler(m)
 		if err == nil {
 			b.Turn *= -1
+			b.Lastmove = *m
 		}
 		return err
 	}
@@ -99,6 +100,7 @@ func (b *Board) Move(m *Move) error {
 		b.Board[pieceindex].can_en_passant = true
 	}
 	b.Turn *= -1
+	b.Lastmove = *m
 	return nil
 }
 
