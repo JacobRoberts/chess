@@ -14,7 +14,50 @@ import (
 		appendIfNotCheck
 		castleHander
 		IsOver
+		CopyBoard
 */
+
+func TestCopyBoard(t *testing.T) {
+	board := &Board{
+		Board: []Piece{
+			Piece{
+				Name: "k",
+				position: Square{
+					X: 1,
+					Y: 1,
+				},
+				color: 1,
+				directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	boardcopy := board.CopyBoard()
+	m := &Move{
+		Piece: "k",
+		Begin: Square{
+			X: 1,
+			Y: 1,
+		},
+		End: Square{
+			X: 2,
+			Y: 2,
+		},
+	}
+	boardcopy.Move(m)
+	if board.Board[0].position.X != 1 || boardcopy.Board[0].position.Y != 2 {
+		t.Errorf("Copied board did not move independently of master board. Master had %d %d, copy had %d %d", board.Board[0].position.X, board.Board[0].position.Y, boardcopy.Board[0].position.X, boardcopy.Board[0].position.Y)
+	}
+}
 
 func TestIsOver(t *testing.T) {
 	board := &Board{

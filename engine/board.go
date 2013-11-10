@@ -35,16 +35,42 @@ func (b *Board) isCheck(color int) bool {
 }
 
 // Returns all legal moves available to the player whose turn it is.
-func (b *Board) allLegalMoves() []Move {
-	legals := make([]Move, 0)
+func (b *Board) allLegalMoves() []*Move {
+	legals := make([]*Move, 0)
 	for _, p := range b.Board {
 		if p.color == b.Turn {
 			for _, m := range p.legalMoves(b, true) {
-				legals = append(legals, m)
+				legals = append(legals, &m)
 			}
 		}
 	}
 	return legals
+}
+
+// Returns a deep copy of a given board
+func (b *Board) CopyBoard() *Board {
+	newboard := &Board{
+		Lastmove: b.Lastmove,
+		Turn:     b.Turn,
+	}
+	s := make([]Piece, len(b.Board))
+	for i, _ := range b.Board {
+		s[i] = b.Board[i]
+	}
+	newboard.Board = s
+	return newboard
+}
+
+// Returns a slice of pointers to all possible boards
+func (b *Board) NewGen() []*Board {
+	legals := b.allLegalMoves()
+	s := make([]*Board, len(legals))
+	for i, m := range legals {
+		newboard := b.CopyBoard()
+		newboard.Move(m)
+		s[i] = newboard
+	}
+	return s
 }
 
 // Checks if the game has ended.
