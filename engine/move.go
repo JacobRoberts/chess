@@ -8,7 +8,7 @@ import (
 type Move struct {
 	Piece      string // Piece.Name
 	Begin, End Square
-	Score      int
+	Score      float64
 }
 
 func maxInt(x, y int) int {
