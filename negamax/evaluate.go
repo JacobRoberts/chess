@@ -9,7 +9,7 @@ func EvalBoard(b *engine.Board) float64 {
 		if over == 1 {
 			return 0
 		} else {
-			return float64(498 * over * b.Turn)
+			return float64(499 * over * b.Turn)
 		}
 	}
 	return 0
