@@ -67,7 +67,7 @@ func TestOneMoveCheckmate(t *testing.T) {
 		t.Error("Move from negamax was rejected by board.Move() because ", err)
 	}
 	if board.IsOver() == 0 {
-		t.Error("Negmax could not find one move checkmate. Returned a move of ", move)
+		t.Errorf("Negmax could not find one move checkmate. Returned a move of %+v", move)
 	}
 }
 
@@ -130,6 +130,6 @@ func TestTwoMoveCheckmate(t *testing.T) {
 		t.Error("Move from negamax was rejected by board.Move() because ", err)
 	}
 	if move.Begin.X != 4 || move.End.X != 2 || move.End.Y != 7 {
-		t.Error("Negmax could not find two move checkmate. Returned a move of ", move)
+		t.Errorf("Negmax could not find two move checkmate. Returned a move of %+v", move)
 	}
 }
