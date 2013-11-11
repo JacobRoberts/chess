@@ -25,6 +25,15 @@ func minInt(x, y int) int {
 	return x
 }
 
+// Returns a pointer to a copy of a move.
+// Does not copy move's score.
+func (m *Move) CopyMove() *Move {
+	newmove := &Move{Piece: m.Piece}
+	newmove.Begin.X, newmove.Begin.Y = m.Begin.X, m.Begin.Y
+	newmove.End.X, newmove.End.Y = m.End.X, m.End.Y
+	return newmove
+}
+
 // Modifies a board in-place.
 // Returns an error without modifying board if illegal move.
 // Removes a captured piece entirely from board.
