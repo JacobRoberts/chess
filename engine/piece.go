@@ -37,7 +37,7 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 			Y: 0,
 		}
 	}
-	if !b.isCheck(b.Turn) {
+	if !b.IsCheck(b.Turn) {
 		s = append(s, *m)
 	}
 	b.Board[pieceindex].Position = m.Begin

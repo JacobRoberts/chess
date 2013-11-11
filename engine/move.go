@@ -105,7 +105,7 @@ func (b *Board) Move(m *Move) error {
 }
 
 func (b *Board) castleHandler(m *Move) error {
-	if b.isCheck(b.Turn) {
+	if b.IsCheck(b.Turn) {
 		return errors.New("func castleHandler: king is in check")
 	}
 
@@ -147,7 +147,7 @@ func (b *Board) castleHandler(m *Move) error {
 		}
 	}
 	b.Board[kingindex].Position = m.End
-	if b.isCheck(b.Turn) {
+	if b.IsCheck(b.Turn) {
 		b.Board[kingindex].Position = m.Begin
 		return errors.New("func castleHandler: castle places user in check")
 	}

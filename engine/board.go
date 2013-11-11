@@ -14,7 +14,7 @@ type Board struct {
 // Checks if a king is in check.
 // Pass the color of the king that you want to check.
 // Returns true if king in check / false if not.
-func (b *Board) isCheck(color int) bool {
+func (b *Board) IsCheck(color int) bool {
 	var kingsquare Square
 	for _, piece := range b.Board {
 		if piece.Name == "k" && piece.Color == color {
@@ -84,7 +84,7 @@ func (b *Board) IsOver() int {
 		}
 	}
 	if len(b.Board[kingindex].legalMoves(b, true)) == 0 {
-		if b.isCheck(b.Turn) {
+		if b.IsCheck(b.Turn) {
 			return -2 * b.Turn
 		}
 		if len(b.AllLegalMoves()) == 0 {

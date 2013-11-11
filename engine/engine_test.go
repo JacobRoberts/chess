@@ -8,7 +8,7 @@ import (
 
 	Functions with working testing in place:
 		occupied
-		isCheck
+		IsCheck
 		Move
 		legalMoves
 		appendIfNotCheck
@@ -215,10 +215,10 @@ func TestIsCheck(t *testing.T) {
 			},
 		},
 	}
-	if check := board.isCheck(1); check == true {
+	if check := board.IsCheck(1); check == true {
 		t.Errorf("False positive when determining check")
 	}
-	if check := board.isCheck(-1); check == false {
+	if check := board.IsCheck(-1); check == false {
 		t.Errorf("False negative when determining check")
 	}
 }
