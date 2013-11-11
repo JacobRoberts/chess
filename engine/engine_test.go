@@ -15,7 +15,31 @@ import (
 		castleHander
 		IsOver
 		CopyBoard
+		CopyMove
 */
+
+func TestCopyMove(t *testing.T) {
+	move := &Move{
+		Piece: "k",
+		Begin: Square{
+			X: 1,
+			Y: 1,
+		},
+		End: Square{
+			X: 2,
+			Y: 2,
+		},
+		Score: 2,
+	}
+	newmove := move.CopyMove()
+	if !(newmove.Piece == move.Piece && newmove.Begin == move.Begin && newmove.End == move.End) {
+		t.Errorf("Something went wrong copying the move, %+v was expected, %+v was returned", move, newmove)
+	}
+	newmove.Score = 3
+	if move.Score != 2 {
+		t.Error("Changing newmove changed master move")
+	}
+}
 
 func TestCopyBoard(t *testing.T) {
 	board := &Board{
@@ -561,7 +585,7 @@ func TestMove(t *testing.T) {
 		t.Error("En passant unexpected error: ", err)
 	}
 	if board.Board[0].Position.X != 0 || board.Board[0].Position.Y != 0 {
-		t.Error("After en passant, captured piece not taken off board. Position is ", board.Board[0].Position)
+		t.Errorf("After en passant, captured piece not taken off board. Position is %+v", board.Board[0].Position)
 	}
 }
 
@@ -875,41 +899,3 @@ func TestCastleHander(t *testing.T) {
 		t.Error("Error when making a legal castle: ", err)
 	}
 }
-
-/*
-
-	Obsolete test functions
-
-*/
-
-// func TestRemovePieceFromBoard(t *testing.T) {
-// 	in := Board{
-// 		Board: []Piece{
-// 			Piece{
-// 				Name: "k",
-// 			},
-// 			Piece{
-// 				Name: "b",
-// 			},
-// 			Piece{
-// 				Name: "n",
-// 			},
-// 		},
-// 	}
-// 	out := Board{
-// 		Board: []Piece{
-// 			Piece{
-// 				Name: "k",
-// 			},
-// 			Piece{
-// 				Name: "n",
-// 			},
-// 		},
-// 	}
-// 	removePieceFromBoard(&in, 1)
-// 	for i, p := range in.Board {
-// 		if p.Name != out.Board[i].Name {
-// 			t.Errorf("removePieceFromBoard failure: was expecting piece name %s, got %s", out.Board[i].Name, p.Name)
-// 		}
-// 	}
-// }
