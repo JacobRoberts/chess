@@ -50,7 +50,7 @@ func TestOneMoveCheckmate(t *testing.T) {
 					X: 3,
 					Y: 3,
 				},
-				Color: -1,
+				Color: 1,
 				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
