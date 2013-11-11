@@ -12,11 +12,14 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 	}
 	var move engine.Move
 	move.Score = -999
-	for _, board := range b.NewGen() {
-		childscore := NegaMaxChild(board, depth-1)
-		childscore *= -1
+	for _, m := range b.AllLegalMoves() {
+		childboard := b.CopyBoard()
+		childboard.Move(m)
+		childscore := -NegaMaxChild(childboard, depth-1)
 		if childscore > move.Score {
-			board.Lastmove.Score = childscore
+			move.Score = childscore
+			move.Begin = m.Begin
+			move.End = m.End
 		}
 	}
 	return &move
