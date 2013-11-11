@@ -20,6 +20,7 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 			move.Score = childscore
 			move.Begin = m.Begin
 			move.End = m.End
+			move.Piece = m.Piece
 		}
 	}
 	return &move
