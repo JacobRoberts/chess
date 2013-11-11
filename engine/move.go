@@ -45,10 +45,10 @@ func (b *Board) Move(m *Move) error {
 	var capture bool
 	var capturedpiece int
 	for i, p := range b.Board {
-		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
+		if m.Begin == p.Position && m.Piece == p.Name && b.Turn == p.Color {
 			pieceindex = i
 			piecefound = true
-		} else if m.End == p.position && p.color == b.Turn*-1 {
+		} else if m.End == p.Position && p.Color == b.Turn*-1 {
 			capture = true
 			capturedpiece = i
 		}
@@ -64,7 +64,7 @@ func (b *Board) Move(m *Move) error {
 	for _, move := range legals {
 		if *m == move {
 			legal = true
-			b.Board[pieceindex].position = move.End
+			b.Board[pieceindex].Position = move.End
 			break
 		}
 	}
@@ -76,7 +76,7 @@ func (b *Board) Move(m *Move) error {
 	if !capture && m.Piece == "p" && (m.Begin.X-m.End.X == 1 || m.End.X-m.Begin.X == 1) {
 		capture = true
 		for i, p := range b.Board {
-			if p.position.X == m.End.X && p.position.Y == m.Begin.Y {
+			if p.Position.X == m.End.X && p.Position.Y == m.Begin.Y {
 				capturedpiece = i
 				break
 			}
@@ -84,20 +84,20 @@ func (b *Board) Move(m *Move) error {
 	}
 
 	if capture {
-		b.Board[capturedpiece].position = Square{
+		b.Board[capturedpiece].Position = Square{
 			X: 0,
 			Y: 0,
 		}
 	}
-	b.Board[pieceindex].can_double_move = false
+	b.Board[pieceindex].Can_double_move = false
 	if m.Piece == "k" || m.Piece == "r" {
-		b.Board[pieceindex].can_castle = false
+		b.Board[pieceindex].Can_castle = false
 	}
 	for i, _ := range b.Board {
-		b.Board[i].can_en_passant = false
+		b.Board[i].Can_en_passant = false
 	}
-	if m.Piece == "p" && m.Begin.Y-m.End.Y == 2*-b.Board[pieceindex].color {
-		b.Board[pieceindex].can_en_passant = true
+	if m.Piece == "p" && m.Begin.Y-m.End.Y == 2*-b.Board[pieceindex].Color {
+		b.Board[pieceindex].Can_en_passant = true
 	}
 	b.Turn *= -1
 	b.Lastmove = *m
@@ -113,13 +113,13 @@ func (b *Board) castleHandler(m *Move) error {
 	var rookindex int
 	var rookfound bool
 	for i, p := range b.Board {
-		if m.Begin == p.position && m.Piece == p.Name && b.Turn == p.color {
+		if m.Begin == p.Position && m.Piece == p.Name && b.Turn == p.Color {
 			kingindex = i
-		} else if p.Name == "r" && ((m.End.X == 7 && p.position.X == 8) || (m.End.X == 3 && p.position.X == 1)) {
-			if b.Turn == 1 && p.position.Y == 1 {
+		} else if p.Name == "r" && ((m.End.X == 7 && p.Position.X == 8) || (m.End.X == 3 && p.Position.X == 1)) {
+			if b.Turn == 1 && p.Position.Y == 1 {
 				rookfound = true
 				rookindex = i
-			} else if b.Turn == -1 && p.position.Y == 8 {
+			} else if b.Turn == -1 && p.Position.Y == 8 {
 				rookfound = true
 				rookindex = i
 			}
@@ -128,34 +128,34 @@ func (b *Board) castleHandler(m *Move) error {
 			break
 		}
 	}
-	if !b.Board[kingindex].can_castle {
+	if !b.Board[kingindex].Can_castle {
 		return errors.New("func castleHandler: king has already moved")
 	}
 	if !rookfound {
 		return errors.New("func castleHandler: no rook in position to castle to given side")
 	}
-	if !b.Board[rookindex].can_castle {
+	if !b.Board[rookindex].Can_castle {
 		return errors.New("func castleHandler: rook has already moved")
 	}
-	for i := minInt(b.Board[rookindex].position.X, b.Board[kingindex].position.X) + 1; i < maxInt(b.Board[rookindex].position.X, b.Board[kingindex].position.X); i++ {
+	for i := minInt(b.Board[rookindex].Position.X, b.Board[kingindex].Position.X) + 1; i < maxInt(b.Board[rookindex].Position.X, b.Board[kingindex].Position.X); i++ {
 		s := &Square{
 			X: i,
-			Y: b.Board[kingindex].position.Y,
+			Y: b.Board[kingindex].Position.Y,
 		}
 		if b.occupied(s) != 0 {
 			return errors.New("func castleHandler: castle path is blocked")
 		}
 	}
-	b.Board[kingindex].position = m.End
+	b.Board[kingindex].Position = m.End
 	if b.isCheck(b.Turn) {
-		b.Board[kingindex].position = m.Begin
+		b.Board[kingindex].Position = m.Begin
 		return errors.New("func castleHandler: castle places user in check")
 	}
 	if m.End.X == 7 {
-		b.Board[rookindex].position.X = 6
+		b.Board[rookindex].Position.X = 6
 	}
 	if m.End.X == 3 {
-		b.Board[rookindex].position.X = 4
+		b.Board[rookindex].Position.X = 4
 	}
 	return nil
 }

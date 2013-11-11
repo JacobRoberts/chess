@@ -22,12 +22,12 @@ func TestCopyBoard(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					X: 1,
 					Y: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -54,8 +54,8 @@ func TestCopyBoard(t *testing.T) {
 		},
 	}
 	boardcopy.Move(m)
-	if board.Board[0].position.X != 1 || boardcopy.Board[0].position.Y != 2 {
-		t.Errorf("Copied board did not move independently of master board. Master had %d %d, copy had %d %d", board.Board[0].position.X, board.Board[0].position.Y, boardcopy.Board[0].position.X, boardcopy.Board[0].position.Y)
+	if board.Board[0].Position.X != 1 || boardcopy.Board[0].Position.Y != 2 {
+		t.Errorf("Copied board did not move independently of master board. Master had %d %d, copy had %d %d", board.Board[0].Position.X, board.Board[0].Position.Y, boardcopy.Board[0].Position.X, boardcopy.Board[0].Position.Y)
 	}
 }
 
@@ -64,12 +64,12 @@ func TestIsOver(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					X: 1,
 					Y: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -82,12 +82,12 @@ func TestIsOver(t *testing.T) {
 			},
 			Piece{
 				Name: "q",
-				position: Square{
+				Position: Square{
 					X: 2,
 					Y: 2,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -97,22 +97,22 @@ func TestIsOver(t *testing.T) {
 					{-1, 0},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 			Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					X: 8,
 					Y: 2,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 		},
 		Turn: 1,
@@ -120,7 +120,7 @@ func TestIsOver(t *testing.T) {
 	if result := board.IsOver(); result != -2 {
 		t.Errorf("Expected black wins, got a result of %d", result)
 	}
-	board.Board[1].position.Y = 3
+	board.Board[1].Position.Y = 3
 	if result := board.IsOver(); result != 1 {
 		t.Errorf("Expected stalemate, got a result of %d", result)
 	}
@@ -164,12 +164,12 @@ func TestIsCheck(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -182,12 +182,12 @@ func TestIsCheck(t *testing.T) {
 			},
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					Y: 8,
 					X: 8,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -200,18 +200,18 @@ func TestIsCheck(t *testing.T) {
 			},
 			Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 8,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 		},
 	}
@@ -228,27 +228,27 @@ func TestAppendIfNotCheck(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "b",
-				position: Square{
+				Position: Square{
 					Y: 2,
 					X: 2,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, -1},
 					{-1, 1},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -261,12 +261,12 @@ func TestAppendIfNotCheck(t *testing.T) {
 			},
 			Piece{
 				Name: "q",
-				position: Square{
+				Position: Square{
 					Y: 4,
 					X: 4,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -276,7 +276,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 					{-1, 0},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 		},
 		Turn: 1,
@@ -331,12 +331,12 @@ func TestAppendIfNotCheck(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -349,33 +349,33 @@ func TestAppendIfNotCheck(t *testing.T) {
 			},
 			Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 8,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 			Piece{
 				Name: "b",
-				position: Square{
+				Position: Square{
 					Y: 2,
 					X: 7,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, -1},
 					{-1, 1},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 		},
 		Turn: 1,
@@ -403,27 +403,27 @@ func TestMove(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 			Piece{
 				Name: "n",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 2,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 2},
 					{-1, 2},
 					{1, -2},
@@ -454,27 +454,27 @@ func TestMove(t *testing.T) {
 	out := []Piece{
 		Piece{
 			Name: "r",
-			position: Square{
+			Position: Square{
 				Y: 1,
 				X: 2,
 			},
-			color: 1,
-			directions: [][2]int{
+			Color: 1,
+			Directions: [][2]int{
 				{1, 0},
 				{-1, 0},
 				{0, 1},
 				{0, -1},
 			},
-			infinite_direction: true,
+			Infinite_direction: true,
 		},
 		Piece{
 			Name: "n",
-			position: Square{
+			Position: Square{
 				Y: 0,
 				X: 0,
 			},
-			color: -1,
-			directions: [][2]int{
+			Color: -1,
+			Directions: [][2]int{
 				{1, 2},
 				{-1, 2},
 				{1, -2},
@@ -486,7 +486,7 @@ func TestMove(t *testing.T) {
 			},
 		},
 	}
-	if !(len(board.Board) == len(out) && board.Board[0].position == out[0].position && board.Board[1].position.X == 0) {
+	if !(len(board.Board) == len(out) && board.Board[0].Position == out[0].Position && board.Board[1].Position.X == 0) {
 		t.Error("Expected: ", out, "\nGot: ", board.Board)
 	}
 	board.Turn = 1
@@ -522,24 +522,24 @@ func TestMove(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					X: 2,
 					Y: 5,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{0, -1},
 				},
-				can_en_passant: true,
+				Can_en_passant: true,
 			},
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					X: 3,
 					Y: 5,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{0, 1},
 				},
 			},
@@ -560,8 +560,8 @@ func TestMove(t *testing.T) {
 	if err := board.Move(m); err != nil {
 		t.Error("En passant unexpected error: ", err)
 	}
-	if board.Board[0].position.X != 0 || board.Board[0].position.Y != 0 {
-		t.Error("After en passant, captured piece not taken off board. Position is ", board.Board[0].position)
+	if board.Board[0].Position.X != 0 || board.Board[0].Position.Y != 0 {
+		t.Error("After en passant, captured piece not taken off board. Position is ", board.Board[0].Position)
 	}
 }
 
@@ -570,39 +570,39 @@ func TestLegalMoves(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 2,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					Y: 2,
 					X: 2,
 				},
-				color:           1,
-				can_double_move: true,
-				directions: [][2]int{
+				Color:           1,
+				Can_double_move: true,
+				Directions: [][2]int{
 					{0, 1},
 				},
 			},
 			Piece{
 				Name: "n",
-				position: Square{
+				Position: Square{
 					Y: 1,
 					X: 5,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{1, 2},
 					{-1, 2},
 					{1, -2},
@@ -615,23 +615,23 @@ func TestLegalMoves(t *testing.T) {
 			},
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					Y: 3,
 					X: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{0, 1},
 				},
 			},
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					Y: 3,
 					X: 3,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{0, -1},
 				},
 			},
@@ -702,13 +702,13 @@ func TestLegalMoves(t *testing.T) {
 		}
 	}
 	capturedpiece := Piece{
-		position: Square{
+		Position: Square{
 			X: 0,
 			Y: 0,
 		},
 		Name:  "p",
-		color: 1,
-		directions: [][2]int{
+		Color: 1,
+		Directions: [][2]int{
 			{0, 1},
 		},
 	}
@@ -719,24 +719,24 @@ func TestLegalMoves(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					X: 2,
 					Y: 5,
 				},
-				color: -1,
-				directions: [][2]int{
+				Color: -1,
+				Directions: [][2]int{
 					{0, -1},
 				},
-				can_en_passant: true,
+				Can_en_passant: true,
 			},
 			Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					X: 3,
 					Y: 5,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{0, 1},
 				},
 			},
@@ -750,12 +750,12 @@ func TestLegalMoves(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "q",
-				position: Square{
+				Position: Square{
 					X: 0,
 					Y: 0,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -765,7 +765,7 @@ func TestLegalMoves(t *testing.T) {
 					{-1, 0},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 		},
 		Turn: 1,
@@ -780,12 +780,12 @@ func TestCastleHander(t *testing.T) {
 		Board: []Piece{
 			Piece{
 				Name: "k",
-				position: Square{
+				Position: Square{
 					X: 5,
 					Y: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
 					{1, -1},
@@ -795,38 +795,38 @@ func TestCastleHander(t *testing.T) {
 					{-1, 0},
 					{-1, -1},
 				},
-				can_castle: true,
+				Can_castle: true,
 			},
 			Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					X: 8,
 					Y: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
-				can_castle:         true,
+				Infinite_direction: true,
+				Can_castle:         true,
 			},
 			Piece{
 				Name: "b",
-				position: Square{
+				Position: Square{
 					X: 6,
 					Y: 1,
 				},
-				color: 1,
-				directions: [][2]int{
+				Color: 1,
+				Directions: [][2]int{
 					{1, 1},
 					{1, -1},
 					{-1, 1},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			},
 		},
 		Turn: 1,
@@ -845,32 +845,32 @@ func TestCastleHander(t *testing.T) {
 	if err := board.castleHandler(m); err == nil {
 		t.Error("Castle allowed through blocking piece")
 	}
-	board.Board[2].color = -1
-	board.Board[2].position.Y = 2
+	board.Board[2].Color = -1
+	board.Board[2].Position.Y = 2
 	if err := board.castleHandler(m); err == nil {
 		t.Error("Castle allowed when king in check")
 	}
-	board.Board[2].position.X = 5
-	board.Board[2].position.Y = 3
+	board.Board[2].Position.X = 5
+	board.Board[2].Position.Y = 3
 	if err := board.castleHandler(m); err == nil {
 		t.Error("Castle allowed when king placed in check")
 	}
-	board.Board[2].color = 1
-	board.Board[0].can_castle = false
+	board.Board[2].Color = 1
+	board.Board[0].Can_castle = false
 	if err := board.castleHandler(m); err == nil {
 		t.Error("Castle allowed after king moved")
 	}
-	board.Board[0].can_castle = true
-	board.Board[1].can_castle = false
+	board.Board[0].Can_castle = true
+	board.Board[1].Can_castle = false
 	if err := board.castleHandler(m); err == nil {
 		t.Error("Castle allowed after rook move")
 	}
-	board.Board[1].can_castle = true
-	board.Board[1].position.Y = 2
+	board.Board[1].Can_castle = true
+	board.Board[1].Position.Y = 2
 	if err := board.castleHandler(m); err == nil {
 		t.Error("Castle allowed when rook out of position")
 	}
-	board.Board[1].position.Y = 1
+	board.Board[1].Position.Y = 1
 	if err := board.castleHandler(m); err != nil {
 		t.Error("Error when making a legal castle: ", err)
 	}

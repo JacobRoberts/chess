@@ -13,8 +13,8 @@ func (b *Board) occupied(s *Square) int {
 		return -2
 	}
 	for _, p := range b.Board {
-		if p.position.X == s.X && p.position.Y == s.Y {
-			return p.color
+		if p.Position.X == s.X && p.Position.Y == s.Y {
+			return p.Color
 		}
 	}
 	return 0

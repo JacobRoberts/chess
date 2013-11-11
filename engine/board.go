@@ -17,13 +17,13 @@ type Board struct {
 func (b *Board) isCheck(color int) bool {
 	var kingsquare Square
 	for _, piece := range b.Board {
-		if piece.Name == "k" && piece.color == color {
-			kingsquare = piece.position
+		if piece.Name == "k" && piece.Color == color {
+			kingsquare = piece.Position
 			break
 		}
 	}
 	for _, piece := range b.Board {
-		if piece.color == color*-1 {
+		if piece.Color == color*-1 {
 			for _, move := range piece.legalMoves(b, false) {
 				if move.End == kingsquare {
 					return true
@@ -35,10 +35,10 @@ func (b *Board) isCheck(color int) bool {
 }
 
 // Returns all legal moves available to the player whose turn it is.
-func (b *Board) allLegalMoves() []*Move {
+func (b *Board) AllLegalMoves() []*Move {
 	legals := make([]*Move, 0)
 	for _, p := range b.Board {
-		if p.color == b.Turn {
+		if p.Color == b.Turn {
 			for _, m := range p.legalMoves(b, true) {
 				legals = append(legals, &m)
 			}
@@ -63,7 +63,7 @@ func (b *Board) CopyBoard() *Board {
 
 // Returns a slice of pointers to all possible boards
 func (b *Board) NewGen() []*Board {
-	legals := b.allLegalMoves()
+	legals := b.AllLegalMoves()
 	s := make([]*Board, len(legals))
 	for i, m := range legals {
 		newboard := b.CopyBoard()
@@ -78,7 +78,7 @@ func (b *Board) NewGen() []*Board {
 func (b *Board) IsOver() int {
 	var kingindex int
 	for i, p := range b.Board {
-		if p.Name == "k" && p.color == b.Turn {
+		if p.Name == "k" && p.Color == b.Turn {
 			kingindex = i
 			break
 		}
@@ -87,7 +87,7 @@ func (b *Board) IsOver() int {
 		if b.isCheck(b.Turn) {
 			return -2 * b.Turn
 		}
-		if len(b.allLegalMoves()) == 0 {
+		if len(b.AllLegalMoves()) == 0 {
 			return 1
 		}
 	}
@@ -98,8 +98,8 @@ func (b *Board) IsOver() int {
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
-		if piece.position.X != 0 {
-			boardarr[piece.position.Y-1][piece.position.X-1] = piece.Name
+		if piece.Position.X != 0 {
+			boardarr[piece.Position.Y-1][piece.Position.X-1] = piece.Name
 		}
 	}
 	for y := 7; y >= 0; y-- {
@@ -129,13 +129,13 @@ func (b *Board) SetUpPieces() {
 		for file := 1; file <= 8; file++ {
 			piece := Piece{
 				Name: "p",
-				position: Square{
+				Position: Square{
 					X: file,
 					Y: rank,
 				},
-				color:           color,
-				can_double_move: true,
-				directions: [][2]int{
+				Color:           color,
+				Can_double_move: true,
+				Directions: [][2]int{
 					{0, 1 * color},
 				},
 			}
@@ -158,31 +158,31 @@ func (b *Board) SetUpPieces() {
 		for _, file := range rookfiles {
 			piece := Piece{
 				Name: "r",
-				position: Square{
+				Position: Square{
 					X: file,
 					Y: rank,
 				},
-				color:      color,
-				can_castle: true,
-				directions: [][2]int{
+				Color:      color,
+				Can_castle: true,
+				Directions: [][2]int{
 					{1, 0},
 					{-1, 0},
 					{0, 1},
 					{0, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			}
 			b.Board = append(b.Board, piece)
 		}
 		for _, file := range knightfiles {
 			piece := Piece{
 				Name: "n",
-				position: Square{
+				Position: Square{
 					X: file,
 					Y: rank,
 				},
-				color: color,
-				directions: [][2]int{
+				Color: color,
+				Directions: [][2]int{
 					{1, 2},
 					{-1, 2},
 					{1, -2},
@@ -198,29 +198,29 @@ func (b *Board) SetUpPieces() {
 		for _, file := range bishopfiles {
 			piece := Piece{
 				Name: "b",
-				position: Square{
+				Position: Square{
 					X: file,
 					Y: rank,
 				},
-				color: color,
-				directions: [][2]int{
+				Color: color,
+				Directions: [][2]int{
 					{1, 1},
 					{1, -1},
 					{-1, 1},
 					{-1, -1},
 				},
-				infinite_direction: true,
+				Infinite_direction: true,
 			}
 			b.Board = append(b.Board, piece)
 		}
 		queen := Piece{
 			Name: "q",
-			position: Square{
+			Position: Square{
 				X: queenfile,
 				Y: rank,
 			},
-			color: color,
-			directions: [][2]int{
+			Color: color,
+			Directions: [][2]int{
 				{1, 1},
 				{1, 0},
 				{1, -1},
@@ -230,17 +230,17 @@ func (b *Board) SetUpPieces() {
 				{-1, 0},
 				{-1, -1},
 			},
-			infinite_direction: true,
+			Infinite_direction: true,
 		}
 		b.Board = append(b.Board, queen)
 		king := Piece{
 			Name: "k",
-			position: Square{
+			Position: Square{
 				X: kingfile,
 				Y: rank,
 			},
-			color: color,
-			directions: [][2]int{
+			Color: color,
+			Directions: [][2]int{
 				{1, 1},
 				{1, 0},
 				{1, -1},
@@ -250,24 +250,8 @@ func (b *Board) SetUpPieces() {
 				{-1, 0},
 				{-1, -1},
 			},
-			can_castle: true,
+			Can_castle: true,
 		}
 		b.Board = append(b.Board, king)
 	}
 }
-
-/*
-
-	Functions that I don't need right now but might need later
-
-*/
-
-// Removes a piece at a given index from a given board.
-// func removePieceFromBoard(b *Board, pieceindex int) {
-// 	// testing implemented
-// 	newboard := b.Board[:pieceindex]
-// 	for i := pieceindex + 1; i < len(b.Board); i++ {
-// 		newboard = append(newboard, b.Board[i])
-// 	}
-// 	b.Board = newboard
-// }
