@@ -62,7 +62,7 @@ func (b *Board) Move(m *Move) error {
 	var legal bool
 	legals := b.Board[pieceindex].legalMoves(b, true)
 	for _, move := range legals {
-		if *m == move {
+		if m.Begin == move.Begin && m.End == move.End && m.Piece == move.Piece {
 			legal = true
 			b.Board[pieceindex].Position = move.End
 			break
