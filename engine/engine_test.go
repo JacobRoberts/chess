@@ -43,8 +43,8 @@ func TestCopyMove(t *testing.T) {
 
 func TestCopyBoard(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					X: 1,
@@ -85,8 +85,8 @@ func TestCopyBoard(t *testing.T) {
 
 func TestIsOver(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					X: 1,
@@ -104,7 +104,7 @@ func TestIsOver(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "q",
 				Position: Square{
 					X: 2,
@@ -123,7 +123,7 @@ func TestIsOver(t *testing.T) {
 				},
 				Infinite_direction: true,
 			},
-			Piece{
+			&Piece{
 				Name: "r",
 				Position: Square{
 					X: 8,
@@ -185,8 +185,8 @@ func TestOccupied(t *testing.T) {
 
 func TestIsCheck(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					Y: 1,
@@ -204,7 +204,7 @@ func TestIsCheck(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					Y: 8,
@@ -222,7 +222,7 @@ func TestIsCheck(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "r",
 				Position: Square{
 					Y: 1,
@@ -249,8 +249,8 @@ func TestIsCheck(t *testing.T) {
 
 func TestAppendIfNotCheck(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "b",
 				Position: Square{
 					Y: 2,
@@ -265,7 +265,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 				},
 				Infinite_direction: true,
 			},
-			Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					Y: 1,
@@ -283,7 +283,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "q",
 				Position: Square{
 					Y: 4,
@@ -352,8 +352,8 @@ func TestAppendIfNotCheck(t *testing.T) {
 		t.Error("Capturing pinning piece with pinned piece places user in check")
 	}
 	board = &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					Y: 1,
@@ -371,7 +371,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "r",
 				Position: Square{
 					Y: 1,
@@ -386,7 +386,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 				},
 				Infinite_direction: true,
 			},
-			Piece{
+			&Piece{
 				Name: "b",
 				Position: Square{
 					Y: 2,
@@ -424,8 +424,8 @@ func TestAppendIfNotCheck(t *testing.T) {
 
 func TestMove(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "r",
 				Position: Square{
 					Y: 1,
@@ -440,7 +440,7 @@ func TestMove(t *testing.T) {
 				},
 				Infinite_direction: true,
 			},
-			Piece{
+			&Piece{
 				Name: "n",
 				Position: Square{
 					Y: 1,
@@ -475,8 +475,8 @@ func TestMove(t *testing.T) {
 	if err := board.Move(m); err != nil {
 		t.Error("Got an unexpected error making a legal capture: ", err)
 	}
-	out := []Piece{
-		Piece{
+	out := []*Piece{
+		&Piece{
 			Name: "r",
 			Position: Square{
 				Y: 1,
@@ -491,7 +491,7 @@ func TestMove(t *testing.T) {
 			},
 			Infinite_direction: true,
 		},
-		Piece{
+		&Piece{
 			Name: "n",
 			Position: Square{
 				Y: 0,
@@ -543,8 +543,8 @@ func TestMove(t *testing.T) {
 		t.Error("Attempting an illegal move did not return an error")
 	}
 	board = &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					X: 2,
@@ -556,7 +556,7 @@ func TestMove(t *testing.T) {
 				},
 				Can_en_passant: true,
 			},
-			Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					X: 3,
@@ -591,8 +591,8 @@ func TestMove(t *testing.T) {
 
 func TestLegalMoves(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "r",
 				Position: Square{
 					Y: 1,
@@ -607,7 +607,7 @@ func TestLegalMoves(t *testing.T) {
 				},
 				Infinite_direction: true,
 			},
-			Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					Y: 2,
@@ -619,7 +619,7 @@ func TestLegalMoves(t *testing.T) {
 					{0, 1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "n",
 				Position: Square{
 					Y: 1,
@@ -637,7 +637,7 @@ func TestLegalMoves(t *testing.T) {
 					{-2, -1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					Y: 3,
@@ -648,7 +648,7 @@ func TestLegalMoves(t *testing.T) {
 					{0, 1},
 				},
 			},
-			Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					Y: 3,
@@ -725,7 +725,7 @@ func TestLegalMoves(t *testing.T) {
 			t.Errorf("Pawn legal moves failure")
 		}
 	}
-	capturedpiece := Piece{
+	capturedpiece := &Piece{
 		Position: Square{
 			X: 0,
 			Y: 0,
@@ -740,8 +740,8 @@ func TestLegalMoves(t *testing.T) {
 		t.Error("Captured piece has legal moves")
 	}
 	board = &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					X: 2,
@@ -753,7 +753,7 @@ func TestLegalMoves(t *testing.T) {
 				},
 				Can_en_passant: true,
 			},
-			Piece{
+			&Piece{
 				Name: "p",
 				Position: Square{
 					X: 3,
@@ -771,8 +771,8 @@ func TestLegalMoves(t *testing.T) {
 		t.Error("En passant not recognized as legal move")
 	}
 	board = &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "q",
 				Position: Square{
 					X: 0,
@@ -801,8 +801,8 @@ func TestLegalMoves(t *testing.T) {
 
 func TestCastleHander(t *testing.T) {
 	board := &Board{
-		Board: []Piece{
-			Piece{
+		Board: []*Piece{
+			&Piece{
 				Name: "k",
 				Position: Square{
 					X: 5,
@@ -821,7 +821,7 @@ func TestCastleHander(t *testing.T) {
 				},
 				Can_castle: true,
 			},
-			Piece{
+			&Piece{
 				Name: "r",
 				Position: Square{
 					X: 8,
@@ -837,7 +837,7 @@ func TestCastleHander(t *testing.T) {
 				Infinite_direction: true,
 				Can_castle:         true,
 			},
-			Piece{
+			&Piece{
 				Name: "b",
 				Position: Square{
 					X: 6,
