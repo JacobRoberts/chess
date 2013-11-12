@@ -7,8 +7,8 @@ import (
 
 func TestOneMoveCheckmate(t *testing.T) {
 	board := &engine.Board{
-		Board: []engine.Piece{
-			engine.Piece{
+		Board: []*engine.Piece{
+			&engine.Piece{
 				Name: "k",
 				Position: engine.Square{
 					X: 1,
@@ -26,7 +26,7 @@ func TestOneMoveCheckmate(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			engine.Piece{
+			&engine.Piece{
 				Name: "k",
 				Position: engine.Square{
 					X: 1,
@@ -44,7 +44,7 @@ func TestOneMoveCheckmate(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			engine.Piece{
+			&engine.Piece{
 				Name: "r",
 				Position: engine.Square{
 					X: 3,
@@ -73,8 +73,8 @@ func TestOneMoveCheckmate(t *testing.T) {
 
 func TestTwoMoveCheckmate(t *testing.T) {
 	board := &engine.Board{
-		Board: []engine.Piece{
-			engine.Piece{
+		Board: []*engine.Piece{
+			&engine.Piece{
 				Name: "k",
 				Position: engine.Square{
 					X: 2,
@@ -92,7 +92,7 @@ func TestTwoMoveCheckmate(t *testing.T) {
 					{-1, -1},
 				},
 			},
-			engine.Piece{
+			&engine.Piece{
 				Name: "r",
 				Position: engine.Square{
 					X: 3,
@@ -107,7 +107,7 @@ func TestTwoMoveCheckmate(t *testing.T) {
 				},
 				Infinite_direction: true,
 			},
-			engine.Piece{
+			&engine.Piece{
 				Name: "r",
 				Position: engine.Square{
 					X: 4,
