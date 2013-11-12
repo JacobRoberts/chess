@@ -19,7 +19,6 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 		if childscore > move.Score {
 			move = *m.CopyMove()
 			move.Score = childscore
-			move.Score = childscore
 		}
 	}
 	return &move
