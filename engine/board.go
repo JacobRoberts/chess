@@ -50,12 +50,14 @@ func (b *Board) AllLegalMoves() []*Move {
 // Returns a deep copy of a given board
 func (b *Board) CopyBoard() *Board {
 	newboard := new(Board)
+	s := make([]*Piece, len(b.Board))
 	newboard.Lastmove, newboard.Turn = b.Lastmove, b.Turn
 	for i, _ := range b.Board {
 		p := new(Piece)
 		*p = *b.Board[i]
-		newboard.Board = append(newboard.Board, p)
+		s[i] = p
 	}
+	newboard.Board = s
 	return newboard
 }
 
