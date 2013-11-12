@@ -6,7 +6,7 @@ import (
 
 // array of all pieces on a given board
 type Board struct {
-	Board    []Piece // all of the pieces on the board
+	Board    []*Piece // all of the pieces on the board
 	Lastmove Move
 	Turn     int // 1 : white , -1 : black
 }
@@ -53,9 +53,9 @@ func (b *Board) CopyBoard() *Board {
 		Lastmove: b.Lastmove,
 		Turn:     b.Turn,
 	}
-	s := make([]Piece, len(b.Board))
+	s := make([]*Piece, len(b.Board))
 	for i, _ := range b.Board {
-		s[i] = b.Board[i]
+		*s[i] = *b.Board[i]
 	}
 	newboard.Board = s
 	return newboard
@@ -117,7 +117,7 @@ func (b *Board) PrintBoard() {
 // Resets a given board to its starting position.
 func (b *Board) SetUpPieces() {
 	// for readability, this should be the last function in the file
-	b.Board = make([]Piece, 0)
+	b.Board = make([]*Piece, 0)
 	pawnrows := [2]int{2, 7}
 	for _, rank := range pawnrows {
 		var color int
@@ -139,7 +139,7 @@ func (b *Board) SetUpPieces() {
 					{0, 1 * color},
 				},
 			}
-			b.Board = append(b.Board, piece)
+			b.Board = append(b.Board, &piece)
 		}
 	}
 	piecerows := [2]int{1, 8}
@@ -172,7 +172,7 @@ func (b *Board) SetUpPieces() {
 				},
 				Infinite_direction: true,
 			}
-			b.Board = append(b.Board, piece)
+			b.Board = append(b.Board, &piece)
 		}
 		for _, file := range knightfiles {
 			piece := Piece{
@@ -193,7 +193,7 @@ func (b *Board) SetUpPieces() {
 					{-2, -1},
 				},
 			}
-			b.Board = append(b.Board, piece)
+			b.Board = append(b.Board, &piece)
 		}
 		for _, file := range bishopfiles {
 			piece := Piece{
@@ -211,7 +211,7 @@ func (b *Board) SetUpPieces() {
 				},
 				Infinite_direction: true,
 			}
-			b.Board = append(b.Board, piece)
+			b.Board = append(b.Board, &piece)
 		}
 		queen := Piece{
 			Name: "q",
@@ -232,7 +232,7 @@ func (b *Board) SetUpPieces() {
 			},
 			Infinite_direction: true,
 		}
-		b.Board = append(b.Board, queen)
+		b.Board = append(b.Board, &queen)
 		king := Piece{
 			Name: "k",
 			Position: Square{
@@ -252,6 +252,6 @@ func (b *Board) SetUpPieces() {
 			},
 			Can_castle: true,
 		}
-		b.Board = append(b.Board, king)
+		b.Board = append(b.Board, &king)
 	}
 }
