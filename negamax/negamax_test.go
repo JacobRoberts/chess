@@ -129,7 +129,7 @@ func TestTwoMoveCheckmate(t *testing.T) {
 	if err := board.Move(move); err != nil {
 		t.Error("Move from negamax was rejected by board.Move() because ", err)
 	}
-	if move.Begin.X != 4 || move.End.X != 2 || move.End.Y != 7 {
+	if move.Begin.X != 4 || move.End.X != 2 || move.End.Y != 8 {
 		t.Errorf("Negmax could not find two move checkmate. Returned a move of %+v", move)
 	}
 }
