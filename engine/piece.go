@@ -16,7 +16,7 @@ type Piece struct {
 
 // Used by legalMoves function.
 // Appends a move to a slice if the move doesn't place the mover in check.
-func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
+func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
 	var pieceindex int
 	var capture bool
 	var capturedpieceposition Square
@@ -38,7 +38,7 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 		}
 	}
 	if !b.IsCheck(b.Turn) {
-		s = append(s, *m)
+		s = append(s, m)
 	}
 	b.Board[pieceindex].Position = m.Begin
 	if capture {
@@ -50,14 +50,14 @@ func appendIfNotCheck(b *Board, m *Move, s []Move) []Move {
 // Returns all legal moves for a given piece.
 // checkcheck is true when:
 //     moves that would place the player in check are not returned.
-func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
+func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 	/*
 		for readability, this should be towards the end of the file
 
 		TODO:
 			castling
 	*/
-	legals := make([]Move, 0)
+	legals := make([]*Move, 0)
 	if p.Position.X == 0 && p.Position.Y == 0 {
 		return legals
 	}
@@ -79,7 +79,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 					if checkcheck {
 						legals = appendIfNotCheck(b, &m, legals)
 					} else {
-						legals = append(legals, m)
+						legals = append(legals, &m)
 					}
 					break
 				} else {
@@ -91,7 +91,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 					if checkcheck {
 						legals = appendIfNotCheck(b, &m, legals)
 					} else {
-						legals = append(legals, m)
+						legals = append(legals, &m)
 					}
 				}
 			}
@@ -111,7 +111,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 				if checkcheck {
 					legals = appendIfNotCheck(b, &m, legals)
 				} else {
-					legals = append(legals, m)
+					legals = append(legals, &m)
 				}
 			}
 		}
@@ -132,7 +132,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 				if checkcheck {
 					legals = appendIfNotCheck(b, &m, legals)
 				} else {
-					legals = append(legals, m)
+					legals = append(legals, &m)
 				}
 			}
 		}
@@ -150,7 +150,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 				if checkcheck {
 					legals = appendIfNotCheck(b, &m, legals)
 				} else {
-					legals = append(legals, m)
+					legals = append(legals, &m)
 				}
 			}
 		} else {
@@ -175,7 +175,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []Move {
 							if checkcheck {
 								legals = appendIfNotCheck(b, &m, legals)
 							} else {
-								legals = append(legals, m)
+								legals = append(legals, &m)
 							}
 						}
 					}

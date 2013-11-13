@@ -40,7 +40,7 @@ func (b *Board) AllLegalMoves() []*Move {
 	for _, p := range b.Board {
 		if p.Color == b.Turn {
 			for _, m := range p.legalMoves(b, true) {
-				legals = append(legals, &m)
+				legals = append(legals, m)
 			}
 		}
 	}
