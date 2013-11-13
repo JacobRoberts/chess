@@ -5,7 +5,6 @@ import (
 )
 
 /*
-
 	Functions with working testing in place:
 		occupied
 		IsCheck
@@ -16,7 +15,74 @@ import (
 		IsOver
 		CopyBoard
 		CopyMove
+		AllLegalMoves
 */
+
+func TestAllLegalMoves(t *testing.T) {
+	board := &Board{
+		Board: []*Piece{
+			&Piece{
+				Name: "k",
+				Position: Square{
+					X: 1,
+					Y: 1,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			&Piece{
+				Name: "k",
+				Position: Square{
+					X: 8,
+					Y: 8,
+				},
+				Color: -1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			&Piece{
+				Name: "p",
+				Position: Square{
+					X: 4,
+					Y: 3,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{0, 1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	moves := board.AllLegalMoves()
+	if moveslen := len(moves); moveslen != 4 {
+		t.Errorf("Too many moves, opposing color's moves likely added. 4 moves expected, %d moves recieved", moveslen)
+	}
+	for i, m1 := range moves {
+		for j, m2 := range moves {
+			if m2 == m1 && i != j {
+				t.Error("Duplicate moves returned, ", moves)
+			}
+		}
+	}
+}
 
 func TestCopyMove(t *testing.T) {
 	move := &Move{
@@ -305,7 +371,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 		},
 		Turn: 1,
 	}
-	legalmoves := make([]Move, 0)
+	legalmoves := make([]*Move, 0)
 	checkmove := &Move{
 		Piece: "b",
 		Begin: Square{
@@ -415,7 +481,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 			X: 8,
 		},
 	}
-	legalmoves = make([]Move, 0)
+	legalmoves = make([]*Move, 0)
 	legalmoves = appendIfNotCheck(board, m, legalmoves)
 	if len(legalmoves) == 0 {
 		t.Error("Capturing the attacking piece still places user in check")
@@ -721,7 +787,7 @@ func TestLegalMoves(t *testing.T) {
 	pawnmoves = append(pawnmoves, m)
 	pawnlegalmoves := board.Board[1].legalMoves(board, false)
 	for i, m := range pawnmoves {
-		if m != pawnlegalmoves[i] {
+		if m != *pawnlegalmoves[i] {
 			t.Errorf("Pawn legal moves failure")
 		}
 	}
