@@ -14,5 +14,10 @@ func EvalBoard(b *engine.Board) float64 {
 			return float64(499 * over * b.Turn)
 		}
 	}
-	return 0
+	var s int
+	for _, p := range b.Board {
+		s += p.Value * p.Color * b.Turn
+	}
+	score := float64(s)
+	return score
 }
