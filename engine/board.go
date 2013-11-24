@@ -138,6 +138,7 @@ func (b *Board) SetUpPieces() {
 				Directions: [][2]int{
 					{0, 1 * color},
 				},
+				Value: 1,
 			}
 			b.Board = append(b.Board, &piece)
 		}
@@ -162,6 +163,7 @@ func (b *Board) SetUpPieces() {
 					X: file,
 					Y: rank,
 				},
+				Value:      5,
 				Color:      color,
 				Can_castle: true,
 				Directions: [][2]int{
@@ -181,6 +183,7 @@ func (b *Board) SetUpPieces() {
 					X: file,
 					Y: rank,
 				},
+				Value: 3,
 				Color: color,
 				Directions: [][2]int{
 					{1, 2},
@@ -202,6 +205,7 @@ func (b *Board) SetUpPieces() {
 					X: file,
 					Y: rank,
 				},
+				Value: 3,
 				Color: color,
 				Directions: [][2]int{
 					{1, 1},
@@ -219,6 +223,7 @@ func (b *Board) SetUpPieces() {
 				X: queenfile,
 				Y: rank,
 			},
+			Value: 9,
 			Color: color,
 			Directions: [][2]int{
 				{1, 1},
