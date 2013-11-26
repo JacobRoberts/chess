@@ -6,6 +6,10 @@ import (
 )
 
 /*
+	http://chessprogramming.wikispaces.com/Principal+Variation+Search
+	http://en.wikipedia.org/wiki/Negascout
+
+
 	orderedmoves should be replaced with function to order all legal moves
 	two options to order moves:
 	1:
@@ -22,7 +26,7 @@ func NegaScout(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		b.Lastmove.Score = EvalBoard(b)
 		return &b.Lastmove
 	}
-	var move *engine.Move
+	var move engine.Move
 
 	// not indended for actual use
 	orderedmoves := b.AllLegalMoves()
@@ -41,12 +45,12 @@ func NegaScout(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		}
 		alpha = math.Max(alpha, score)
 		if alpha >= beta {
-			move = m.CopyMove()
+			move = *m.CopyMove()
 			move.Score = alpha
 			break
 		}
 	}
-	return move
+	return &move
 }
 
 // Child level NegaScout search function.
