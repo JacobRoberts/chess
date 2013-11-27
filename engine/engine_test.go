@@ -306,10 +306,10 @@ func TestIsCheck(t *testing.T) {
 		},
 	}
 	if check := board.IsCheck(1); check == true {
-		t.Errorf("False positive when determining check")
+		t.Error("False positive when determining check")
 	}
 	if check := board.IsCheck(-1); check == false {
-		t.Errorf("False negative when determining check")
+		t.Error("False negative when determining check")
 	}
 }
 
@@ -539,7 +539,7 @@ func TestMove(t *testing.T) {
 		},
 	}
 	if err := board.Move(m); err != nil {
-		t.Error("Got an unexpected error making a legal capture: ", err)
+		t.Errorf("Got an unexpected error making a legal capture: %s", err)
 	}
 	out := []*Piece{
 		&Piece{
@@ -577,7 +577,7 @@ func TestMove(t *testing.T) {
 		},
 	}
 	if !(len(board.Board) == len(out) && board.Board[0].Position == out[0].Position && board.Board[1].Position.X == 0) {
-		t.Error("Expected: ", out, "\nGot: ", board.Board)
+		t.Errorf("Expected: %+v\nGot: %+v", out, board.Board)
 	}
 	board.Turn = 1
 	m = &Move{
@@ -648,7 +648,7 @@ func TestMove(t *testing.T) {
 		},
 	}
 	if err := board.Move(m); err != nil {
-		t.Error("En passant unexpected error: ", err)
+		t.Errorf("En passant unexpected error: %s", err)
 	}
 	if board.Board[0].Position.X != 0 || board.Board[0].Position.Y != 0 {
 		t.Errorf("After en passant, captured piece not taken off board. Position is %+v", board.Board[0].Position)
@@ -788,7 +788,7 @@ func TestLegalMoves(t *testing.T) {
 	pawnlegalmoves := board.Board[1].legalMoves(board, false)
 	for i, m := range pawnmoves {
 		if m != *pawnlegalmoves[i] {
-			t.Errorf("Pawn legal moves failure")
+			t.Error("Pawn legal moves failure")
 		}
 	}
 	capturedpiece := &Piece{
