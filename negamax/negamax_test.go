@@ -63,7 +63,7 @@ func TestOneMoveCheckmate(t *testing.T) {
 		Turn: 1,
 	}
 	move := NegaMax(board, 2)
-	//move := NegaScout(board, 2, -1000, 1000)
+	// move := NegaScout(board, 2, -1000, 1000)
 	if err := board.Move(move); err != nil {
 		t.Errorf("Move %+v from negamax was rejected by board.Move() because %s", move, err)
 	}
@@ -127,7 +127,7 @@ func TestTwoMoveCheckmate(t *testing.T) {
 		Turn: 1,
 	}
 	move := NegaMax(board, 4)
-	//move := NegaScout(board, 4, -1000, 1000)
+	// move := NegaScout(board, 4, -1000, 1000)
 	if err := board.Move(move); err != nil {
 		t.Errorf("Move from negamax was rejected by board.Move() because %s", err)
 	}
