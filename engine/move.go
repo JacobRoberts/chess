@@ -9,6 +9,7 @@ type Move struct {
 	Piece      string // Piece.Name
 	Begin, End Square
 	Score      float64
+	Promotion  string
 }
 
 func maxInt(x, y int) int {
@@ -109,18 +110,54 @@ func (b *Board) Move(m *Move) error {
 		if m.Begin.Y-m.End.Y == 2*-b.Board[pieceindex].Color {
 			b.Board[pieceindex].Can_en_passant = true
 		} else if (b.Turn == 1 && m.End.Y == 8) || (b.Turn == -1 && m.End.Y == 1) {
-			b.Board[pieceindex].Directions = [][2]int{
-				{1, 1},
-				{1, 0},
-				{1, -1},
-				{0, 1},
-				{0, -1},
-				{-1, 1},
-				{-1, 0},
-				{-1, -1},
+			if promotion := m.Promotion; promotion == "q" {
+				b.Board[pieceindex].Name = promotion
+				b.Board[pieceindex].Directions = [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				}
+				b.Board[pieceindex].Value = 9
+				b.Board[pieceindex].Infinite_direction = true
+			} else if promotion == "r" {
+				b.Board[pieceindex].Name = promotion
+				b.Board[pieceindex].Directions = [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				}
+				b.Board[pieceindex].Value = 5
+				b.Board[pieceindex].Infinite_direction = true
+			} else if promotion == "n" {
+				b.Board[pieceindex].Name = promotion
+				b.Board[pieceindex].Directions = [][2]int{
+					{1, 2},
+					{-1, 2},
+					{1, -2},
+					{-1, -2},
+					{2, 1},
+					{-2, 1},
+					{2, -1},
+					{-2, -1},
+				}
+				b.Board[pieceindex].Value = 3
+			} else if promotion == "b" {
+				b.Board[pieceindex].Name = promotion
+				b.Board[pieceindex].Directions = [][2]int{
+					{1, 1},
+					{1, -1},
+					{-1, 1},
+					{-1, -1},
+				}
+				b.Board[pieceindex].Infinite_direction = true
+				b.Board[pieceindex].Value = 3
 			}
-			b.Board[pieceindex].Value = 9
-			b.Board[pieceindex].Infinite_direction = true
 		}
 	}
 	b.Lastmove = *m

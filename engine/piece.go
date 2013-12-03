@@ -72,7 +72,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				}
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.Color {
 					break
-				} else if b.occupied(&s) == p.Color*-1 && p.Name != "p" {
+				} else if b.occupied(&s) == p.Color*-1 {
 					m := Move{
 						Begin: p.Position,
 						End:   s,
@@ -110,10 +110,22 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 					End:   s,
 					Piece: p.Name,
 				}
-				if checkcheck {
-					legals = appendIfNotCheck(b, &m, legals)
+				if p.Name == "p" && ((p.Color == 1 && s.Y == 8) || (p.Color == -1 && s.Y == 1)) {
+					for _, promotion := range [4]string{"q", "r", "n", "b"} {
+						move := m.CopyMove()
+						move.Promotion = promotion
+						if checkcheck {
+							legals = appendIfNotCheck(b, &m, legals)
+						} else {
+							legals = append(legals, &m)
+						}
+					}
 				} else {
-					legals = append(legals, &m)
+					if checkcheck {
+						legals = appendIfNotCheck(b, &m, legals)
+					} else {
+						legals = append(legals, &m)
+					}
 				}
 			}
 		}
@@ -131,10 +143,22 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 					End:   capture,
 					Piece: p.Name,
 				}
-				if checkcheck {
-					legals = appendIfNotCheck(b, &m, legals)
+				if p.Name == "p" && ((p.Color == 1 && capture.Y == 8) || (p.Color == -1 && capture.Y == 1)) {
+					for _, promotion := range [4]string{"q", "r", "n", "b"} {
+						move := m.CopyMove()
+						move.Promotion = promotion
+						if checkcheck {
+							legals = appendIfNotCheck(b, &m, legals)
+						} else {
+							legals = append(legals, &m)
+						}
+					}
 				} else {
-					legals = append(legals, &m)
+					if checkcheck {
+						legals = appendIfNotCheck(b, &m, legals)
+					} else {
+						legals = append(legals, &m)
+					}
 				}
 			}
 		}

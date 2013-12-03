@@ -653,6 +653,40 @@ func TestMove(t *testing.T) {
 	if board.Board[0].Position.X != 0 || board.Board[0].Position.Y != 0 {
 		t.Errorf("After en passant, captured piece not taken off board. Position is %+v", board.Board[0].Position)
 	}
+	board = &Board{
+		Board: []*Piece{
+			&Piece{
+				Name: "p",
+				Position: Square{
+					X: 1,
+					Y: 7,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{0, 1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	m = &Move{
+		Piece: "p",
+		Begin: Square{
+			X: 1,
+			Y: 7,
+		},
+		End: Square{
+			X: 1,
+			Y: 8,
+		},
+		Promotion: "q",
+	}
+	if err := board.Move(m); err != nil {
+		t.Errorf("Promoting pawn raised error %s", err)
+	}
+	if piece := board.Board[0]; piece.Name != "q" || piece.Value != 9 {
+		t.Errorf("Pawn failed to promote properly, resulted in %+v", piece)
+	}
 }
 
 func TestLegalMoves(t *testing.T) {
@@ -862,6 +896,25 @@ func TestLegalMoves(t *testing.T) {
 	}
 	if numlegalmoves := len(board.Board[0].legalMoves(board, false)); numlegalmoves != 0 {
 		t.Error("Captured piece returns legal moves")
+	}
+	board = &Board{
+		Board: []*Piece{
+			&Piece{
+				Name: "p",
+				Position: Square{
+					X: 1,
+					Y: 7,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{0, 1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	if numlegalmoves := len(board.Board[0].legalMoves(board, false)); numlegalmoves == 1 {
+		t.Error("Only one legal move recognized for promoting pawn")
 	}
 }
 
