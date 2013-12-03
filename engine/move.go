@@ -117,6 +117,7 @@ func (b *Board) Move(m *Move) error {
 	return nil
 }
 
+// Changes a pawn at the back rank to a specified piece.
 func (b *Board) Promote(p string) error {
 	for i, piece := range b.Board {
 		if piece.Name == "p" && ((b.Turn == 1 && piece.Position.Y == 8) ||
