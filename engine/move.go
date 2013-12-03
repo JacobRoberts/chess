@@ -105,74 +105,26 @@ func (b *Board) Move(m *Move) error {
 	for i, _ := range b.Board {
 		b.Board[i].Can_en_passant = false
 	}
-	b.Lastmove = *m
 	if m.Piece == "p" {
 		if m.Begin.Y-m.End.Y == 2*-b.Board[pieceindex].Color {
 			b.Board[pieceindex].Can_en_passant = true
 		} else if (b.Turn == 1 && m.End.Y == 8) || (b.Turn == -1 && m.End.Y == 1) {
-			return errors.New("promotion")
-		}
-	}
-	b.Turn *= -1
-	return nil
-}
-
-// Changes a pawn at the back rank to a specified piece.
-func (b *Board) Promote(p string) error {
-	for i, piece := range b.Board {
-		if piece.Name == "p" && ((b.Turn == 1 && piece.Position.Y == 8) ||
-			(b.Turn == -1 && piece.Position.Y == 1)) {
-
-			b.Board[i].Name = p
-			if p == "n" {
-				b.Board[i].Directions = [][2]int{
-					{1, 2},
-					{-1, 2},
-					{1, -2},
-					{-1, -2},
-					{2, 1},
-					{-2, 1},
-					{2, -1},
-					{-2, -1},
-				}
-				b.Board[i].Value = 3
-			} else if p == "b" {
-				b.Board[i].Directions = [][2]int{
-					{1, 1},
-					{1, -1},
-					{-1, 1},
-					{-1, -1},
-				}
-				b.Board[i].Value = 3
-				b.Board[i].Infinite_direction = true
-			} else if p == "r" {
-				b.Board[i].Directions = [][2]int{
-					{1, 0},
-					{-1, 0},
-					{0, 1},
-					{0, -1},
-				}
-				b.Board[i].Value = 5
-				b.Board[i].Infinite_direction = true
-			} else if p == "q" {
-				b.Board[i].Directions = [][2]int{
-					{1, 1},
-					{1, 0},
-					{1, -1},
-					{0, 1},
-					{0, -1},
-					{-1, 1},
-					{-1, 0},
-					{-1, -1},
-				}
-				b.Board[i].Value = 9
-				b.Board[i].Infinite_direction = true
-			} else {
-				return errors.New("func Promote: promoting to illegal piece")
+			b.Board[pieceindex].Directions = [][2]int{
+				{1, 1},
+				{1, 0},
+				{1, -1},
+				{0, 1},
+				{0, -1},
+				{-1, 1},
+				{-1, 0},
+				{-1, -1},
 			}
-			break
+			b.Board[pieceindex].Value = 9
+			b.Board[pieceindex].Infinite_direction = true
 		}
 	}
+	b.Lastmove = *m
+	b.Turn *= -1
 	return nil
 }
 
