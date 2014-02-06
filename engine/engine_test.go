@@ -316,7 +316,7 @@ func TestIsCheck(t *testing.T) {
 	}
 }
 
-func TestMoveIsNotCheck(t *testing.T) {
+func TestAppendIfNotCheck(t *testing.T) {
 	board := &Board{
 		Board: []*Piece{
 			&Piece{
@@ -374,6 +374,7 @@ func TestMoveIsNotCheck(t *testing.T) {
 		},
 		Turn: 1,
 	}
+	legalmoves := make([]*Move, 0)
 	checkmove := &Move{
 		Piece: "b",
 		Begin: Square{
@@ -385,8 +386,9 @@ func TestMoveIsNotCheck(t *testing.T) {
 			X: 3,
 		},
 	}
-	if ok := moveIsNotCheck(board, checkmove); ok {
-		t.Errorf("Did not recognize check, expected false got %t", ok)
+	legalmoves = appendIfNotCheck(board, checkmove, legalmoves)
+	if len(legalmoves) != 0 {
+		t.Error("Move that placed user in check added to slice")
 	}
 	okmove := &Move{
 		Piece: "b",
@@ -399,8 +401,9 @@ func TestMoveIsNotCheck(t *testing.T) {
 			X: 3,
 		},
 	}
-	if ok := moveIsNotCheck(board, okmove); !ok {
-		t.Error("False positive on non-checking move, expected true got %t", ok)
+	legalmoves = appendIfNotCheck(board, okmove, legalmoves)
+	if len(legalmoves) != 1 {
+		t.Error("Move that did not place user in check not added to slice")
 	}
 	capturemove := &Move{
 		Piece: "b",
@@ -413,8 +416,9 @@ func TestMoveIsNotCheck(t *testing.T) {
 			X: 4,
 		},
 	}
-	if ok := moveIsNotCheck(board, capturemove); !ok {
-		t.Error("Capturing pinning piece with pinned piece places user in check, expected true got %t", ok)
+	legalmoves = appendIfNotCheck(board, capturemove, legalmoves)
+	if len(legalmoves) != 2 {
+		t.Error("Capturing pinning piece with pinned piece places user in check")
 	}
 	board = &Board{
 		Board: []*Piece{
@@ -480,11 +484,10 @@ func TestMoveIsNotCheck(t *testing.T) {
 			X: 8,
 		},
 	}
-	if ok := moveIsNotCheck(board, m); !ok {
-		t.Error("Capturing the attacking piece still places user in check, expected true got %t", ok)
-	}
-	if board.Board[2].Position.X != 7 || board.Board[2].Position.Y != 2 {
-		t.Errorf("Function modified board, bishop was on {X: 7, Y: 2}, now on %+v", board.Board[2].Position)
+	legalmoves = make([]*Move, 0)
+	legalmoves = appendIfNotCheck(board, m, legalmoves)
+	if len(legalmoves) == 0 {
+		t.Error("Capturing the attacking piece still places user in check")
 	}
 }
 

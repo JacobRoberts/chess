@@ -18,7 +18,7 @@ type Piece struct {
 
 // Used by legalMoves function.
 // Appends a move to a slice if the move doesn't place the mover in check.
-func moveIsNotCheck(b *Board, m *Move) bool {
+func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
 	var pieceindex int
 	var capture bool
 	var capturedpieceposition Square
@@ -40,19 +40,18 @@ func moveIsNotCheck(b *Board, m *Move) bool {
 		}
 	}
 	if !b.IsCheck(b.Turn) {
-		return true
+		s = append(s, m)
 	}
 	b.Board[pieceindex].Position = m.Begin
 	if capture {
 		b.Board[capturedpieceindex].Position = capturedpieceposition
 	}
-	return false
+	return s
 }
 
 // Returns all legal moves for a given piece.
 // checkcheck is true when:
-// 	moves that would place the player in check are not returned.
-// 	(when you want to see if a pinned piece is placing a king in check, set to false)
+//     moves that would place the player in check are not returned.
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 	/*
 		for readability, this should be towards the end of the file
@@ -61,7 +60,6 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 			castling
 	*/
 	legals := make([]*Move, 0)
-	var oktoappend bool
 	if p.Position.X == 0 && p.Position.Y == 0 {
 		return legals
 	}
@@ -75,33 +73,27 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				if b.occupied(&s) == -2 || b.occupied(&s) == p.Color {
 					break
 				} else if b.occupied(&s) == p.Color*-1 {
-					m := &Move{
+					m := Move{
 						Begin: p.Position,
 						End:   s,
 						Piece: p.Name,
 					}
 					if checkcheck {
-						oktoappend = moveIsNotCheck(b, m)
+						legals = appendIfNotCheck(b, &m, legals)
 					} else {
-						oktoappend = true
-					}
-					if oktoappend {
-						legals = append(legals, m)
+						legals = append(legals, &m)
 					}
 					break
 				} else {
-					m := &Move{
+					m := Move{
 						Begin: p.Position,
 						End:   s,
 						Piece: p.Name,
 					}
 					if checkcheck {
-						oktoappend = moveIsNotCheck(b, m)
+						legals = appendIfNotCheck(b, &m, legals)
 					} else {
-						oktoappend = true
-					}
-					if oktoappend {
-						legals = append(legals, m)
+						legals = append(legals, &m)
 					}
 				}
 			}
@@ -113,7 +105,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				Y: p.Position.Y + direction[1],
 			}
 			if b.occupied(&s) == 0 || (b.occupied(&s) == p.Color*-1 && p.Name != "p") {
-				m := &Move{
+				m := Move{
 					Begin: p.Position,
 					End:   s,
 					Piece: p.Name,
@@ -123,22 +115,16 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 						move := m.CopyMove()
 						move.Promotion = promotion
 						if checkcheck {
-							oktoappend = moveIsNotCheck(b, move)
+							legals = appendIfNotCheck(b, &m, legals)
 						} else {
-							oktoappend = true
-						}
-						if oktoappend {
-							legals = append(legals, move)
+							legals = append(legals, &m)
 						}
 					}
 				} else {
 					if checkcheck {
-						oktoappend = moveIsNotCheck(b, m)
+						legals = appendIfNotCheck(b, &m, legals)
 					} else {
-						oktoappend = true
-					}
-					if oktoappend {
-						legals = append(legals, m)
+						legals = append(legals, &m)
 					}
 				}
 			}
@@ -152,7 +138,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				Y: p.Position.Y + val[0]*p.Color,
 			}
 			if b.occupied(&capture) == p.Color*-1 {
-				m := &Move{
+				m := Move{
 					Begin: p.Position,
 					End:   capture,
 					Piece: p.Name,
@@ -162,22 +148,16 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 						move := m.CopyMove()
 						move.Promotion = promotion
 						if checkcheck {
-							oktoappend = moveIsNotCheck(b, move)
+							legals = appendIfNotCheck(b, &m, legals)
 						} else {
-							oktoappend = true
-						}
-						if oktoappend {
-							legals = append(legals, move)
+							legals = append(legals, &m)
 						}
 					}
 				} else {
 					if checkcheck {
-						oktoappend = moveIsNotCheck(b, m)
+						legals = appendIfNotCheck(b, &m, legals)
 					} else {
-						oktoappend = true
-					}
-					if oktoappend {
-						legals = append(legals, m)
+						legals = append(legals, &m)
 					}
 				}
 			}
@@ -188,18 +168,15 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				Y: p.Position.Y + 2*p.Color,
 			}
 			if b.occupied(&s) == 0 {
-				m := &Move{
+				m := Move{
 					Begin: p.Position,
 					End:   s,
 					Piece: p.Name,
 				}
 				if checkcheck {
-					oktoappend = moveIsNotCheck(b, m)
+					legals = appendIfNotCheck(b, &m, legals)
 				} else {
-					oktoappend = true
-				}
-				if oktoappend {
-					legals = append(legals, m)
+					legals = append(legals, &m)
 				}
 			}
 		} else {
@@ -216,18 +193,15 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 								X: p.Position.X + val[0],
 								Y: p.Position.Y + p.Color,
 							}
-							m := &Move{
+							m := Move{
 								Begin: p.Position,
 								End:   capturesquare,
 								Piece: p.Name,
 							}
 							if checkcheck {
-								oktoappend = moveIsNotCheck(b, m)
+								legals = appendIfNotCheck(b, &m, legals)
 							} else {
-								oktoappend = true
-							}
-							if oktoappend {
-								legals = append(legals, m)
+								legals = append(legals, &m)
 							}
 						}
 					}
