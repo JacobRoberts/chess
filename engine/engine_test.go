@@ -10,7 +10,6 @@ import (
 		IsCheck
 		Move
 		legalMoves
-		appendIfNotCheck
 		castleHander
 		IsOver
 		CopyBoard
@@ -313,7 +312,7 @@ func TestIsCheck(t *testing.T) {
 	}
 }
 
-func TestAppendIfNotCheck(t *testing.T) {
+func TestMoveIsNotCheck(t *testing.T) {
 	board := &Board{
 		Board: []*Piece{
 			&Piece{
@@ -371,26 +370,47 @@ func TestAppendIfNotCheck(t *testing.T) {
 		},
 		Turn: 1,
 	}
-	checksquare := &Square{
-		Y: 1,
-		X: 3,
+	checkmove := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 1,
+			X: 3,
+		},
 	}
-	if !moveIsNotCheck(board, board.Board[0], checksquare) {
-		t.Error("Did not recognize check")
+	if ok := moveIsNotCheck(board, checkmove); ok {
+		t.Errorf("Did not recognize check, expected false got %t", ok)
 	}
-	oksquare := &Square{
-		Y: 3,
-		X: 3,
+	okmove := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 3,
+			X: 3,
+		},
 	}
-	if moveIsNotCheck(board, board.Board[0], oksquare) {
-		t.Error("False positive on non-checking move")
+	if ok := moveIsNotCheck(board, okmove); !ok {
+		t.Error("False positive on non-checking move, expected true got %t", ok)
 	}
-	capturesquare := &Square{
-		Y: 4,
-		X: 4,
+	capturemove := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 2,
+		},
+		End: Square{
+			Y: 4,
+			X: 4,
+		},
 	}
-	if moveIsNotCheck(board, board.Board[0], capturesquare) {
-		t.Error("Capturing pinning piece with pinned piece places user in check")
+	if ok := moveIsNotCheck(board, capturemove); !ok {
+		t.Error("Capturing pinning piece with pinned piece places user in check, expected true got %t", ok)
 	}
 	board = &Board{
 		Board: []*Piece{
@@ -445,12 +465,19 @@ func TestAppendIfNotCheck(t *testing.T) {
 		},
 		Turn: 1,
 	}
-	s := &Square{
-		Y: 1,
-		X: 8,
+	m := &Move{
+		Piece: "b",
+		Begin: Square{
+			Y: 2,
+			X: 7,
+		},
+		End: Square{
+			Y: 1,
+			X: 8,
+		},
 	}
-	if moveIsNotCheck(board, board.Board[2], s) {
-		t.Error("Capturing the attacking piece still places user in check")
+	if ok := moveIsNotCheck(board, m); !ok {
+		t.Error("Capturing the attacking piece still places user in check, expected true got %t", ok)
 	}
 }
 
