@@ -3,9 +3,9 @@ package engine
 // name, position, color, and piece-specific flags
 type Piece struct {
 	Position   Square
-	Color      int    // 1 : white , -1 : black
-	Name       string // p, n, b, r, q, k
-	Can_castle bool   // rooks and kings. default true, set to false when piece makes a non-castle move
+	Color      int  // 1 : white , -1 : black
+	Name       byte // p, n, b, r, q, k
+	Can_castle bool // rooks and kings. default true, set to false when piece makes a non-castle move
 
 	Can_en_passant  bool // only applicable
 	Can_double_move bool // for pawns
@@ -51,7 +51,8 @@ func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
 
 // Returns all legal moves for a given piece.
 // checkcheck is true when:
-//     moves that would place the player in check are not returned.
+// 	moves that would place the player in check are not returned.
+//	eg if a pinned piece is giving check
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 	/*
 		for readability, this should be towards the end of the file
@@ -104,14 +105,14 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				X: p.Position.X + direction[0],
 				Y: p.Position.Y + direction[1],
 			}
-			if b.occupied(&s) == 0 || (b.occupied(&s) == p.Color*-1 && p.Name != "p") {
+			if b.occupied(&s) == 0 || (b.occupied(&s) == p.Color*-1 && p.Name != 'p') {
 				m := Move{
 					Begin: p.Position,
 					End:   s,
 					Piece: p.Name,
 				}
-				if p.Name == "p" && ((p.Color == 1 && s.Y == 8) || (p.Color == -1 && s.Y == 1)) {
-					for _, promotion := range [4]string{"q", "r", "n", "b"} {
+				if p.Name == 'p' && ((p.Color == 1 && s.Y == 8) || (p.Color == -1 && s.Y == 1)) {
+					for _, promotion := range [4]byte{'q', 'r', 'n', 'b'} {
 						move := m.CopyMove()
 						move.Promotion = promotion
 						if checkcheck {
@@ -130,7 +131,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 			}
 		}
 	}
-	if p.Name == "p" {
+	if p.Name == 'p' {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
 			capture := Square{
@@ -143,8 +144,8 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 					End:   capture,
 					Piece: p.Name,
 				}
-				if p.Name == "p" && ((p.Color == 1 && capture.Y == 8) || (p.Color == -1 && capture.Y == 1)) {
-					for _, promotion := range [4]string{"q", "r", "n", "b"} {
+				if p.Name == 'p' && ((p.Color == 1 && capture.Y == 8) || (p.Color == -1 && capture.Y == 1)) {
+					for _, promotion := range [4]byte{'q', 'b', 'n', 'r'} {
 						move := m.CopyMove()
 						move.Promotion = promotion
 						if checkcheck {

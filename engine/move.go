@@ -6,10 +6,10 @@ import (
 
 // piece name + beginning and ending squares
 type Move struct {
-	Piece      string // Piece.Name
+	Piece      byte // Piece.Name
 	Begin, End Square
 	Score      float64
-	Promotion  string
+	Promotion  byte
 }
 
 func maxInt(x, y int) int {
@@ -41,7 +41,7 @@ func (m *Move) CopyMove() *Move {
 // Changes the turn of the board once move is successfully completed.
 func (b *Board) Move(m *Move) error {
 	//for readability, this should be towards the end of the file
-	if m.Piece == "k" && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
+	if m.Piece == 'k' && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
 		err := b.castleHandler(m)
 		if err == nil {
 			b.Turn *= -1
@@ -83,7 +83,7 @@ func (b *Board) Move(m *Move) error {
 	}
 
 	// en passant
-	if !capture && m.Piece == "p" && (m.Begin.X-m.End.X == 1 || m.End.X-m.Begin.X == 1) {
+	if !capture && m.Piece == 'p' && (m.Begin.X-m.End.X == 1 || m.End.X-m.Begin.X == 1) {
 		capture = true
 		for i, p := range b.Board {
 			if p.Position.X == m.End.X && p.Position.Y == m.Begin.Y {
@@ -100,17 +100,17 @@ func (b *Board) Move(m *Move) error {
 		}
 	}
 	b.Board[pieceindex].Can_double_move = false
-	if m.Piece == "k" || m.Piece == "r" {
+	if m.Piece == 'k' || m.Piece == 'r' {
 		b.Board[pieceindex].Can_castle = false
 	}
 	for i, _ := range b.Board {
 		b.Board[i].Can_en_passant = false
 	}
-	if m.Piece == "p" {
+	if m.Piece == 'p' {
 		if m.Begin.Y-m.End.Y == 2*-b.Board[pieceindex].Color {
 			b.Board[pieceindex].Can_en_passant = true
 		} else if (b.Turn == 1 && m.End.Y == 8) || (b.Turn == -1 && m.End.Y == 1) {
-			if promotion := m.Promotion; promotion == "q" {
+			if promotion := m.Promotion; promotion == 'q' {
 				b.Board[pieceindex].Name = promotion
 				b.Board[pieceindex].Directions = [][2]int{
 					{1, 1},
@@ -124,7 +124,7 @@ func (b *Board) Move(m *Move) error {
 				}
 				b.Board[pieceindex].Value = 9
 				b.Board[pieceindex].Infinite_direction = true
-			} else if promotion == "r" {
+			} else if promotion == 'q' {
 				b.Board[pieceindex].Name = promotion
 				b.Board[pieceindex].Directions = [][2]int{
 					{1, 0},
@@ -134,7 +134,7 @@ func (b *Board) Move(m *Move) error {
 				}
 				b.Board[pieceindex].Value = 5
 				b.Board[pieceindex].Infinite_direction = true
-			} else if promotion == "n" {
+			} else if promotion == 'n' {
 				b.Board[pieceindex].Name = promotion
 				b.Board[pieceindex].Directions = [][2]int{
 					{1, 2},
@@ -147,7 +147,7 @@ func (b *Board) Move(m *Move) error {
 					{-2, -1},
 				}
 				b.Board[pieceindex].Value = 3
-			} else if promotion == "b" {
+			} else if promotion == 'b' {
 				b.Board[pieceindex].Name = promotion
 				b.Board[pieceindex].Directions = [][2]int{
 					{1, 1},
@@ -176,7 +176,7 @@ func (b *Board) castleHandler(m *Move) error {
 	for i, p := range b.Board {
 		if m.Begin == p.Position && m.Piece == p.Name && b.Turn == p.Color {
 			kingindex = i
-		} else if p.Name == "r" && ((m.End.X == 7 && p.Position.X == 8) || (m.End.X == 3 && p.Position.X == 1)) {
+		} else if p.Name == 'r' && ((m.End.X == 7 && p.Position.X == 8) || (m.End.X == 3 && p.Position.X == 1)) {
 			if b.Turn == 1 && p.Position.Y == 1 {
 				rookfound = true
 				rookindex = i

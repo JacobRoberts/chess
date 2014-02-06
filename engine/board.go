@@ -17,7 +17,7 @@ type Board struct {
 func (b *Board) IsCheck(color int) bool {
 	var kingsquare Square
 	for _, piece := range b.Board {
-		if piece.Name == "k" && piece.Color == color {
+		if piece.Name == 'k' && piece.Color == color {
 			kingsquare = piece.Position
 			break
 		}
@@ -78,7 +78,7 @@ func (b *Board) NewGen() []*Board {
 func (b *Board) IsOver() int {
 	var kingindex int
 	for i, p := range b.Board {
-		if p.Name == "k" && p.Color == b.Turn {
+		if p.Name == 'k' && p.Color == b.Turn {
 			kingindex = i
 			break
 		}
@@ -96,7 +96,7 @@ func (b *Board) IsOver() int {
 
 // Prints the board to the console in a human-readable format.
 func (b *Board) PrintBoard() {
-	boardarr := [8][8]string{}
+	boardarr := [8][8]byte{}
 	for _, piece := range b.Board {
 		if piece.Position.X != 0 {
 			boardarr[piece.Position.Y-1][piece.Position.X-1] = piece.Name
@@ -104,7 +104,7 @@ func (b *Board) PrintBoard() {
 	}
 	for y := 7; y >= 0; y-- {
 		for x := 0; x < 8; x++ {
-			if boardarr[y][x] == "" {
+			if piece := boardarr[y][x]; piece != 'q' && piece != 'k' && piece != 'b' && piece != 'n' || piece != 'p' && piece != 'r' {
 				fmt.Printf("  ")
 			} else {
 				fmt.Printf("%s ", boardarr[y][x])
@@ -128,7 +128,7 @@ func (b *Board) SetUpPieces() {
 		}
 		for file := 1; file <= 8; file++ {
 			piece := Piece{
-				Name: "p",
+				Name: 'p',
 				Position: Square{
 					X: file,
 					Y: rank,
@@ -158,7 +158,7 @@ func (b *Board) SetUpPieces() {
 		}
 		for _, file := range rookfiles {
 			piece := Piece{
-				Name: "r",
+				Name: 'r',
 				Position: Square{
 					X: file,
 					Y: rank,
@@ -178,7 +178,7 @@ func (b *Board) SetUpPieces() {
 		}
 		for _, file := range knightfiles {
 			piece := Piece{
-				Name: "n",
+				Name: 'n',
 				Position: Square{
 					X: file,
 					Y: rank,
@@ -200,7 +200,7 @@ func (b *Board) SetUpPieces() {
 		}
 		for _, file := range bishopfiles {
 			piece := Piece{
-				Name: "b",
+				Name: 'b',
 				Position: Square{
 					X: file,
 					Y: rank,
@@ -218,7 +218,7 @@ func (b *Board) SetUpPieces() {
 			b.Board = append(b.Board, &piece)
 		}
 		queen := Piece{
-			Name: "q",
+			Name: 'q',
 			Position: Square{
 				X: queenfile,
 				Y: rank,
@@ -239,7 +239,7 @@ func (b *Board) SetUpPieces() {
 		}
 		b.Board = append(b.Board, &queen)
 		king := Piece{
-			Name: "k",
+			Name: 'k',
 			Position: Square{
 				X: kingfile,
 				Y: rank,
