@@ -18,11 +18,16 @@ type Piece struct {
 
 // Used by legalMoves function.
 // Appends a move to a slice if the move doesn't place the mover in check.
-func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
+func moveIsNotCheck(b *Board, piece *Piece, sq *Square) bool {
 	var pieceindex int
 	var capture bool
 	var capturedpieceposition Square
 	var capturedpieceindex int
+	m := &Move{
+		Piece: piece.Name,
+		Begin: piece.Position,
+		End:   *sq,
+	}
 	for i, p := range b.Board {
 		if p.Position == m.Begin && p.Name == m.Piece && p.Color == b.Turn {
 			pieceindex = i
@@ -40,174 +45,205 @@ func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
 		}
 	}
 	if !b.IsCheck(b.Turn) {
-		s = append(s, m)
+		return true
 	}
 	b.Board[pieceindex].Position = m.Begin
 	if capture {
 		b.Board[capturedpieceindex].Position = capturedpieceposition
 	}
-	return s
+	return false
 }
 
-// Returns all legal moves for a given piece.
-// checkcheck is true when:
-//     moves that would place the player in check are not returned.
-func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
-	/*
-		for readability, this should be towards the end of the file
-
-		TODO:
-			castling
-	*/
-	legals := make([]*Move, 0)
+// Returns all squares that a piece is attacking.
+func (p *Piece) Attacking(b *Board, checkcheck bool) []*Square {
+	attacking := make([]*Square, 0)
+	var oktoappend bool
 	if p.Position.X == 0 && p.Position.Y == 0 {
-		return legals
+		return attacking
 	}
 	if p.Infinite_direction {
 		for _, direction := range p.Directions {
 			for i := 1; i < 8; i++ {
-				s := Square{
+				s := &Square{
 					X: p.Position.X + direction[0]*i,
 					Y: p.Position.Y + direction[1]*i,
 				}
-				if b.occupied(&s) == -2 || b.occupied(&s) == p.Color {
+				if b.occupied(s) == -2 {
 					break
-				} else if b.occupied(&s) == p.Color*-1 {
-					m := Move{
-						Begin: p.Position,
-						End:   s,
-						Piece: p.Name,
-					}
+				} else if b.occupied(s) != 0 {
 					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
+						oktoappend = moveIsNotCheck(b, p, s)
 					} else {
-						legals = append(legals, &m)
+						oktoappend = true
+					}
+					if oktoappend {
+						attacking = append(attacking, s)
 					}
 					break
 				} else {
-					m := Move{
-						Begin: p.Position,
-						End:   s,
-						Piece: p.Name,
-					}
 					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
+						oktoappend = moveIsNotCheck(b, p, s)
 					} else {
-						legals = append(legals, &m)
+						oktoappend = true
+					}
+					if oktoappend {
+						attacking = append(attacking, s)
 					}
 				}
 			}
 		}
 	} else {
 		for _, direction := range p.Directions {
-			s := Square{
+			s := &Square{
 				X: p.Position.X + direction[0],
 				Y: p.Position.Y + direction[1],
 			}
-			if b.occupied(&s) == 0 || (b.occupied(&s) == p.Color*-1 && p.Name != "p") {
-				m := Move{
-					Begin: p.Position,
-					End:   s,
-					Piece: p.Name,
-				}
-				if p.Name == "p" && ((p.Color == 1 && s.Y == 8) || (p.Color == -1 && s.Y == 1)) {
-					for _, promotion := range [4]string{"q", "r", "n", "b"} {
-						move := m.CopyMove()
-						move.Promotion = promotion
-						if checkcheck {
-							legals = appendIfNotCheck(b, &m, legals)
-						} else {
-							legals = append(legals, &m)
-						}
-					}
-				} else {
-					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
-					} else {
-						legals = append(legals, &m)
-					}
-				}
+			if checkcheck {
+				oktoappend = moveIsNotCheck(b, p, s)
+			} else {
+				oktoappend = true
+			}
+			if oktoappend {
+				attacking = append(attacking, s)
 			}
 		}
 	}
 	if p.Name == "p" {
 		captures := [2][2]int{{1, -1}, {1, 1}}
 		for _, val := range captures {
-			capture := Square{
+			capture := &Square{
 				X: p.Position.X + val[1],
 				Y: p.Position.Y + val[0]*p.Color,
 			}
-			if b.occupied(&capture) == p.Color*-1 {
-				m := Move{
-					Begin: p.Position,
-					End:   capture,
-					Piece: p.Name,
-				}
-				if p.Name == "p" && ((p.Color == 1 && capture.Y == 8) || (p.Color == -1 && capture.Y == 1)) {
-					for _, promotion := range [4]string{"q", "r", "n", "b"} {
-						move := m.CopyMove()
-						move.Promotion = promotion
-						if checkcheck {
-							legals = appendIfNotCheck(b, &m, legals)
-						} else {
-							legals = append(legals, &m)
+			if checkcheck {
+				oktoappend = moveIsNotCheck(b, p, capture)
+			} else {
+				oktoappend = true
+			}
+			if oktoappend {
+				attacking = append(attacking, capture)
+			}
+		}
+		en_passants := [2][2]int{{1, 0}, {-1, 0}}
+		for _, val := range en_passants {
+			s := &Square{
+				X: p.Position.X + val[0],
+				Y: p.Position.Y,
+			}
+			if b.occupied(s) == p.Color*-1 {
+				for _, piece := range b.Board {
+					if piece.Position.X == s.X && piece.Position.Y == s.Y && piece.Can_en_passant == true {
+						capturesquare := &Square{
+							X: p.Position.X + val[0],
+							Y: p.Position.Y + p.Color,
 						}
-					}
-				} else {
-					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
-					} else {
-						legals = append(legals, &m)
+						if checkcheck {
+							oktoappend = moveIsNotCheck(b, p, capturesquare)
+						} else {
+							oktoappend = true
+						}
+						if oktoappend {
+							attacking = append(attacking, capturesquare)
+						}
 					}
 				}
 			}
 		}
-		if p.Can_double_move {
-			s := Square{
-				X: p.Position.X,
-				Y: p.Position.Y + 2*p.Color,
+	}
+	return attacking
+}
+
+// Returns all legal moves for a given piece.
+// checkcheck is true when:
+// 	moves that would place the player in check are not returned.
+// 	(when you want to see if a pinned piece is placing a king in check, set to false)
+func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
+	// TODO: castling
+	legals := make([]*Move, 0)
+	attacking := p.Attacking(b, checkcheck)
+	failedsquares := make([]int, 0)
+	for _, piece := range b.Board {
+		if piece.Color == p.Color {
+			for i, square := range attacking {
+				if piece.Position.X == square.X && piece.Position.Y == square.Y {
+					failedsquares = append(failedsquares, i)
+					break
+				}
 			}
-			if b.occupied(&s) == 0 {
-				m := Move{
-					Begin: p.Position,
-					End:   s,
-					Piece: p.Name,
+		}
+	}
+	nofailedsquares := (len(failedsquares) > 0)
+	for i, square := range attacking {
+		if !nofailedsquares && i == failedsquares[0] {
+			failedsquares = failedsquares[1:]
+			nofailedsquares = (len(failedsquares) > 0)
+		} else {
+			m := &Move{
+				Piece: p.Name,
+				Begin: p.Position,
+				End:   *square,
+			}
+			legals = append(legals, m)
+		}
+	}
+	if p.Name == "p" {
+		var oktoappend bool
+		s := &Square{
+			X: p.Position.X,
+			Y: p.Position.Y + (p.Directions[0][1] * p.Color),
+		}
+		if b.occupied(s) == 0 {
+			m := &Move{
+				Piece: p.Name,
+				Begin: p.Position,
+				End:   *s,
+			}
+			if (p.Color == 1 && s.Y == 8) || (p.Color == -1 && s.Y == 1) {
+				for _, promotion := range [4]string{"q", "r", "n", "b"} {
+					move := m.CopyMove()
+					move.Promotion = promotion
+					if checkcheck {
+						oktoappend = moveIsNotCheck(b, p, s)
+					} else {
+						oktoappend = true
+					}
+					if oktoappend {
+						attacking = append(attacking, s)
+					}
+				}
+			} else {
+				if checkcheck {
+					oktoappend = moveIsNotCheck(b, p, s)
+				} else {
+					oktoappend = true
+				}
+				if oktoappend {
+					attacking = append(attacking, s)
+				}
+			}
+			if p.Can_double_move {
+				s = &Square{
+					X: p.Position.X,
+					Y: p.Position.Y + (p.Directions[0][1] * p.Color * 2),
+				}
+				if b.occupied(s) == 0 {
+					m = &Move{
+						Piece: p.Name,
+						Begin: p.Position,
+						End:   *s,
+					}
 				}
 				if checkcheck {
-					legals = appendIfNotCheck(b, &m, legals)
+					oktoappend = moveIsNotCheck(b, p, s)
 				} else {
-					legals = append(legals, &m)
+					oktoappend = true
 				}
-			}
-		} else {
-			en_passants := [2][2]int{{1, 0}, {-1, 0}}
-			for _, val := range en_passants {
-				s := Square{
-					X: p.Position.X + val[0],
-					Y: p.Position.Y,
-				}
-				if b.occupied(&s) == p.Color*-1 {
-					for _, piece := range b.Board {
-						if piece.Position == s && piece.Can_en_passant == true {
-							capturesquare := Square{
-								X: p.Position.X + val[0],
-								Y: p.Position.Y + p.Color,
-							}
-							m := Move{
-								Begin: p.Position,
-								End:   capturesquare,
-								Piece: p.Name,
-							}
-							if checkcheck {
-								legals = appendIfNotCheck(b, &m, legals)
-							} else {
-								legals = append(legals, &m)
-							}
-						}
-					}
+				if oktoappend {
+					attacking = append(attacking, s)
 				}
 			}
 		}
+
 	}
 	return legals
 }
