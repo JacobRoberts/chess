@@ -15,6 +15,7 @@ import (
 		CopyBoard
 		CopyMove
 		AllLegalMoves
+		moveIsNotCheck
 */
 
 func TestAllLegalMoves(t *testing.T) {
@@ -72,7 +73,7 @@ func TestAllLegalMoves(t *testing.T) {
 	}
 	moves := board.AllLegalMoves()
 	if moveslen := len(moves); moveslen != 4 {
-		t.Errorf("Too many moves, opposing color's moves likely added. 4 moves expected, %d moves recieved", moveslen)
+		t.Errorf("Too many possible moves on the board. 4 moves expected, %d moves recieved", moveslen)
 	}
 	for i, m1 := range moves {
 		for j, m2 := range moves {
@@ -310,6 +311,9 @@ func TestIsCheck(t *testing.T) {
 	if check := board.IsCheck(-1); check == false {
 		t.Error("False negative when determining check")
 	}
+	if king := board.Board[0]; king.Position.X != 1 || king.Position.Y != 1 {
+		t.Errorf("isCheck modified board, king moves from {X: 1, Y:1} to %+v", king.Position)
+	}
 }
 
 func TestMoveIsNotCheck(t *testing.T) {
@@ -478,6 +482,9 @@ func TestMoveIsNotCheck(t *testing.T) {
 	}
 	if ok := moveIsNotCheck(board, m); !ok {
 		t.Error("Capturing the attacking piece still places user in check, expected true got %t", ok)
+	}
+	if board.Board[2].Position.X != 7 || board.Board[2].Position.Y != 2 {
+		t.Errorf("Function modified board, bishop was on {X: 7, Y: 2}, now on %+v", board.Board[2].Position)
 	}
 }
 
@@ -866,33 +873,6 @@ func TestLegalMoves(t *testing.T) {
 	board = &Board{
 		Board: []*Piece{
 			&Piece{
-				Name: "q",
-				Position: Square{
-					X: 0,
-					Y: 0,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 1},
-					{1, 0},
-					{1, -1},
-					{0, 1},
-					{0, -1},
-					{-1, 1},
-					{-1, 0},
-					{-1, -1},
-				},
-				Infinite_direction: true,
-			},
-		},
-		Turn: 1,
-	}
-	if numlegalmoves := len(board.Board[0].legalMoves(board, false)); numlegalmoves != 0 {
-		t.Error("Captured piece returns legal moves")
-	}
-	board = &Board{
-		Board: []*Piece{
-			&Piece{
 				Name: "p",
 				Position: Square{
 					X: 1,
@@ -908,6 +888,31 @@ func TestLegalMoves(t *testing.T) {
 	}
 	if numlegalmoves := len(board.Board[0].legalMoves(board, false)); numlegalmoves == 1 {
 		t.Error("Only one legal move recognized for promoting pawn")
+	}
+	board = &Board{
+		Board: []*Piece{
+			&Piece{
+				Name: "k",
+				Position: Square{
+					X: 1,
+					Y: 1,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+		},
+	}
+	if numlegalmoves := len(board.Board[0].legalMoves(board, true)); numlegalmoves != 3 {
+		t.Errorf("%d moves generated for king in corner", numlegalmoves)
 	}
 }
 
