@@ -19,6 +19,94 @@ import (
 		makeMoveTo
 */
 
+func TestAttacking(t *testing.T) {
+	board := &Board{
+		Board: []*Piece{
+			&Piece{
+				Name: 'k',
+				Position: Square{
+					X: 1,
+					Y: 1,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+			&Piece{
+				Name: 'r',
+				Position: Square{
+					X: 2,
+					Y: 2,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 0},
+					{-1, 0},
+					{0, 1},
+					{0, -1},
+				},
+				Infinite_direction: true,
+			},
+			&Piece{
+				Name: 'p',
+				Position: Square{
+					X: 2,
+					Y: 3,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{0, 1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	rook := board.Board[1]
+	s := &Square{
+		X: 4,
+		Y: 2,
+	}
+	if !rook.Attacking(s, board) {
+		t.Errorf("Rook not attacking on open line, should be attacking %+v from %+v", s, rook.Position)
+	}
+	s.X, s.Y = 2, 3
+	if !rook.Attacking(s, board) {
+		t.Errorf("Rook not attacking own piece, should be attacking %+v from %+v", s, rook.Position)
+	}
+	s.Y = 5
+	if rook.Attacking(s, board) {
+		t.Errorf("Rook attacking through own piece, should not be attacking %+v from %+v", s, rook.Position)
+	}
+	p := &Piece{
+		Name: 'b',
+		Position: Square{
+			X: 3,
+			Y: 3,
+		},
+		Color: -1,
+		Directions: [][2]int{
+			{1, 1},
+			{1, -1},
+			{-1, 1},
+			{-1, -1},
+		},
+		Infinite_direction: true,
+	}
+	board.Board = append(board.Board, p)
+	s.X, s.Y = 2, 4
+	if rook.Attacking(s, board) {
+		t.Errorf("False positive on pinned piece, should not be attacking %+v from %+v", s, rook.Position)
+	}
+}
+
 func TestMakeMoveTo(t *testing.T) {
 	board := &Board{
 		Board: []*Piece{

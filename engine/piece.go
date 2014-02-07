@@ -16,6 +16,9 @@ type Piece struct {
 	Value int // how many "points" a piece is worth
 }
 
+// Returns true if a piece p is attacking a square s.
+// "Attacking" means it could capture an opposing piece on that square;
+// A rook is attacking its own pawn next to it, but a pawn is not attacking a piece directly in front of it.
 func (p *Piece) Attacking(s *Square, b *Board) bool {
 	if p.Position.X == 0 || p.Position.Y == 0 {
 		return false
@@ -31,7 +34,37 @@ func (p *Piece) Attacking(s *Square, b *Board) bool {
 		return false
 	}
 	if p.Infinite_direction {
-
+		direction := [2]int{0, 0}
+		if s.X > p.Position.X {
+			direction[0] = 1
+		} else if s.X < p.Position.X {
+			direction[0] = -1
+		}
+		if s.Y > p.Position.Y {
+			direction[1] = 1
+		} else if s.Y < p.Position.Y {
+			direction[1] = -1
+		}
+		var directionfound bool
+		for _, d := range p.Directions {
+			if d[0] == direction[0] && d[1] == direction[1] {
+				directionfound = true
+				break
+			}
+		}
+		if !directionfound {
+			return false
+		}
+		for i := 1; i < 8; i++ {
+			x, y := p.Position.X+i*direction[0], p.Position.Y+i*direction[1]
+			if x == s.X && y == s.Y {
+				m := p.makeMoveTo(x, y)
+				return !moveIsCheck(b, m)
+			}
+			if b.occupied(&Square{X: x, Y: y}) != 0 {
+				return false
+			}
+		}
 	} else {
 		for _, direction := range p.Directions {
 			if s.X == p.Position.X+direction[0] && s.Y == p.Position.Y+direction[1] {
@@ -56,7 +89,7 @@ func moveIsCheck(b *Board, m *Move) bool {
 	for i, p := range b.Board {
 		if p.Position == m.Begin && p.Name == m.Piece && p.Color == b.Turn {
 			pieceindex = i
-		} else if p.Position == m.End && p.Color == b.Turn*-1 {
+		} else if p.Position == m.End {
 			capture = true
 			capturedpieceposition = p.Position
 			capturedpieceindex = i
