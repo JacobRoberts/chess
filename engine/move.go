@@ -26,6 +26,18 @@ func minInt(x, y int) int {
 	return x
 }
 
+func (p *Piece) makeMoveTo(x, y int) *Move {
+	m := &Move{
+		Piece: p.Name,
+		Begin: p.Position,
+		End: Square{
+			X: x,
+			Y: y,
+		},
+	}
+	return m
+}
+
 // Returns a pointer to a copy of a move.
 // Does not copy move's score.
 func (m *Move) CopyMove() *Move {
