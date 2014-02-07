@@ -16,7 +16,44 @@ import (
 		CopyMove
 		AllLegalMoves
 		moveIsNotCheck
+		makeMoveTo
 */
+
+func TestMakeMoveTo(t *testing.T) {
+	board := &Board{
+		Board: []*Piece{
+			&Piece{
+				Name: 'k',
+				Position: Square{
+					X: 1,
+					Y: 1,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
+		},
+		Turn: 1,
+	}
+	m := board.Board[0].makeMoveTo(2, 2)
+	if m.Piece != 'k' {
+		t.Error("Warped piece name from ", 'k', " to ", m.Piece)
+	}
+	if m.Begin != board.Board[0].Position {
+		t.Errorf("Piece originated at 1,1. Current location: %+v, move begin: %+v", board.Board[0].Position, m.Begin)
+	}
+	if m.End.X != 2 || m.End.Y != 2 {
+		t.Errorf("Incorrect ending square. Should be 2, 2, ended up at %+v", m.End)
+	}
+}
 
 func TestAllLegalMoves(t *testing.T) {
 	board := &Board{
@@ -320,21 +357,6 @@ func TestMoveIsCheck(t *testing.T) {
 	board := &Board{
 		Board: []*Piece{
 			&Piece{
-				Name: 'b',
-				Position: Square{
-					Y: 2,
-					X: 2,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 1},
-					{1, -1},
-					{-1, 1},
-					{-1, -1},
-				},
-				Infinite_direction: true,
-			},
-			&Piece{
 				Name: 'k',
 				Position: Square{
 					Y: 1,
@@ -351,6 +373,21 @@ func TestMoveIsCheck(t *testing.T) {
 					{-1, 0},
 					{-1, -1},
 				},
+			},
+			&Piece{
+				Name: 'b',
+				Position: Square{
+					Y: 2,
+					X: 2,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, -1},
+					{-1, 1},
+					{-1, -1},
+				},
+				Infinite_direction: true,
 			},
 			&Piece{
 				Name: 'q',
