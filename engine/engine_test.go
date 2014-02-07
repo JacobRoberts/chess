@@ -316,7 +316,7 @@ func TestIsCheck(t *testing.T) {
 	}
 }
 
-func TestAppendIfNotCheck(t *testing.T) {
+func TestMoveIsCheck(t *testing.T) {
 	board := &Board{
 		Board: []*Piece{
 			&Piece{
@@ -374,7 +374,6 @@ func TestAppendIfNotCheck(t *testing.T) {
 		},
 		Turn: 1,
 	}
-	legalmoves := make([]*Move, 0)
 	checkmove := &Move{
 		Piece: 'b',
 		Begin: Square{
@@ -386,9 +385,8 @@ func TestAppendIfNotCheck(t *testing.T) {
 			X: 3,
 		},
 	}
-	legalmoves = appendIfNotCheck(board, checkmove, legalmoves)
-	if len(legalmoves) != 0 {
-		t.Error("Move that placed user in check added to slice")
+	if check := moveIsCheck(board, checkmove); !check {
+		t.Error("Check not recognized")
 	}
 	okmove := &Move{
 		Piece: 'b',
@@ -401,9 +399,8 @@ func TestAppendIfNotCheck(t *testing.T) {
 			X: 3,
 		},
 	}
-	legalmoves = appendIfNotCheck(board, okmove, legalmoves)
-	if len(legalmoves) != 1 {
-		t.Error("Move that did not place user in check not added to slice")
+	if check := moveIsCheck(board, okmove); check {
+		t.Error("False positive with ok move")
 	}
 	capturemove := &Move{
 		Piece: 'b',
@@ -416,8 +413,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 			X: 4,
 		},
 	}
-	legalmoves = appendIfNotCheck(board, capturemove, legalmoves)
-	if len(legalmoves) != 2 {
+	if check := moveIsCheck(board, capturemove); check {
 		t.Error("Capturing pinning piece with pinned piece places user in check")
 	}
 	board = &Board{
@@ -484,9 +480,7 @@ func TestAppendIfNotCheck(t *testing.T) {
 			X: 8,
 		},
 	}
-	legalmoves = make([]*Move, 0)
-	legalmoves = appendIfNotCheck(board, m, legalmoves)
-	if len(legalmoves) == 0 {
+	if check := moveIsCheck(board, m); check {
 		t.Error("Capturing the attacking piece still places user in check")
 	}
 }

@@ -16,9 +16,16 @@ type Piece struct {
 	Value int // how many "points" a piece is worth
 }
 
+func (b *Board) Attacking(p *Piece, s *Square) bool {
+	if p.Position.X == 0 || p.Position.Y == 0 {
+		return false
+	}
+	return true
+}
+
 // Used by legalMoves function.
 // Appends a move to a slice if the move doesn't place the mover in check.
-func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
+func moveIsCheck(b *Board, m *Move) bool {
 	var pieceindex int
 	var capture bool
 	var capturedpieceposition Square
@@ -39,14 +46,15 @@ func appendIfNotCheck(b *Board, m *Move, s []*Move) []*Move {
 			Y: 0,
 		}
 	}
+	passes := true
 	if !b.IsCheck(b.Turn) {
-		s = append(s, m)
+		passes = false
 	}
 	b.Board[pieceindex].Position = m.Begin
 	if capture {
 		b.Board[capturedpieceindex].Position = capturedpieceposition
 	}
-	return s
+	return passes
 }
 
 // Returns all legal moves for a given piece.
@@ -80,7 +88,9 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 						Piece: p.Name,
 					}
 					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
+						if !moveIsCheck(b, &m) {
+							legals = append(legals, &m)
+						}
 					} else {
 						legals = append(legals, &m)
 					}
@@ -92,7 +102,9 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 						Piece: p.Name,
 					}
 					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
+						if !moveIsCheck(b, &m) {
+							legals = append(legals, &m)
+						}
 					} else {
 						legals = append(legals, &m)
 					}
@@ -116,14 +128,18 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 						move := m.CopyMove()
 						move.Promotion = promotion
 						if checkcheck {
-							legals = appendIfNotCheck(b, &m, legals)
+							if !moveIsCheck(b, &m) {
+								legals = append(legals, &m)
+							}
 						} else {
 							legals = append(legals, &m)
 						}
 					}
 				} else {
 					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
+						if !moveIsCheck(b, &m) {
+							legals = append(legals, &m)
+						}
 					} else {
 						legals = append(legals, &m)
 					}
@@ -149,14 +165,18 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 						move := m.CopyMove()
 						move.Promotion = promotion
 						if checkcheck {
-							legals = appendIfNotCheck(b, &m, legals)
+							if !moveIsCheck(b, &m) {
+								legals = append(legals, &m)
+							}
 						} else {
 							legals = append(legals, &m)
 						}
 					}
 				} else {
 					if checkcheck {
-						legals = appendIfNotCheck(b, &m, legals)
+						if !moveIsCheck(b, &m) {
+							legals = append(legals, &m)
+						}
 					} else {
 						legals = append(legals, &m)
 					}
@@ -175,7 +195,9 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 					Piece: p.Name,
 				}
 				if checkcheck {
-					legals = appendIfNotCheck(b, &m, legals)
+					if !moveIsCheck(b, &m) {
+						legals = append(legals, &m)
+					}
 				} else {
 					legals = append(legals, &m)
 				}
@@ -200,7 +222,9 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 								Piece: p.Name,
 							}
 							if checkcheck {
-								legals = appendIfNotCheck(b, &m, legals)
+								if !moveIsCheck(b, &m) {
+									legals = append(legals, &m)
+								}
 							} else {
 								legals = append(legals, &m)
 							}
