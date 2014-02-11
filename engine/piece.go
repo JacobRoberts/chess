@@ -27,8 +27,7 @@ func (p *Piece) Attacking(s *Square, b *Board) bool {
 		captures := [2][2]int{{1, 1 * p.Color}, {-1, 1 * p.Color}}
 		for _, capture := range captures {
 			if s.X == p.Position.X+capture[0] && s.Y == p.Position.Y+capture[1] {
-				m := p.makeMoveTo(p.Position.X+capture[0], p.Position.Y+capture[1])
-				return !moveIsCheck(b, m)
+				return true
 			}
 		}
 		return false
@@ -58,8 +57,7 @@ func (p *Piece) Attacking(s *Square, b *Board) bool {
 		for i := 1; i < 8; i++ {
 			x, y := p.Position.X+i*direction[0], p.Position.Y+i*direction[1]
 			if x == s.X && y == s.Y {
-				m := p.makeMoveTo(x, y)
-				return !moveIsCheck(b, m)
+				return true
 			}
 			if b.occupied(&Square{X: x, Y: y}) != 0 {
 				return false
@@ -68,12 +66,7 @@ func (p *Piece) Attacking(s *Square, b *Board) bool {
 	} else {
 		for _, direction := range p.Directions {
 			if s.X == p.Position.X+direction[0] && s.Y == p.Position.Y+direction[1] {
-				m := p.makeMoveTo(p.Position.X+direction[0], p.Position.Y+direction[1])
-				if p.Name == 'k' {
-					return true
-				} else {
-					return !moveIsCheck(b, m)
-				}
+				return true
 			}
 		}
 	}

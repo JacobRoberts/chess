@@ -85,26 +85,6 @@ func TestAttacking(t *testing.T) {
 	if rook.Attacking(s, board) {
 		t.Errorf("Rook attacking through own piece, should not be attacking %+v from %+v", s, rook.Position)
 	}
-	p := &Piece{
-		Name: 'b',
-		Position: Square{
-			X: 3,
-			Y: 3,
-		},
-		Color: -1,
-		Directions: [][2]int{
-			{1, 1},
-			{1, -1},
-			{-1, 1},
-			{-1, -1},
-		},
-		Infinite_direction: true,
-	}
-	board.Board = append(board.Board, p)
-	s.X, s.Y = 2, 4
-	if rook.Attacking(s, board) {
-		t.Errorf("False positive on pinned piece, should not be attacking %+v from %+v", s, rook.Position)
-	}
 }
 
 func TestMakeMoveTo(t *testing.T) {
