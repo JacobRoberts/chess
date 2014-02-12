@@ -6,62 +6,10 @@ import (
 )
 
 func TestOneMoveCheckmate(t *testing.T) {
-	board := &engine.Board{
-		Board: []*engine.Piece{
-			&engine.Piece{
-				Name: 'k',
-				Position: engine.Square{
-					X: 1,
-					Y: 3,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 1},
-					{1, 0},
-					{1, -1},
-					{0, 1},
-					{0, -1},
-					{-1, 1},
-					{-1, 0},
-					{-1, -1},
-				},
-			},
-			&engine.Piece{
-				Name: 'k',
-				Position: engine.Square{
-					X: 1,
-					Y: 1,
-				},
-				Color: -1,
-				Directions: [][2]int{
-					{1, 1},
-					{1, 0},
-					{1, -1},
-					{0, 1},
-					{0, -1},
-					{-1, 1},
-					{-1, 0},
-					{-1, -1},
-				},
-			},
-			&engine.Piece{
-				Name: 'r',
-				Position: engine.Square{
-					X: 3,
-					Y: 3,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 0},
-					{-1, 0},
-					{0, 1},
-					{0, -1},
-				},
-				Infinite_direction: true,
-			},
-		},
-		Turn: 1,
-	}
+	board := &engine.Board{Turn: 1}
+	board.PlacePiece('k', 1, 1, 3)
+	board.PlacePiece('k', -1, 1, 1)
+	board.PlacePiece('r', 1, 3, 3)
 	move := NegaMax(board, 2)
 	// move := NegaScout(board, 2, LOSS, WIN)
 	if err := board.Move(move); err != nil {
@@ -73,77 +21,11 @@ func TestOneMoveCheckmate(t *testing.T) {
 }
 
 func TestTwoMoveCheckmate(t *testing.T) {
-	board := &engine.Board{
-		Board: []*engine.Piece{
-			&engine.Piece{
-				Name: 'k',
-				Position: engine.Square{
-					X: 8,
-					Y: 8,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 1},
-					{1, 0},
-					{1, -1},
-					{0, 1},
-					{0, -1},
-					{-1, 1},
-					{-1, 0},
-					{-1, -1},
-				},
-			},
-			&engine.Piece{
-				Name: 'k',
-				Position: engine.Square{
-					X: 2,
-					Y: 1,
-				},
-				Color: -1,
-				Directions: [][2]int{
-					{1, 1},
-					{1, 0},
-					{1, -1},
-					{0, 1},
-					{0, -1},
-					{-1, 1},
-					{-1, 0},
-					{-1, -1},
-				},
-			},
-			&engine.Piece{
-				Name: 'r',
-				Position: engine.Square{
-					X: 3,
-					Y: 7,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 0},
-					{-1, 0},
-					{0, 1},
-					{0, -1},
-				},
-				Infinite_direction: true,
-			},
-			&engine.Piece{
-				Name: 'r',
-				Position: engine.Square{
-					X: 4,
-					Y: 8,
-				},
-				Color: 1,
-				Directions: [][2]int{
-					{1, 0},
-					{-1, 0},
-					{0, 1},
-					{0, -1},
-				},
-				Infinite_direction: true,
-			},
-		},
-		Turn: 1,
-	}
+	board := &engine.Board{Turn: 1}
+	board.PlacePiece('k', 1, 8, 8)
+	board.PlacePiece('k', -1, 2, 1)
+	board.PlacePiece('r', 1, 3, 7)
+	board.PlacePiece('r', 1, 4, 8)
 	move := NegaMax(board, 4)
 	// move := NegaScout(board, 4, LOSS, WIN)
 	if err := board.Move(move); err != nil {

@@ -18,15 +18,25 @@ http://www.frayn.net/beowulf/theory.html#analysis
 */
 
 // Represents the board as an array of aggression.
-// Each value is how many times the mover attacks the square minus how many times the other player defnds it.
-// func createAttackArray(b *engine.Board) [8][8]int {
-// 	attackarray = [8][8]int{}
-// 	for _, piece := range b.Board {
-// 		for _, move := range piece.Attacking(b, true) {
-// 			// incomplete
-// 		}
-// 	}
-// }
+// Each value is how many times the mover attacks the square minus how many times the other player defends it.
+// Not optimized yet. Premature optimization and stuff.
+func createAttackArray(b *engine.Board) [8][8]int {
+	attackarray := [8][8]int{}
+	for _, piece := range b.Board {
+		for x := 1; x <= 8; x++ {
+			for y := 1; y < 8; y++ {
+				s := &engine.Square{
+					X: x,
+					Y: y,
+				}
+				if piece.Attacking(s, b) {
+					attackarray[x][y] += piece.Color * b.Turn
+				}
+			}
+		}
+	}
+	return attackarray
+}
 
 // Returns the score from the point of view of the person whose turn it is.
 // Positive numbers indicate a stronger position.

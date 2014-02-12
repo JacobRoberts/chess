@@ -88,9 +88,81 @@ func (b *Board) IsOver() int {
 	return 0
 }
 
+// Given a name, color, and coordinates, place the appropriate piece on the board.
+// Does not add flags such as Can_Castle, must be done manually.
+func (b *Board) PlacePiece(name byte, color, x, y int) {
+	values := make(map[byte]int)
+	values['p'], values['b'], values['n'], values['r'], values['q'] = 1, 3, 3, 5, 9
+	p := &Piece{
+		Name:  name,
+		Color: color,
+		Position: Square{
+			X: x,
+			Y: y,
+		},
+		Value: values[name],
+	}
+	if name == 'b' || name == 'r' || name == 'q' {
+		p.Infinite_direction = true
+	}
+	if name == 'p' {
+		p.Directions = [][2]int{
+			{0, 1 * color},
+		}
+	} else if name == 'b' {
+		p.Directions = [][2]int{
+			{1, 1},
+			{1, -1},
+			{-1, 1},
+			{-1, -1},
+		}
+	} else if name == 'n' {
+		p.Directions = [][2]int{
+			{1, 2},
+			{-1, 2},
+			{1, -2},
+			{-1, -2},
+			{2, 1},
+			{-2, 1},
+			{2, -1},
+			{-2, -1},
+		}
+
+	} else if name == 'r' {
+		p.Directions = [][2]int{
+			{1, 0},
+			{-1, 0},
+			{0, 1},
+			{0, -1},
+		}
+	} else if name == 'q' {
+		p.Directions = [][2]int{
+			{1, 1},
+			{1, 0},
+			{1, -1},
+			{0, 1},
+			{0, -1},
+			{-1, 1},
+			{-1, 0},
+			{-1, -1},
+		}
+	} else if name == 'k' {
+		p.Directions = [][2]int{
+			{1, 1},
+			{1, 0},
+			{1, -1},
+			{0, 1},
+			{0, -1},
+			{-1, 1},
+			{-1, 0},
+			{-1, -1},
+		}
+	}
+	b.Board = append(b.Board, p)
+}
+
 // Resets a given board to its starting position.
 func (b *Board) SetUpPieces() {
-	// for readability, this should be the last function in the file
 	b.Board = make([]*Piece, 0)
 	pawnrows := [2]int{2, 7}
 	piecerows := [2]int{1, 8}
@@ -107,26 +179,8 @@ func (b *Board) SetUpPieces() {
 		} else {
 			color = -1
 		}
-		king := Piece{
-			Name: 'k',
-			Position: Square{
-				X: kingfile,
-				Y: rank,
-			},
-			Color: color,
-			Directions: [][2]int{
-				{1, 1},
-				{1, 0},
-				{1, -1},
-				{0, 1},
-				{0, -1},
-				{-1, 1},
-				{-1, 0},
-				{-1, -1},
-			},
-			Can_castle: true,
-		}
-		b.Board = append(b.Board, &king)
+		b.PlacePiece('k', color, kingfile, rank)
+		b.Board[len(b.Board)-1].Can_castle = true
 	}
 	for _, rank := range piecerows {
 		var color int
@@ -136,87 +190,16 @@ func (b *Board) SetUpPieces() {
 			color = -1
 		}
 		for _, file := range rookfiles {
-			piece := Piece{
-				Name: 'r',
-				Position: Square{
-					X: file,
-					Y: rank,
-				},
-				Value:      5,
-				Color:      color,
-				Can_castle: true,
-				Directions: [][2]int{
-					{1, 0},
-					{-1, 0},
-					{0, 1},
-					{0, -1},
-				},
-				Infinite_direction: true,
-			}
-			b.Board = append(b.Board, &piece)
+			b.PlacePiece('r', color, file, rank)
+			b.Board[len(b.Board)-1].Can_castle = true
 		}
 		for _, file := range knightfiles {
-			piece := Piece{
-				Name: 'n',
-				Position: Square{
-					X: file,
-					Y: rank,
-				},
-				Value: 3,
-				Color: color,
-				Directions: [][2]int{
-					{1, 2},
-					{-1, 2},
-					{1, -2},
-					{-1, -2},
-					{2, 1},
-					{-2, 1},
-					{2, -1},
-					{-2, -1},
-				},
-			}
-			b.Board = append(b.Board, &piece)
+			b.PlacePiece('n', color, file, rank)
 		}
 		for _, file := range bishopfiles {
-			piece := Piece{
-				Name: 'b',
-				Position: Square{
-					X: file,
-					Y: rank,
-				},
-				Value: 3,
-				Color: color,
-				Directions: [][2]int{
-					{1, 1},
-					{1, -1},
-					{-1, 1},
-					{-1, -1},
-				},
-				Infinite_direction: true,
-			}
-			b.Board = append(b.Board, &piece)
+			b.PlacePiece('b', color, file, rank)
 		}
-		queen := Piece{
-			Name: 'q',
-			Position: Square{
-				X: queenfile,
-				Y: rank,
-			},
-			Value: 9,
-			Color: color,
-			Directions: [][2]int{
-				{1, 1},
-				{1, 0},
-				{1, -1},
-				{0, 1},
-				{0, -1},
-				{-1, 1},
-				{-1, 0},
-				{-1, -1},
-			},
-			Infinite_direction: true,
-		}
-		b.Board = append(b.Board, &queen)
+		b.PlacePiece('q', color, queenfile, rank)
 	}
 	for _, rank := range pawnrows {
 		var color int
@@ -226,20 +209,8 @@ func (b *Board) SetUpPieces() {
 			color = -1
 		}
 		for file := 1; file <= 8; file++ {
-			piece := Piece{
-				Name: 'p',
-				Position: Square{
-					X: file,
-					Y: rank,
-				},
-				Color:           color,
-				Can_double_move: true,
-				Directions: [][2]int{
-					{0, 1 * color},
-				},
-				Value: 1,
-			}
-			b.Board = append(b.Board, &piece)
+			b.PlacePiece('p', color, file, rank)
+			b.Board[len(b.Board)-1].Can_double_move = true
 		}
 	}
 }
