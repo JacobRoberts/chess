@@ -46,11 +46,9 @@ func EvalBoard(b *engine.Board) float64 {
 		}
 	}
 	var score float64
-	for _, p := range b.Board {
-		score += float64(p.Value * p.Color * b.Turn)
-	}
 	attackarray := [8][8]int{}
 	for _, piece := range b.Board {
+		score += float64(piece.Value * piece.Color * b.Turn)
 		attackarray = updateAttackArray(b, piece, attackarray)
 	}
 	return score
