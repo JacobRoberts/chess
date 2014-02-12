@@ -30,7 +30,7 @@ func createAttackArray(b *engine.Board) [8][8]int {
 					Y: y,
 				}
 				if piece.Attacking(s, b) {
-					attackarray[x][y] += piece.Color * b.Turn
+					attackarray[x-1][y-1] += piece.Color * b.Turn
 				}
 			}
 		}
