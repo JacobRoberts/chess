@@ -4,6 +4,12 @@ import (
 	"chess/engine"
 )
 
+const (
+	WIN  = 500
+	LOSS = -500
+	DRAW = 0
+)
+
 /*
 
 Based heavily off of the analysis function here
@@ -27,15 +33,14 @@ http://www.frayn.net/beowulf/theory.html#analysis
 func EvalBoard(b *engine.Board) float64 {
 	if over := b.IsOver(); over != 0 {
 		if over == 1 {
-			return 0
+			return DRAW
 		} else {
-			return float64(500 * over * b.Turn)
+			return float64(WIN / 2 * over * b.Turn)
 		}
 	}
-	var s int
+	var score float64
 	for _, p := range b.Board {
-		s += p.Value * p.Color * b.Turn
+		score += float64(p.Value * p.Color * b.Turn)
 	}
-	score := float64(s)
 	return score
 }
