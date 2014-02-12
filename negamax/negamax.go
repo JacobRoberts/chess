@@ -2,7 +2,6 @@ package negamax
 
 import (
 	"chess/engine"
-	"fmt"
 )
 
 // First-level negamax search function.
@@ -17,7 +16,6 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 		childboard := b.CopyBoard()
 		childboard.Move(m)
 		childscore := -NegaMaxChild(childboard, depth-1)
-		fmt.Printf("%+v returned score %d\n", m, int(childscore))
 		if childscore > move.Score {
 			move = *m.CopyMove()
 			move.Score = childscore
@@ -33,10 +31,6 @@ func NegaMax(b *engine.Board, depth int) *engine.Move {
 // Unlike NegaMax(), only returns score, not full move.
 func NegaMaxChild(b *engine.Board, depth int) float64 {
 	if b.IsOver() != 0 || depth == 0 {
-		eval := EvalBoard(b)
-		if eval != 0 {
-			fmt.Println(eval)
-		}
 		return EvalBoard(b)
 	}
 	var score float64 = LOSS

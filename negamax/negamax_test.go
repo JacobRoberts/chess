@@ -12,9 +12,9 @@ func TestOneMoveCheckmate(t *testing.T) {
 				Name: 'k',
 				Position: engine.Square{
 					X: 1,
-					Y: 1,
+					Y: 3,
 				},
-				Color: -1,
+				Color: 1,
 				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
@@ -30,9 +30,9 @@ func TestOneMoveCheckmate(t *testing.T) {
 				Name: 'k',
 				Position: engine.Square{
 					X: 1,
-					Y: 3,
+					Y: 1,
 				},
-				Color: 1,
+				Color: -1,
 				Directions: [][2]int{
 					{1, 1},
 					{1, 0},
@@ -75,6 +75,24 @@ func TestOneMoveCheckmate(t *testing.T) {
 func TestTwoMoveCheckmate(t *testing.T) {
 	board := &engine.Board{
 		Board: []*engine.Piece{
+			&engine.Piece{
+				Name: 'k',
+				Position: engine.Square{
+					X: 8,
+					Y: 8,
+				},
+				Color: 1,
+				Directions: [][2]int{
+					{1, 1},
+					{1, 0},
+					{1, -1},
+					{0, 1},
+					{0, -1},
+					{-1, 1},
+					{-1, 0},
+					{-1, -1},
+				},
+			},
 			&engine.Piece{
 				Name: 'k',
 				Position: engine.Square{
