@@ -111,15 +111,25 @@ func moveIsCheck(b *Board, m *Move) bool {
 // 	moves that would place the player in check are not returned.
 //	eg if a pinned piece is giving check
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
-	/*
-		for readability, this should be towards the end of the file
-
-		TODO:
-			castling
-	*/
 	legals := make([]*Move, 0)
 	if p.Position.X == 0 && p.Position.Y == 0 {
 		return legals
+	}
+	if p.Name == 'k' {
+		var castley int
+		if b.Turn == 1 {
+			castley = 1
+		} else if b.Turn == -1 {
+			castley = 8
+		}
+		if b.can_castle(1) {
+			m := p.makeMoveTo(3, castley)
+			legals = append(legals, m)
+		}
+		if b.can_castle(8) {
+			m := p.makeMoveTo(7, castley)
+			legals = append(legals, m)
+		}
 	}
 	if p.Infinite_direction {
 		for _, direction := range p.Directions {

@@ -10,7 +10,7 @@ import (
 		IsCheck
 		Move
 		legalMoves
-		castleHander
+		canCastle
 		IsOver
 		CopyBoard
 		CopyMove
@@ -339,6 +339,22 @@ func TestLegalMoves(t *testing.T) {
 	board.PlacePiece('k', 1, 1, 1)
 	if numlegalmoves := len(board.Board[0].legalMoves(board, true)); numlegalmoves != 3 {
 		t.Errorf("%d moves generated for king in corner", numlegalmoves)
+	}
+	board = &Board{Turn: 1}
+	board.PlacePiece('k', 1, 5, 1)
+	board.PlacePiece('r', 1, 1, 1)
+	board.PlacePiece('r', 1, 8, 1)
+	for i, _ := range board.Board {
+		board.Board[i].Can_castle = true
+	}
+	castles := 0
+	for _, m := range board.Board[0].legalMoves(board, false) {
+		if m.End.X == 3 || m.End.X == 7 {
+			castles += 1
+		}
+	}
+	if castles != 2 {
+		t.Errorf("The wrong amount of valid castles were found. Expected 2, got %d", castles)
 	}
 }
 
