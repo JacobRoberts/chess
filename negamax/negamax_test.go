@@ -10,8 +10,8 @@ func TestOneMoveCheckmate(t *testing.T) {
 	board.PlacePiece('k', 1, 1, 3)
 	board.PlacePiece('k', -1, 1, 1)
 	board.PlacePiece('r', 1, 3, 3)
-	move := NegaMax(board, 2)
-	// move := NegaScout(board, 2, LOSS, WIN)
+	// move := NegaMax(board, 2)
+	move := NegaScout(board, 2, LOSS, WIN)
 	if err := board.Move(move); err != nil {
 		t.Errorf("Move %+v from negamax was rejected by board.Move() because %s", move, err)
 	}
@@ -26,8 +26,8 @@ func TestTwoMoveCheckmate(t *testing.T) {
 	board.PlacePiece('k', -1, 2, 1)
 	board.PlacePiece('r', 1, 3, 7)
 	board.PlacePiece('r', 1, 4, 8)
-	move := NegaMax(board, 4)
-	// move := NegaScout(board, 4, LOSS, WIN)
+	// move := NegaMax(board, 4)
+	move := NegaScout(board, 4, LOSS, WIN)
 	if err := board.Move(move); err != nil {
 		t.Errorf("Move from negamax was rejected by board.Move() because %s", err)
 	}
