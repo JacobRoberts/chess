@@ -342,44 +342,43 @@ func TestLegalMoves(t *testing.T) {
 	}
 }
 
-func TestCastleHander(t *testing.T) {
+func TestCanCastle(t *testing.T) {
 	board := &Board{Turn: 1}
 	board.PlacePiece('k', 1, 5, 1)
 	board.Board[0].Can_castle = true
 	board.PlacePiece('r', 1, 8, 1)
 	board.Board[1].Can_castle = true
 	board.PlacePiece('b', 1, 6, 1)
-	m := board.Board[0].makeMoveTo(7, 1)
-	if err := board.castleHandler(m); err == nil {
+	if board.can_castle(8) {
 		t.Error("Castle allowed through blocking piece")
 	}
 	board.Board[2].Color = -1
 	board.Board[2].Position.Y = 2
-	if err := board.castleHandler(m); err == nil {
+	if board.can_castle(8) {
 		t.Error("Castle allowed when king in check")
 	}
 	board.Board[2].Position.X = 5
 	board.Board[2].Position.Y = 3
-	if err := board.castleHandler(m); err == nil {
+	if board.can_castle(8) {
 		t.Error("Castle allowed when king placed in check")
 	}
 	board.Board[2].Color = 1
 	board.Board[0].Can_castle = false
-	if err := board.castleHandler(m); err == nil {
+	if board.can_castle(8) {
 		t.Error("Castle allowed after king moved")
 	}
 	board.Board[0].Can_castle = true
 	board.Board[1].Can_castle = false
-	if err := board.castleHandler(m); err == nil {
+	if board.can_castle(8) {
 		t.Error("Castle allowed after rook move")
 	}
 	board.Board[1].Can_castle = true
 	board.Board[1].Position.Y = 2
-	if err := board.castleHandler(m); err == nil {
+	if board.can_castle(8) {
 		t.Error("Castle allowed when rook out of position")
 	}
 	board.Board[1].Position.Y = 1
-	if err := board.castleHandler(m); err != nil {
-		t.Error("Error when making a legal castle: ", err)
+	if !board.can_castle(8) {
+		t.Error("Error when making a legal castle")
 	}
 }
