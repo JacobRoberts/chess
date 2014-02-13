@@ -2,23 +2,22 @@ package main
 
 import (
 	"chess/engine"
-	"fmt"
+	"html/template"
 	"net/http"
 )
 
-// http://nirbhay.in/2013/03/ajax-with-go/
-
+// Will eventually be responsible for recieving moves from chessboardjs.
+// For now, just trying to serve the right file.
 func getMoveHandler(w http.ResponseWriter, r *http.Request) {
 	// do stuff with the move
-	fmt.Fprintln(w, "hello world")
+	t, _ := template.ParseFiles("./web/html/index.html")
+	t.Execute(w, nil)
 }
 
 // handles user interface
 func main() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
-	color_names := make(map[int]string)
-	color_names[1], color_names[-1] = "White", "Black"
 	http.HandleFunc("/", getMoveHandler)
-	http.ListenAndServe("localhost:9999", nil)
+	http.ListenAndServe(":9999", nil)
 }
