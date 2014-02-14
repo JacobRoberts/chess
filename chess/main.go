@@ -2,7 +2,7 @@ package main
 
 import (
 	"chess/engine"
-	"html/template"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -10,14 +10,16 @@ import (
 // For now, just trying to serve the right file.
 func getMoveHandler(w http.ResponseWriter, r *http.Request) {
 	// do stuff with the move
-	t, _ := template.ParseFiles("./web/html/index.html")
-	t.Execute(w, nil)
+	http.ServeFile(w, r, "./web/html/index.html")
 }
 
 // handles user interface
 func main() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
-	http.HandleFunc("/", getMoveHandler)
+	r := mux.NewRouter()
+	r.HandleFunc("/", getMoveHandler)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./web/")))
+	http.Handle("/", r)
 	http.ListenAndServe(":9999", nil)
 }
