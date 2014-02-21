@@ -37,7 +37,7 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a [8][8]int) [8][8]int 
 
 // Returns the score from the point of view of the person whose turn it is.
 // Positive numbers indicate a stronger position.
-func EvalBoard(b *engine.Board) float64 {
+func EvalBoard(b *engine.Board) (score float64) {
 	if over := b.IsOver(); over != 0 {
 		if over == 1 {
 			return DRAW
@@ -45,7 +45,6 @@ func EvalBoard(b *engine.Board) float64 {
 			return float64(WIN / 2 * over * b.Turn)
 		}
 	}
-	var score float64
 	attackarray := [8][8]int{}
 	mypawns := [8]int{}
 	opppawns := [8]int{}
@@ -60,5 +59,5 @@ func EvalBoard(b *engine.Board) float64 {
 			}
 		}
 	}
-	return score
+	return
 }
