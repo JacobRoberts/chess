@@ -20,7 +20,7 @@ http://www.frayn.net/beowulf/theory.html#analysis
 // Represents the board as an array of aggression.
 // Each value is how many times the mover attacks the square minus how many times the other player defends it.
 // Not optimized yet. Premature optimization and stuff.
-func updateAttackArray(b *engine.Board, p *engine.Piece, a [8][8]int) [8][8]int {
+func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 	for x := 1; x <= 8; x++ {
 		for y := 1; y <= 8; y++ {
 			s := &engine.Square{
@@ -32,7 +32,6 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a [8][8]int) [8][8]int 
 			}
 		}
 	}
-	return a
 }
 
 // Returns the score from the point of view of the person whose turn it is.
@@ -50,7 +49,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 	opppawns := [8]int{}
 	for _, piece := range b.Board {
 		score += float64(piece.Value * piece.Color * b.Turn)
-		attackarray = updateAttackArray(b, piece, attackarray)
+		updateAttackArray(b, piece, &attackarray)
 		if piece.Name == 'p' {
 			if piece.Color == b.Turn {
 				mypawns[piece.Position.X-1] += 1
