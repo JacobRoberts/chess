@@ -12,8 +12,6 @@ type Piece struct {
 
 	Directions         [][2]int // slice of {0 or 1, 0 or 1} indicating how piece moves
 	Infinite_direction bool     // if piece can move as far as it wants in given direction
-
-	Value int // how many "points" a piece is worth
 }
 
 // Returns true if a piece p is attacking a square s.

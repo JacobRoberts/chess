@@ -149,7 +149,6 @@ func (b *Board) Move(m *Move) error {
 					{-1, 0},
 					{-1, -1},
 				}
-				b.Board[pieceindex].Value = 9
 				b.Board[pieceindex].Infinite_direction = true
 			} else if promotion == 'q' {
 				b.Board[pieceindex].Name = promotion
@@ -159,7 +158,6 @@ func (b *Board) Move(m *Move) error {
 					{0, 1},
 					{0, -1},
 				}
-				b.Board[pieceindex].Value = 5
 				b.Board[pieceindex].Infinite_direction = true
 			} else if promotion == 'n' {
 				b.Board[pieceindex].Name = promotion
@@ -173,7 +171,6 @@ func (b *Board) Move(m *Move) error {
 					{2, -1},
 					{-2, -1},
 				}
-				b.Board[pieceindex].Value = 3
 			} else if promotion == 'b' {
 				b.Board[pieceindex].Name = promotion
 				b.Board[pieceindex].Directions = [][2]int{
@@ -183,7 +180,6 @@ func (b *Board) Move(m *Move) error {
 					{-1, -1},
 				}
 				b.Board[pieceindex].Infinite_direction = true
-				b.Board[pieceindex].Value = 3
 			}
 		}
 	}

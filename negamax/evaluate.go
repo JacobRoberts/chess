@@ -10,6 +10,10 @@ const (
 	DRAW = 0
 )
 
+var (
+	VALUES = map[byte]int{'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9}
+)
+
 /*
 
 Based heavily off of the analysis function here
@@ -48,7 +52,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 	mypawns := [8]int{}
 	opppawns := [8]int{}
 	for _, piece := range b.Board {
-		score += float64(piece.Value * piece.Color * b.Turn)
+		score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
 		updateAttackArray(b, piece, &attackarray)
 		if piece.Name == 'p' {
 			if piece.Color == b.Turn {

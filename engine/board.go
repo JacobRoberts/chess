@@ -91,8 +91,6 @@ func (b *Board) IsOver() int {
 // Given a name, color, and coordinates, place the appropriate piece on the board.
 // Does not add flags such as Can_Castle, must be done manually.
 func (b *Board) PlacePiece(name byte, color, x, y int) {
-	values := make(map[byte]int)
-	values['p'], values['b'], values['n'], values['r'], values['q'] = 1, 3, 3, 5, 9
 	p := &Piece{
 		Name:  name,
 		Color: color,
@@ -100,7 +98,6 @@ func (b *Board) PlacePiece(name byte, color, x, y int) {
 			X: x,
 			Y: y,
 		},
-		Value: values[name],
 	}
 	if name == 'b' || name == 'r' || name == 'q' {
 		p.Infinite_direction = true

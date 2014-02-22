@@ -282,7 +282,7 @@ func TestMove(t *testing.T) {
 	if err := board.Move(m); err != nil {
 		t.Errorf("Promoting pawn raised error %s", err)
 	}
-	if piece := board.Board[0]; piece.Name != 'q' || piece.Value != 9 {
+	if piece := board.Board[0]; piece.Name != 'q' {
 		t.Errorf("Pawn failed to promote properly, resulted in %+v", piece)
 	}
 }
