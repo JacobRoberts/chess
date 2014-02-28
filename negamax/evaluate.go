@@ -85,6 +85,10 @@ func EvalBoard(b *engine.Board) (score float64) {
 			} else {
 				// endgame stuff
 			}
+		} else if piece.Name == 'p' {
+
+		} else {
+
 		}
 	}
 	return score
