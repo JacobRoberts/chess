@@ -8,7 +8,7 @@ const (
 	WIN            = 500
 	LOSS           = -500
 	DRAW           = 0
-	LONGPAWNCHAIN  = .5 // per pawn
+	LONGPAWNCHAIN  = .05 // per pawn
 	ISOLATEDPAWN   = -.15
 	DOUBLEDPAWN    = -float64(1) / float64(7) // increases for tripled, etc. pawns
 	KINGINCORNER   = .3                       // king in a castled position
