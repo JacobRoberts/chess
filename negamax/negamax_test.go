@@ -1,8 +1,9 @@
 package negamax
 
 import (
-	"chess/engine"
 	"testing"
+
+	"github.com/jacobroberts/chess/engine"
 )
 
 func TestOneMoveCheckmate(t *testing.T) {

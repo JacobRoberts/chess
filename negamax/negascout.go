@@ -1,8 +1,9 @@
 package negamax
 
 import (
-	"chess/engine"
 	"math"
+
+	"github.com/jacobroberts/chess/engine"
 )
 
 /*

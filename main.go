@@ -1,8 +1,9 @@
 package main
 
 import (
-	"chess/engine"
 	"net/http"
+
+	"github.com/jacobroberts/chess/engine"
 
 	"github.com/gorilla/mux"
 )

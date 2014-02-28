@@ -1,7 +1,7 @@
 package negamax
 
 import (
-	"chess/engine"
+	"github.com/jacobroberts/chess/engine"
 )
 
 // First-level negamax search function.
