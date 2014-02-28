@@ -18,3 +18,20 @@ func TestAttackArray(t *testing.T) {
 		t.Errorf("Expected -1 attack value on square (1, 1), got %d", attackarray[0][0])
 	}
 }
+
+func TestPawnStructureAnalysis(t *testing.T) {
+	pawnarray := [8]int{}
+	if score := pawnStructureAnalysis(pawnarray); score != 0 {
+		t.Errorf("Empty pawn array expected to give score 0, gave score %f", score)
+	}
+	for i := range pawnarray {
+		pawnarray[i] = 1
+	}
+	if score := pawnStructureAnalysis(pawnarray); score != .4 {
+		t.Errorf("Straight pawn chain expected to give score .4, gave score %f", score)
+	}
+	pawnarray = [8]int{2, 0, 2, 0, 2, 0, 2, 0}
+	if score := pawnStructureAnalysis(pawnarray); score > 0 {
+		t.Errorf("Awful pawn structure gave positive score of %f", score)
+	}
+}

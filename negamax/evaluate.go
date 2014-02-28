@@ -21,6 +21,36 @@ http://www.frayn.net/beowulf/theory.html#analysis
 
 */
 
+// Used in pawnStructureAnalysis to update a score given a discovered to be broken pawn chain
+func updatePawnChainScore(pawnchain int) float64 {
+	var score float64
+	if pawnchain > 2 {
+		score += float64(pawnchain) / float64(20)
+	} else if pawnchain != 0 {
+		score -= .15 / float64(pawnchain)
+	}
+	return score
+}
+
+// Returns appropriate penalties for doubled and isolated pawns
+func pawnStructureAnalysis(pawnarray [8]int) float64 {
+	var score float64
+	var pawnchain int
+	for _, count := range pawnarray {
+		if count >= 2 {
+			score -= float64(count) / float64(7)
+			pawnchain += 1
+		} else if count == 1 {
+			pawnchain += 1
+		} else if count == 0 {
+			score += updatePawnChainScore(pawnchain)
+			pawnchain = 0
+		}
+	}
+	score += updatePawnChainScore(pawnchain)
+	return score
+}
+
 // Represents the board as an array of aggression.
 // Each value is how many times the mover attacks the square minus how many times the other player defends it.
 // Not optimized yet. Premature optimization and stuff.
@@ -32,7 +62,7 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 				Y: y,
 			}
 			if p.Attacking(s, b) {
-				a[x-1][y-1] += p.Color * b.Turn
+				a[y-1][x-1] += p.Color * b.Turn
 			}
 		}
 	}
@@ -51,7 +81,9 @@ func EvalBoard(b *engine.Board) (score float64) {
 	attackarray := [8][8]int{}
 	mypawns := [8]int{}
 	opppawns := [8]int{}
+	var heavies int // count of opponent's queens and rooks
 	for _, piece := range b.Board {
+		// add piece value to score and update attack array
 		score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
 		updateAttackArray(b, piece, &attackarray)
 		if piece.Name == 'p' {
@@ -60,7 +92,22 @@ func EvalBoard(b *engine.Board) (score float64) {
 			} else {
 				opppawns[piece.Position.X-1] += 1
 			}
+		} else if (piece.Name == 'q' || piece.Name == 'r') && piece.Color == b.Turn*-1 {
+			heavies += 1
 		}
 	}
-	return
+	score += pawnStructureAnalysis(mypawns)
+	score -= pawnStructureAnalysis(opppawns)
+	for _, piece := range b.Board {
+		if piece.Name == 'k' {
+			if file := piece.Position.X; file == 1 || file == 2 || file == 7 || file == 8 {
+
+			} else {
+				if heavies >= 2 {
+					score -= .2 // king is not safe and there are still dangerous pieces on the board
+				}
+			}
+		}
+	}
+	return score
 }
