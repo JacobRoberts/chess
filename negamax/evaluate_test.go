@@ -27,11 +27,17 @@ func TestPawnStructureAnalysis(t *testing.T) {
 	for i := range pawnarray {
 		pawnarray[i] = 1
 	}
-	if score := pawnStructureAnalysis(pawnarray); score != .4 {
+	if score := pawnStructureAnalysis(pawnarray); score != float64(8)*LONGPAWNCHAIN {
 		t.Errorf("Straight pawn chain expected to give score .4, gave score %f", score)
 	}
 	pawnarray = [8]int{2, 0, 2, 0, 2, 0, 2, 0}
 	if score := pawnStructureAnalysis(pawnarray); score > 0 {
 		t.Errorf("Awful pawn structure gave positive score of %f", score)
+	}
+}
+
+func TestCheckKingSafety(t *testing.T) {
+	if score := checkKingSafety(1, [8]int{}); score > 0 {
+		t.Errorf("Isolated king in corner gives positive score of %f", score)
 	}
 }

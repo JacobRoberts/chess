@@ -5,9 +5,15 @@ import (
 )
 
 const (
-	WIN  = 500
-	LOSS = -500
-	DRAW = 0
+	WIN            = 500
+	LOSS           = -500
+	DRAW           = 0
+	LONGPAWNCHAIN  = .5 // per pawn
+	ISOLATEDPAWN   = -.15
+	DOUBLEDPAWN    = -float64(1) / float64(7) // increases for tripled, etc. pawns
+	KINGINCORNER   = .3                       // king in a castled position
+	KINGONOPENFILE = -.5                      // king not protected by a pawn
+	KINGPROTECTED  = .2                       // king protected by a pawn, applies to pawns on files near king
 )
 
 var (
@@ -20,36 +26,6 @@ Based heavily off of the analysis function here
 http://www.frayn.net/beowulf/theory.html#analysis
 
 */
-
-// Used in pawnStructureAnalysis to update a score given a discovered to be broken pawn chain
-func updatePawnChainScore(pawnchain int) float64 {
-	var score float64
-	if pawnchain > 2 {
-		score += float64(pawnchain) / float64(20)
-	} else if pawnchain != 0 {
-		score -= .15 / float64(pawnchain)
-	}
-	return score
-}
-
-// Returns appropriate penalties for doubled and isolated pawns
-func pawnStructureAnalysis(pawnarray [8]int) float64 {
-	var score float64
-	var pawnchain int
-	for _, count := range pawnarray {
-		if count >= 2 {
-			score -= float64(count) / float64(7)
-			pawnchain += 1
-		} else if count == 1 {
-			pawnchain += 1
-		} else if count == 0 {
-			score += updatePawnChainScore(pawnchain)
-			pawnchain = 0
-		}
-	}
-	score += updatePawnChainScore(pawnchain)
-	return score
-}
 
 // Represents the board as an array of aggression.
 // Each value is how many times the mover attacks the square minus how many times the other player defends it.
@@ -100,14 +76,66 @@ func EvalBoard(b *engine.Board) (score float64) {
 	score -= pawnStructureAnalysis(opppawns)
 	for _, piece := range b.Board {
 		if piece.Name == 'k' {
-			if file := piece.Position.X; file == 1 || file == 2 || file == 7 || file == 8 {
-
-			} else {
-				if heavies >= 2 {
-					score -= .2 // king is not safe and there are still dangerous pieces on the board
+			if heavies > 1 {
+				if piece.Color == b.Turn {
+					score += checkKingSafety(piece.Position.X, mypawns)
+				} else {
+					score -= checkKingSafety(piece.Position.X, opppawns)
 				}
+			} else {
+				// endgame stuff
 			}
 		}
+	}
+	return score
+}
+
+// Used in pawnStructureAnalysis to update a score given a discovered to be broken pawn chain
+func updatePawnChainScore(pawnchain int) float64 {
+	var score float64
+	if pawnchain > 2 {
+		score += float64(pawnchain) * LONGPAWNCHAIN
+	} else if pawnchain != 0 {
+		score += ISOLATEDPAWN / float64(pawnchain)
+	}
+	return score
+}
+
+// Returns appropriate penalties for doubled and isolated pawns
+func pawnStructureAnalysis(pawnarray [8]int) float64 {
+	var score float64
+	var pawnchain int
+	for _, count := range pawnarray {
+		if count >= 2 {
+			score += float64(count) * DOUBLEDPAWN
+			pawnchain += 1
+		} else if count == 1 {
+			pawnchain += 1
+		} else if count == 0 {
+			score += updatePawnChainScore(pawnchain)
+			pawnchain = 0
+		}
+	}
+	score += updatePawnChainScore(pawnchain)
+	return score
+}
+
+// Rewards players for protecting their king with pawns and being in a corner
+func checkKingSafety(file int, pawnarray [8]int) float64 {
+	var score float64
+	for i := -1; i < 2; i++ {
+		if location := file + i; location > -1 && location < 8 {
+			if pawnarray[location] == 0 {
+				score += KINGONOPENFILE
+			} else {
+				score += KINGPROTECTED
+			}
+		}
+	}
+	if file == 1 || file == 2 || file == 7 || file == 8 {
+		score += KINGINCORNER
+	} else {
+		score -= KINGINCORNER
 	}
 	return score
 }
