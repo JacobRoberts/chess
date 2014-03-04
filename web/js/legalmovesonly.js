@@ -27,6 +27,7 @@ var onDrop = function(source, target) {
   // illegal move
   if (move === null) return 'snapback';
 
+  // ==== send ajax to server
   updateStatus();
 };
 
@@ -34,7 +35,6 @@ var onDrop = function(source, target) {
 // for castling, en passant, pawn promotion
 var onSnapEnd = function() {
   board.position(game.fen());
-  // ====== send ajax to server
 };
 
 var updateStatus = function() {
