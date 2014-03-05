@@ -9,6 +9,24 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const (
+	index = `
+<html>
+<head>
+	<title>test</title>
+	<link rel="stylesheet" type="text/css" href="http://csmarlboro.org/jacobr/chess/css/chessboard-0.3.0.min.css">
+</head>
+<body>
+	<div id="board" style="width: 400px"></div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://csmarlboro.org/jacobr/chess/js/chessjs/chess.min.js"></script>
+	<script src="http://csmarlboro.org/jacobr/chess/js/chessboardjs/chessboard-0.3.0.js"></script>
+	<script src="http://csmarlboro.org/jacobr/chess/js/legalmovesonly.js"></script>
+</body>
+</html>
+`
+)
+
 var (
 	moves = make(chan *engine.Move, 1)
 	quit  = make(chan int, 1)
@@ -46,7 +64,7 @@ func stringToSquare(s string) engine.Square {
 // Will eventually be responsible for recieving moves from chessboardjs.
 // For now, just trying to serve the right file.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "/Users/jacobr/go/src/github.com/jacobroberts/chess/web/html/index.html")
+	fmt.Fprint(w, index)
 }
 
 // Gets a move form from an AJAX request and sends it to the chess program.
