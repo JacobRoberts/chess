@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"text/template"
 
 	"github.com/jacobroberts/chess/engine"
 
@@ -23,19 +22,15 @@ func game() {
 	for {
 		select {
 		case move := <-moves:
-			if move != nil {
-				for _, p := range board.Board {
-					if p.Position.X == move.Begin.X && p.Position.Y == move.Begin.Y {
-						move.Piece = p.Name
-						break
-					}
+			for _, p := range board.Board {
+				if p.Position.X == move.Begin.X && p.Position.Y == move.Begin.Y {
+					move.Piece = p.Name
+					break
 				}
-				board.Move(move)
 			}
+			board.Move(move)
 		case <-quit:
 			return
-		default:
-			continue
 		}
 
 	}
@@ -48,21 +43,10 @@ func stringToSquare(s string) engine.Square {
 	}
 }
 
-type MyPath struct {
-	path string
-}
-
 // Will eventually be responsible for recieving moves from chessboardjs.
 // For now, just trying to serve the right file.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	// do stuff with the move
-	t := template.New("Index")
-	t, _ = t.ParseFiles("./web/html/index.html")
-	if t == nil {
-		fmt.Println("nil template")
-	}
-	p := &MyPath{path: "/Users/jacobr/go/src/github.com/jacobroberts/chess/web"}
-	t.Execute(w, p)
+	http.ServeFile(w, r, "/Users/jacobr/go/src/github.com/jacobroberts/chess/web/html/index.html")
 }
 
 // Gets a move form from an AJAX request and sends it to the chess program.
