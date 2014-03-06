@@ -88,17 +88,12 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 	incmoves <- m
 }
 
-func testHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World")
-}
-
 // Listens for HTTP requests and dispatches them to appropriate function
 func main() {
 	go game()
 	r := mux.NewRouter()
 	r.HandleFunc("/", indexHandler)
 	r.HandleFunc("/move", chessHandler)
-	r.HandleFunc("/hello", testHandler)
 	http.Handle("/", r)
 
 	http.ListenAndServe(":9999", nil)
