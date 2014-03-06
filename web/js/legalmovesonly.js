@@ -18,17 +18,23 @@ var onDragStart = function(source, piece, position, orientation) {
 
 var onDrop = function(source, target) {
   // see if the move is legal
+  var promote = 'q';
   var move = game.move({
     from: source,
     to: target,
-    promotion: 'q' // NOTE: always promote to a queen for example simplicity
+    promotion: promote // NOTE: always promote to a queen for example simplicity
   });
 
   // illegal move
   if (move === null) return 'snapback';
 
-  // ==== send ajax to server
-  updateStatus();
+  $.ajax({
+    url: "move",
+    data: { from: source, to: target, promotion: promote}
+  })
+    .done( function () {
+      updateStatus();
+    });
 };
 
 // update the board position after the piece snap 

@@ -28,10 +28,10 @@ const (
 )
 
 var (
-	moves = make(chan *engine.Move, 1)
-	quit  = make(chan int, 1)
-	files = map[byte]int{'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8}
-	ranks = map[byte]int{'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8}
+	incmoves = make(chan *engine.Move, 1)
+	quit     = make(chan int, 1)
+	files    = map[byte]int{'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8}
+	ranks    = map[byte]int{'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8}
 )
 
 func game() {
@@ -39,7 +39,7 @@ func game() {
 	board.SetUpPieces()
 	for {
 		select {
-		case move := <-moves:
+		case move := <-incmoves:
 			for _, p := range board.Board {
 				if p.Position.X == move.Begin.X && p.Position.Y == move.Begin.Y {
 					move.Piece = p.Name
@@ -76,7 +76,7 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	var promotion byte = 'q'
-	if p, ok := r.Form["promotion"]; ok {
+	if p, ok := r.PostForm["promotion"]; ok {
 		promotion = p[0][0]
 	}
 	m := &engine.Move{
@@ -84,8 +84,8 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 		End:       stringToSquare(r.Form["to"][0]),
 		Promotion: promotion,
 	}
-	moves <- m
-	fmt.Fprintf(w, "%#v", m)
+	incmoves <- m
+	fmt.Printf("%#v", m)
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
