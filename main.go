@@ -40,6 +40,7 @@ func game() {
 	for {
 		select {
 		case move := <-incmoves:
+			fmt.Printf("%#v\n", move)
 			for _, p := range board.Board {
 				if p.Position.X == move.Begin.X && p.Position.Y == move.Begin.Y {
 					move.Piece = p.Name
@@ -85,7 +86,6 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 		Promotion: promotion,
 	}
 	incmoves <- m
-	fmt.Printf("%#v\n", m)
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
