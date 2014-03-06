@@ -85,7 +85,7 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 		Promotion: promotion,
 	}
 	incmoves <- m
-	fmt.Printf("%#v", m)
+	fmt.Printf("%#v\n", m)
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
