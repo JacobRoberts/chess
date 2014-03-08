@@ -13,13 +13,13 @@ const (
 	index = `
 <html>
 <head>
-	<title>test</title>
+	<title>Play Chess</title>
 	<link rel="stylesheet" type="text/css" href="http://csmarlboro.org/jacobr/chess/css/chessboard-0.3.0.min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://csmarlboro.org/jacobr/chess/js/chessjs/chess.min.js"></script>
 </head>
 <body>
 	<div id="board" style="width: 400px"></div>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="http://csmarlboro.org/jacobr/chess/js/chessjs/chess.min.js"></script>
 	<script src="http://csmarlboro.org/jacobr/chess/js/chessboardjs/chessboard-0.3.0.js"></script>
 	<script src="http://csmarlboro.org/jacobr/chess/js/legalmovesonly.js"></script>
 </body>
@@ -40,13 +40,13 @@ func game() {
 	for {
 		select {
 		case move := <-incmoves:
-			fmt.Printf("%#v\n", move)
 			for _, p := range board.Board {
 				if p.Position.X == move.Begin.X && p.Position.Y == move.Begin.Y {
 					move.Piece = p.Name
 					break
 				}
 			}
+			fmt.Printf("%#v\n", move)
 			board.Move(move)
 		case <-quit:
 			return
@@ -77,7 +77,7 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	var promotion byte = 'q'
-	if p, ok := r.PostForm["promotion"]; ok {
+	if p, ok := r.Form["promotion"]; ok {
 		promotion = p[0][0]
 	}
 	m := &engine.Move{
