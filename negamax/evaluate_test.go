@@ -37,6 +37,26 @@ func TestPawnStructureAnalysis(t *testing.T) {
 	}
 }
 
+func TestPawnIsPassed(t *testing.T) {
+	oppfullpawns := []engine.Square{}
+	oppfullpawns = append(oppfullpawns, engine.Square{2, 5})
+	pawn := &engine.Piece{
+		Position: engine.Square{
+			X: 1,
+			Y: 2,
+		},
+		Color: 1,
+	}
+	if pawnIsPassed(pawn, oppfullpawns) {
+		t.Error("False positive on passed pawn")
+	}
+	pawn.Position.X = 8
+	if !pawnIsPassed(pawn, oppfullpawns) {
+		t.Error("False negative on passed pawn")
+	}
+
+}
+
 func TestCheckKingSafety(t *testing.T) {
 	if score := checkKingSafety(1, [8]int{}); score > 0 {
 		t.Errorf("Isolated king in corner gives positive score of %f", score)

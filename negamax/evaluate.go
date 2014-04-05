@@ -5,15 +5,16 @@ import (
 )
 
 const (
-	WIN            = 500
-	LOSS           = -500
+	WIN            = 255
+	LOSS           = -255
 	DRAW           = 0
 	LONGPAWNCHAIN  = .05 // per pawn
 	ISOLATEDPAWN   = -.15
-	DOUBLEDPAWN    = -float64(1) / float64(7) // increases for tripled, etc. pawns
-	KINGINCORNER   = .3                       // king in a castled position
-	KINGONOPENFILE = -.5                      // king not protected by a pawn
-	KINGPROTECTED  = .2                       // king protected by a pawn, applies to pawns on files near king
+	DOUBLEDPAWN    = -.4 // increases for tripled, etc. pawns
+	KINGINCORNER   = .3  // king in a castled position
+	KINGONOPENFILE = -.5 // king not protected by a pawn
+	KINGPROTECTED  = .2  // king protected by a pawn, applies to pawns on files near king
+	PASSEDPAWN     = .75 // pawn has no opposing pawns blocking it from promoting
 )
 
 var (
@@ -57,6 +58,8 @@ func EvalBoard(b *engine.Board) (score float64) {
 	attackarray := [8][8]int{}
 	mypawns := [8]int{}
 	opppawns := [8]int{}
+	myfullpawns := []engine.Square{}
+	oppfullpawns := []engine.Square{}
 	var heavies int // count of opponent's queens and rooks
 	for _, piece := range b.Board {
 		// add piece value to score and update attack array
@@ -65,8 +68,10 @@ func EvalBoard(b *engine.Board) (score float64) {
 		if piece.Name == 'p' {
 			if piece.Color == b.Turn {
 				mypawns[piece.Position.X-1] += 1
+				myfullpawns = append(myfullpawns, piece.Position)
 			} else {
 				opppawns[piece.Position.X-1] += 1
+				oppfullpawns = append(oppfullpawns, piece.Position)
 			}
 		} else if (piece.Name == 'q' || piece.Name == 'r') && piece.Color == b.Turn*-1 {
 			heavies += 1
@@ -86,12 +91,33 @@ func EvalBoard(b *engine.Board) (score float64) {
 				// endgame stuff
 			}
 		} else if piece.Name == 'p' {
-
+			// reward passed pawns
+			if piece.Color == b.Turn {
+				if pawnIsPassed(piece, oppfullpawns) {
+					score += PASSEDPAWN
+				}
+			} else {
+				if pawnIsPassed(piece, myfullpawns) {
+					score -= PASSEDPAWN
+				}
+			}
 		} else {
 
 		}
 	}
 	return score
+}
+
+// Returns whether a given pawn has no opposing pawns blocking its path in any of its adjacent files
+func pawnIsPassed(pawn *engine.Piece, oppfullpawns []engine.Square) bool {
+	for _, p := range oppfullpawns {
+		if p.X-pawn.Position.X == 1 || p.X-pawn.Position.X == 0 || p.X-pawn.Position.X == -1 {
+			if (pawn.Color == 1 && p.Y > pawn.Position.Y) || (pawn.Color == -1 && p.Y < pawn.Position.Y) {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 // Used in pawnStructureAnalysis to update a score given a discovered to be broken pawn chain
