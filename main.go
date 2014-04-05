@@ -34,6 +34,8 @@ var (
 	ranks    = map[byte]int{'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8}
 )
 
+// Intended to run as a goroutine.
+// Keeps track of the state of a single game, recieving and sending moves through the appropriate channel.
 func game() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
@@ -46,15 +48,16 @@ func game() {
 					break
 				}
 			}
-			fmt.Printf("%#v\n", move)
 			board.Move(move)
 		case <-quit:
-			return
+			board.SetUpPieces()
+			board.Turn = 1
 		}
 
 	}
 }
 
+// Accepts a string such as 'e4' and converts it to the Square struct.
 func stringToSquare(s string) engine.Square {
 	return engine.Square{
 		X: files[s[0]],
@@ -62,8 +65,7 @@ func stringToSquare(s string) engine.Square {
 	}
 }
 
-// Will eventually be responsible for recieving moves from chessboardjs.
-// For now, just trying to serve the right file.
+// Serves the index, including relevant JS files.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, index)
 }
