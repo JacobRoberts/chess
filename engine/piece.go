@@ -14,6 +14,29 @@ type Piece struct {
 	Infinite_direction bool     // if piece can move as far as it wants in given direction
 }
 
+// Measures how many squares a piece can attack in a given direction
+func (p *Piece) AttackRay(b *Board, dir [2]int) int {
+	if p.Position.X == 0 && p.Position.Y == 0 {
+		return 0
+	}
+	if !p.Infinite_direction {
+		return 1
+	}
+	for n := 1; n < 8; n++ {
+		s := &Square{
+			X: p.Position.X + dir[0]*n,
+			Y: p.Position.Y + dir[1]*n,
+		}
+		if b.occupied(s) != 0 {
+			if b.occupied(s) == p.Color*-1 {
+				return n
+			}
+			return n - 1
+		}
+	}
+	return 7
+}
+
 // Returns true if a piece p is attacking a square s.
 // "Attacking" means it could capture an opposing piece on that square;
 // A rook is attacking its own pawn next to it, but a pawn is not attacking a piece directly in front of it.

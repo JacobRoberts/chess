@@ -4,20 +4,19 @@ import (
 	"testing"
 )
 
-/*
-	Functions with working testing in place:
-		occupied
-		IsCheck
-		Move
-		legalMoves
-		canCastle
-		IsOver
-		CopyBoard
-		CopyMove
-		AllLegalMoves
-		moveIsNotCheck
-		makeMoveTo
-*/
+func TestAttackRay(t *testing.T) {
+	board := &Board{Turn: 1}
+	board.PlacePiece('r', 1, 1, 1)
+	board.PlacePiece('r', 1, 4, 1)
+	board.PlacePiece('r', -1, 1, 4)
+	rook := board.Board[0]
+	if num := rook.AttackRay(board, [2]int{1, 0}); num != 2 {
+		t.Errorf("Incorrect number when ray ends on own piece, expected 2, got %d", num)
+	}
+	if num := rook.AttackRay(board, [2]int{0, 1}); num != 3 {
+		t.Errorf("Incorrect number when ray ends on opposing piece, expected 3, got %d", num)
+	}
+}
 
 func TestAttacking(t *testing.T) {
 	board := &Board{Turn: 1}
