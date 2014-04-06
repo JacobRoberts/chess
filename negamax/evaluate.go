@@ -8,13 +8,16 @@ const (
 	WIN            = 255
 	LOSS           = -255
 	DRAW           = 0
+	HUNGPIECE      = -.4
 	LONGPAWNCHAIN  = .05 // per pawn
 	ISOLATEDPAWN   = -.15
-	DOUBLEDPAWN    = -.4 // increases for tripled, etc. pawns
-	KINGINCORNER   = .3  // king in a castled position
-	KINGONOPENFILE = -.5 // king not protected by a pawn
-	KINGPROTECTED  = .2  // king protected by a pawn, applies to pawns on files near king
-	PASSEDPAWN     = .75 // pawn has no opposing pawns blocking it from promoting
+	DOUBLEDPAWN    = -.4  // increases for tripled, etc. pawns
+	KINGINCORNER   = .3   // king in a castled position
+	KINGONOPENFILE = -.5  // king not protected by a pawn
+	KINGPROTECTED  = .2   // king protected by a pawn, applies to pawns on files near king
+	PASSEDPAWN     = .75  // pawn has no opposing pawns blocking it from promoting
+	CENTRALKNIGHT  = .3   // knight close to center of board
+	BISHOPSQUARES  = .025 // per square a bishop attacks
 )
 
 var (
@@ -47,7 +50,7 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 				Y: y,
 			}
 			if p.Attacking(s, b) {
-				a[y-1][x-1] += p.Color * b.Turn
+				a[x-1][y-1] += p.Color * b.Turn
 			}
 		}
 	}
@@ -87,6 +90,11 @@ func EvalBoard(b *engine.Board) (score float64) {
 	score += pawnStructureAnalysis(mypawns)
 	score -= pawnStructureAnalysis(opppawns)
 	for _, piece := range b.Board {
+		if piece.Name != 'q' {
+			if attackarray[piece.Position.X][piece.Position.Y] < 1 {
+				score += b.Turn * piece.Color * HUNGPIECE
+			}
+		}
 		switch piece.Name {
 		case 'k':
 			if heavies > 1 {
@@ -110,7 +118,15 @@ func EvalBoard(b *engine.Board) (score float64) {
 				}
 			}
 		case 'n':
-
+			if piece.Position.X >= 3 && piece.Position.X <= 6 && piece.Position.Y >= 3 && piece.Position.Y <= 6 {
+				score += b.Turn * piece.Color * CENTRALKNIGHT
+			}
+		case 'b':
+			var numattacking int
+			for _, dir := range piece.Directions {
+				numattacking += piece.AttackRay(b, dir)
+			}
+			score += piece.Color * b.Turn * numattacking * BISHOPSQUARES
 		}
 	}
 	return score
