@@ -21,6 +21,14 @@ var (
 	VALUES = map[byte]int{'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9}
 )
 
+// default math package uses float64
+func absInt(i int) int {
+	if i > 0 {
+		return i
+	}
+	return i * -1
+}
+
 /*
 
 Based heavily off of the analysis function here
@@ -62,7 +70,6 @@ func EvalBoard(b *engine.Board) (score float64) {
 	oppfullpawns := []engine.Square{}
 	var heavies int // count of opponent's queens and rooks
 	for _, piece := range b.Board {
-		// add piece value to score and update attack array
 		score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
 		updateAttackArray(b, piece, &attackarray)
 		if piece.Name == 'p' {
@@ -80,7 +87,8 @@ func EvalBoard(b *engine.Board) (score float64) {
 	score += pawnStructureAnalysis(mypawns)
 	score -= pawnStructureAnalysis(opppawns)
 	for _, piece := range b.Board {
-		if piece.Name == 'k' {
+		switch piece.Name {
+		case 'k':
 			if heavies > 1 {
 				if piece.Color == b.Turn {
 					score += checkKingSafety(piece.Position.X, mypawns)
@@ -90,7 +98,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 			} else {
 				// endgame stuff
 			}
-		} else if piece.Name == 'p' {
+		case 'p':
 			// reward passed pawns
 			if piece.Color == b.Turn {
 				if pawnIsPassed(piece, oppfullpawns) {
@@ -101,7 +109,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 					score -= PASSEDPAWN
 				}
 			}
-		} else {
+		case 'n':
 
 		}
 	}
@@ -111,7 +119,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 // Returns whether a given pawn has no opposing pawns blocking its path in any of its adjacent files
 func pawnIsPassed(pawn *engine.Piece, oppfullpawns []engine.Square) bool {
 	for _, p := range oppfullpawns {
-		if p.X-pawn.Position.X == 1 || p.X-pawn.Position.X == 0 || p.X-pawn.Position.X == -1 {
+		if absInt(p.X-pawn.Position.X) <= 1 {
 			if (pawn.Color == 1 && p.Y > pawn.Position.Y) || (pawn.Color == -1 && p.Y < pawn.Position.Y) {
 				return false
 			}
