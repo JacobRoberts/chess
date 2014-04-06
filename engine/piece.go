@@ -27,8 +27,8 @@ func (p *Piece) AttackRay(b *Board, dir [2]int) int {
 			X: p.Position.X + dir[0]*n,
 			Y: p.Position.Y + dir[1]*n,
 		}
-		if b.occupied(s) != 0 {
-			if b.occupied(s) == p.Color*-1 {
+		if b.Occupied(s) != 0 {
+			if b.Occupied(s) == p.Color*-1 {
 				return n
 			}
 			return n - 1
@@ -80,7 +80,7 @@ func (p *Piece) Attacking(s *Square, b *Board) bool {
 			if x == s.X && y == s.Y {
 				return true
 			}
-			if b.occupied(&Square{X: x, Y: y}) != 0 {
+			if b.Occupied(&Square{X: x, Y: y}) != 0 {
 				return false
 			}
 		}
@@ -159,9 +159,9 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 					X: p.Position.X + direction[0]*i,
 					Y: p.Position.Y + direction[1]*i,
 				}
-				if b.occupied(&s) == -2 || b.occupied(&s) == p.Color {
+				if b.Occupied(&s) == -2 || b.Occupied(&s) == p.Color {
 					break
-				} else if b.occupied(&s) == p.Color*-1 {
+				} else if b.Occupied(&s) == p.Color*-1 {
 					m := p.makeMoveTo(s.X, s.Y)
 					if checkcheck {
 						if !moveIsCheck(b, m) {
@@ -189,7 +189,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				X: p.Position.X + direction[0],
 				Y: p.Position.Y + direction[1],
 			}
-			if b.occupied(&s) == 0 || (b.occupied(&s) == p.Color*-1 && p.Name != 'p') {
+			if b.Occupied(&s) == 0 || (b.Occupied(&s) == p.Color*-1 && p.Name != 'p') {
 				m := p.makeMoveTo(s.X, s.Y)
 				if p.Name == 'p' && ((p.Color == 1 && s.Y == 8) || (p.Color == -1 && s.Y == 1)) {
 					for _, promotion := range [4]byte{'q', 'r', 'n', 'b'} {
@@ -222,7 +222,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				X: p.Position.X + val[1],
 				Y: p.Position.Y + val[0]*p.Color,
 			}
-			if b.occupied(&capture) == p.Color*-1 {
+			if b.Occupied(&capture) == p.Color*-1 {
 				m := p.makeMoveTo(capture.X, capture.Y)
 				if p.Name == 'p' && ((p.Color == 1 && capture.Y == 8) || (p.Color == -1 && capture.Y == 1)) {
 					for _, promotion := range [4]byte{'q', 'b', 'n', 'r'} {
@@ -252,7 +252,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				X: p.Position.X,
 				Y: p.Position.Y + 2*p.Color,
 			}
-			if b.occupied(&s) == 0 {
+			if b.Occupied(&s) == 0 {
 				m := p.makeMoveTo(s.X, s.Y)
 				if checkcheck {
 					if !moveIsCheck(b, m) {
@@ -269,7 +269,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 					X: p.Position.X + val[0],
 					Y: p.Position.Y,
 				}
-				if b.occupied(&s) == p.Color*-1 {
+				if b.Occupied(&s) == p.Color*-1 {
 					for _, piece := range b.Board {
 						if piece.Position == s && piece.Can_en_passant == true {
 							capturesquare := Square{

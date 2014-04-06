@@ -141,16 +141,16 @@ func TestOccupied(t *testing.T) {
 		X: 10,
 		Y: 10,
 	}
-	if out := b.occupied(whitesquare); out != 1 {
+	if out := b.Occupied(whitesquare); out != 1 {
 		t.Errorf("expected 1, got %d", out)
 	}
-	if out := b.occupied(blacksquare); out != -1 {
+	if out := b.Occupied(blacksquare); out != -1 {
 		t.Errorf("expected -1, got %d", out)
 	}
-	if out := b.occupied(emptysquare); out != 0 {
+	if out := b.Occupied(emptysquare); out != 0 {
 		t.Errorf("expected 0, got %d", out)
 	}
-	if out := b.occupied(nonsquare); out != -2 {
+	if out := b.Occupied(nonsquare); out != -2 {
 		t.Errorf("expected -2, got %d", out)
 	}
 }
