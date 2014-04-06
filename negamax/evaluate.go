@@ -43,14 +43,28 @@ http://www.frayn.net/beowulf/theory.html#analysis
 // Each value is how many times the mover attacks the square minus how many times the other player defends it.
 // Not optimized yet. Premature optimization and stuff.
 func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
-	for x := 1; x <= 8; x++ {
-		for y := 1; y <= 8; y++ {
+	if p.Name == 'p' {
+		captures := [2][2]int{{1, 1 * p.Color}, {-1, 1 * p.Color}}
+		for _, capture := range captures {
 			s := &engine.Square{
-				X: x,
-				Y: y,
+				X: p.Position.X + capture[0],
+				Y: p.Position.Y + capture[1],
 			}
-			if p.Attacking(s, b) {
-				a[x-1][y-1] += p.Color * b.Turn
+			if b.Occupied(s) == p.Color*-1 {
+				a[p.Position.X+capture[0]-1][p.Position.Y+capture[1]-1] += p.Color * b.Turn
+			}
+		}
+
+	} else {
+		for x := 1; x <= 8; x++ {
+			for y := 1; y <= 8; y++ {
+				s := &engine.Square{
+					X: x,
+					Y: y,
+				}
+				if p.Attacking(s, b) {
+					a[x-1][y-1] += p.Color * b.Turn
+				}
 			}
 		}
 	}
@@ -90,43 +104,47 @@ func EvalBoard(b *engine.Board) (score float64) {
 	score += pawnStructureAnalysis(mypawns)
 	score -= pawnStructureAnalysis(opppawns)
 	for _, piece := range b.Board {
-		if piece.Name != 'q' {
-			if attackarray[piece.Position.X][piece.Position.Y] < 1 {
-				score += b.Turn * piece.Color * HUNGPIECE
+		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
+			if piece.Name != 'q' {
+				if attackarray[piece.Position.X-1][piece.Position.Y-1] < 1 {
+					score += float64(b.Turn*piece.Color) * HUNGPIECE
+				}
 			}
-		}
-		switch piece.Name {
-		case 'k':
-			if heavies > 1 {
-				if piece.Color == b.Turn {
-					score += checkKingSafety(piece.Position.X, mypawns)
+			switch piece.Name {
+			case 'k':
+				if heavies > 1 {
+					if piece.Color == b.Turn {
+						score += checkKingSafety(piece.Position.X, mypawns)
+					} else {
+						score -= checkKingSafety(piece.Position.X, opppawns)
+					}
 				} else {
-					score -= checkKingSafety(piece.Position.X, opppawns)
+					// endgame stuff
 				}
-			} else {
-				// endgame stuff
-			}
-		case 'p':
-			// reward passed pawns
-			if piece.Color == b.Turn {
-				if pawnIsPassed(piece, oppfullpawns) {
-					score += PASSEDPAWN
+			case 'p':
+				// reward passed pawns
+				if piece.Color == b.Turn {
+					if pawnIsPassed(piece, oppfullpawns) {
+						score += PASSEDPAWN
+					}
+				} else {
+					if pawnIsPassed(piece, myfullpawns) {
+						score -= PASSEDPAWN
+					}
 				}
-			} else {
-				if pawnIsPassed(piece, myfullpawns) {
-					score -= PASSEDPAWN
+			case 'n':
+				if piece.Position.X >= 3 && piece.Position.X <= 6 && piece.Position.Y >= 3 && piece.Position.Y <= 6 {
+					score += float64(b.Turn*piece.Color) * CENTRALKNIGHT
 				}
+			case 'b':
+				var numattacking int
+				for _, dir := range piece.Directions {
+					numattacking += piece.AttackRay(b, dir)
+				}
+				score += float64(piece.Color*b.Turn*numattacking) * BISHOPSQUARES
+			case 'r':
+
 			}
-		case 'n':
-			if piece.Position.X >= 3 && piece.Position.X <= 6 && piece.Position.Y >= 3 && piece.Position.Y <= 6 {
-				score += b.Turn * piece.Color * CENTRALKNIGHT
-			}
-		case 'b':
-			var numattacking int
-			for _, dir := range piece.Directions {
-				numattacking += piece.AttackRay(b, dir)
-			}
-			score += piece.Color * b.Turn * numattacking * BISHOPSQUARES
 		}
 	}
 	return score
