@@ -110,7 +110,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 	opprooks := []engine.Square{}
 	for _, piece := range b.Board {
 		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
-			if piece.Name != 'q' {
+			if piece.Name != 'q' && piece.Name != 'k' {
 				if attackarray[piece.Position.X-1][piece.Position.Y-1] < 1 {
 					score += float64(b.Turn*piece.Color) * HUNGPIECE
 				}
