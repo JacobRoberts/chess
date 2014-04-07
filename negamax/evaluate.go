@@ -5,19 +5,23 @@ import (
 )
 
 const (
-	WIN            = 255
-	LOSS           = -255
-	DRAW           = 0
-	HUNGPIECE      = -.4
-	LONGPAWNCHAIN  = .05 // per pawn
-	ISOLATEDPAWN   = -.15
-	DOUBLEDPAWN    = -.4  // increases for tripled, etc. pawns
-	KINGINCORNER   = .3   // king in a castled position
-	KINGONOPENFILE = -.5  // king not protected by a pawn
-	KINGPROTECTED  = .2   // king protected by a pawn, applies to pawns on files near king
-	PASSEDPAWN     = .75  // pawn has no opposing pawns blocking it from promoting
-	CENTRALKNIGHT  = .3   // knight close to center of board
-	BISHOPSQUARES  = .025 // per square a bishop attacks
+	WIN             = 255
+	LOSS            = -255
+	DRAW            = 0
+	HUNGPIECE       = -.4
+	LONGPAWNCHAIN   = .05 // per pawn
+	ISOLATEDPAWN    = -.15
+	DOUBLEDPAWN     = -.4  // increases for tripled, etc. pawns
+	KINGINCORNER    = .3   // king in a castled position
+	KINGONOPENFILE  = -.5  // king not protected by a pawn
+	KINGPROTECTED   = .2   // king protected by a pawn, applies to pawns on files near king
+	PASSEDPAWN      = .75  // pawn has no opposing pawns blocking it from promoting
+	CENTRALKNIGHT   = .3   // knight close to center of board
+	BISHOPSQUARES   = .025 // per square a bishop attacks
+	ROOKONSEVENTH   = .8   // rook is on the second to last rank relative to color
+	CONNECTEDROOKS  = .5   // both rooks share the same rank or file
+	IMPORTANTSQUARE = .25  // the central squares
+	WEAKSQUARE      = .07  // outer squares
 )
 
 var (
@@ -54,7 +58,6 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 				a[p.Position.X+capture[0]-1][p.Position.Y+capture[1]-1] += p.Color * b.Turn
 			}
 		}
-
 	} else {
 		for x := 1; x <= 8; x++ {
 			for y := 1; y <= 8; y++ {
@@ -103,6 +106,8 @@ func EvalBoard(b *engine.Board) (score float64) {
 	}
 	score += pawnStructureAnalysis(mypawns)
 	score -= pawnStructureAnalysis(opppawns)
+	myrooks := []engine.Square{}
+	opprooks := []engine.Square{}
 	for _, piece := range b.Board {
 		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
 			if piece.Name != 'q' {
@@ -143,11 +148,47 @@ func EvalBoard(b *engine.Board) (score float64) {
 				}
 				score += float64(piece.Color*b.Turn*numattacking) * BISHOPSQUARES
 			case 'r':
-
+				if (piece.Color == -1 && piece.Position.Y == 2) || (piece.Color == 1 && piece.Position.Y == 7) {
+					score += float64(piece.Color*b.Turn) * ROOKONSEVENTH
+				}
+				if piece.Color == b.Turn {
+					myrooks = append(myrooks, piece.Position)
+				} else {
+					opprooks = append(opprooks, piece.Position)
+				}
+			}
+		}
+	}
+	score += rookAnalysis(myrooks)
+	score -= rookAnalysis(opprooks)
+	for x := 0; x < 8; x++ {
+		for y := 0; y < 8; y++ {
+			if attackarray[x][y] > 0 {
+				if x >= 2 && x <= 5 && y >= 2 && y <= 5 {
+					score += IMPORTANTSQUARE
+				} else {
+					score += WEAKSQUARE
+				}
+			} else if attackarray[x][y] < 0 {
+				if x >= 2 && x <= 5 && y >= 2 && y <= 5 {
+					score -= IMPORTANTSQUARE
+				} else {
+					score -= WEAKSQUARE
+				}
 			}
 		}
 	}
 	return score
+}
+
+func rookAnalysis(rooks []engine.Square) float64 {
+	if len(rooks) != 2 {
+		return 0
+	}
+	if rooks[0].X == rooks[1].X || rooks[0].Y == rooks[1].Y {
+		return CONNECTEDROOKS
+	}
+	return 0
 }
 
 // Returns whether a given pawn has no opposing pawns blocking its path in any of its adjacent files
