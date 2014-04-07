@@ -7,8 +7,7 @@ import (
 // First-level negamax search function.
 func NegaMax(b *engine.Board, depth int) *engine.Move {
 	if b.IsOver() != 0 || depth == 0 {
-		b.Lastmove.Score = EvalBoard(b)
-		return &b.Lastmove
+		return nil
 	}
 	var move engine.Move
 	move.Score = LOSS
