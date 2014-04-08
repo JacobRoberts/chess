@@ -2,9 +2,8 @@ package engine
 
 // array of all pieces on a given board
 type Board struct {
-	Board    []*Piece // all of the pieces on the board
-	Lastmove Move
-	Turn     int // 1 : white , -1 : black
+	Board []*Piece // all of the pieces on the board
+	Turn  int      // 1 : white , -1 : black
 }
 
 // Checks if a king is in check.
@@ -46,7 +45,7 @@ func (b *Board) AllLegalMoves() []*Move {
 func (b *Board) CopyBoard() *Board {
 	newboard := new(Board)
 	s := make([]*Piece, len(b.Board))
-	newboard.Lastmove, newboard.Turn = b.Lastmove, b.Turn
+	newboard.Turn = b.Turn
 	for i, _ := range b.Board {
 		p := new(Piece)
 		*p = *b.Board[i]
