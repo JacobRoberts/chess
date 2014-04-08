@@ -1,8 +1,6 @@
 package negamax
 
-import (
-	"github.com/jacobroberts/chess/engine"
-)
+import "github.com/jacobroberts/chess/engine"
 
 // First-level negamax search function.
 func NegaMax(b *engine.Board, depth int) *engine.Move {

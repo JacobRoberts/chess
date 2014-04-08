@@ -1,27 +1,25 @@
 package negamax
 
-import (
-	"github.com/jacobroberts/chess/engine"
-)
+import "github.com/jacobroberts/chess/engine"
 
 const (
-	WIN             = 255
-	LOSS            = -255
-	DRAW            = 0
-	HUNGPIECE       = -.4
-	LONGPAWNCHAIN   = .05 // per pawn
-	ISOLATEDPAWN    = -.15
-	DOUBLEDPAWN     = -.4  // increases for tripled, etc. pawns
-	KINGINCORNER    = .3   // king in a castled position
-	KINGONOPENFILE  = -.5  // king not protected by a pawn
-	KINGPROTECTED   = .2   // king protected by a pawn, applies to pawns on files near king
-	PASSEDPAWN      = .75  // pawn has no opposing pawns blocking it from promoting
-	CENTRALKNIGHT   = .3   // knight close to center of board
-	BISHOPSQUARES   = .025 // per square a bishop attacks
-	ROOKONSEVENTH   = .8   // rook is on the second to last rank relative to color
-	CONNECTEDROOKS  = .5   // both rooks share the same rank or file
-	IMPORTANTSQUARE = .25  // the central squares
-	WEAKSQUARE      = .07  // outer squares
+	WIN             float64 = 255
+	LOSS            float64 = -255
+	DRAW            float64 = 0
+	HUNGPIECE               = -.4
+	LONGPAWNCHAIN           = .05 // per pawn
+	ISOLATEDPAWN            = -.15
+	DOUBLEDPAWN             = -.4  // increases for tripled, etc. pawns
+	KINGINCORNER            = .3   // king in a castled position
+	KINGONOPENFILE          = -.5  // king not protected by a pawn
+	KINGPROTECTED           = .2   // king protected by a pawn, applies to pawns on files near king
+	PASSEDPAWN              = .75  // pawn has no opposing pawns blocking it from promoting
+	CENTRALKNIGHT           = .3   // knight close to center of board
+	BISHOPSQUARES           = .025 // per square a bishop attacks
+	ROOKONSEVENTH           = .8   // rook is on the second to last rank relative to color
+	CONNECTEDROOKS          = .5   // both rooks share the same rank or file
+	IMPORTANTSQUARE         = .25  // the central squares
+	WEAKSQUARE              = .07  // outer squares
 )
 
 var (
@@ -75,12 +73,12 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 
 // Returns the score from the point of view of the person whose turn it is.
 // Positive numbers indicate a stronger position.
-func EvalBoard(b *engine.Board) (score float64) {
+func EvalBoard(b *engine.Board) float64 {
 	if over := b.IsOver(); over != 0 {
 		if over == 1 {
 			return DRAW
 		} else {
-			return float64(WIN / 2 * over * b.Turn)
+			return WIN / 2 * float64(over*b.Turn)
 		}
 	}
 	attackarray := [8][8]int{}
@@ -89,6 +87,7 @@ func EvalBoard(b *engine.Board) (score float64) {
 	myfullpawns := []engine.Square{}
 	oppfullpawns := []engine.Square{}
 	var heavies int // count of opponent's queens and rooks
+	var score float64
 	for _, piece := range b.Board {
 		score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
 		updateAttackArray(b, piece, &attackarray)
