@@ -24,8 +24,7 @@ import (
 // When called, alpha and beta should be set to the lowest and highest values possible.
 func NegaScout(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 	if b.IsOver() != 0 || depth == 0 {
-		b.Lastmove.Score = EvalBoard(b)
-		return &b.Lastmove
+		return nil
 	}
 	var move engine.Move
 
