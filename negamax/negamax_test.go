@@ -52,7 +52,7 @@ func TestNegaScout(t *testing.T) {
 	board.PlacePiece('r', 1, 4, 8)
 	move = NegaScout(board, 4, LOSS, WIN)
 	if err := board.Move(move); err != nil {
-		t.Errorf("Move from negascout was rejected by board.Move() because %s", err)
+		t.Errorf("Move %+v from negascout was rejected by board.Move() because %s", move, err)
 	}
 	if move.Begin.X != 4 || move.End.X != 2 || move.End.Y != 8 {
 		t.Errorf("Negascout could not find two move checkmate. Returned a move of %+v", move)
