@@ -31,8 +31,8 @@ const (
 var (
 	incmoves = make(chan *engine.Move, 1)
 	quit     = make(chan int, 1)
-	files    = map[byte]int{'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8}
-	ranks    = map[byte]int{'1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8}
+	files    = []byte{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}
+	ranks    = []byte{'1', '2', '3', '4', '5', '6', '7', '8'}
 )
 
 // Intended to run as a goroutine.
@@ -63,10 +63,26 @@ func game() {
 
 // Accepts a string such as 'e4' and converts it to the Square struct.
 func stringToSquare(s string) engine.Square {
-	return engine.Square{
-		X: files[s[0]],
-		Y: ranks[s[1]],
+	var square engine.Square
+	for i, b := range files {
+		if b == s[0] {
+			square.X = i + 1
+			break
+		}
 	}
+	for i, b := range ranks {
+		if b == s[1] {
+			square.Y = i + 1
+			break
+		}
+	}
+	return square
+}
+
+// Takes a Square struct and converts it to common chess notation
+func squareToString(s engine.Square) string {
+	bytearray := [2]byte{files[s.X-1], ranks[s.Y-1]}
+	return string(bytearray[:])
 }
 
 // Serves the index, including relevant JS files.
