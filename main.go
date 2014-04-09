@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/jacobroberts/chess/engine"
+	"github.com/jacobroberts/chess/negamax"
 
 	"github.com/gorilla/mux"
 )
@@ -29,6 +31,7 @@ const (
 
 var (
 	incmoves = make(chan *engine.Move, 1)
+	outmoves = make(chan *engine.Move, 1)
 	quit     = make(chan int, 1)
 	files    = []byte{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}
 	ranks    = []byte{'1', '2', '3', '4', '5', '6', '7', '8'}
@@ -41,18 +44,24 @@ func game() {
 	board.SetUpPieces()
 	for {
 		select {
-		case move := <-incmoves:
+		case oppmove := <-incmoves:
 			for _, p := range board.Board {
-				if p.Position.X == move.Begin.X && p.Position.Y == move.Begin.Y {
-					move.Piece = p.Name
+				if p.Position.X == oppmove.Begin.X && p.Position.Y == oppmove.Begin.Y {
+					oppmove.Piece = p.Name
 					break
 				}
 			}
-			board.Move(move)
+			if err := board.Move(oppmove); err != nil {
+				// hope this never happense
+			}
 			board.PrintBoard()
-			// if m := negamax.NegaMax(board, 4); m != nil {
-			// 	// send move to ajax
-			// }
+			if mymove := negamax.NegaMax(board, 1); mymove != nil {
+				if err := board.Move(mymove); err != nil {
+					// hope this never happens
+				}
+				outmoves <- mymove
+			}
+			board.PrintBoard()
 		case <-quit:
 			board.SetUpPieces()
 			board.Turn = 1
@@ -102,12 +111,15 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 	if p, ok := r.Form["promotion"]; ok {
 		promotion = p[0][0]
 	}
-	m := &engine.Move{
+	oppmove := &engine.Move{
 		Begin:     stringToSquare(r.Form["from"][0]),
 		End:       stringToSquare(r.Form["to"][0]),
 		Promotion: promotion,
 	}
-	incmoves <- m
+	incmoves <- oppmove
+	mymove := <-outmoves
+	mymoveB, _ := json.Marshal(map[string]string{"from": squareToString(mymove.Begin), "to": squareToString(mymove.End), "promotion": string(mymove.Promotion)})
+	fmt.Fprint(w, mymoveB)
 }
 
 // Listens for HTTP requests and dispatches them to appropriate function
