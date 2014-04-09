@@ -89,18 +89,20 @@ func EvalBoard(b *engine.Board) float64 {
 	var heavies int // count of opponent's queens and rooks
 	var score float64
 	for _, piece := range b.Board {
-		score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
-		updateAttackArray(b, piece, &attackarray)
-		if piece.Name == 'p' {
-			if piece.Color == b.Turn {
-				mypawns[piece.Position.X-1] += 1
-				myfullpawns = append(myfullpawns, piece.Position)
-			} else {
-				opppawns[piece.Position.X-1] += 1
-				oppfullpawns = append(oppfullpawns, piece.Position)
+		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
+			score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
+			updateAttackArray(b, piece, &attackarray)
+			if piece.Name == 'p' {
+				if piece.Color == b.Turn {
+					mypawns[piece.Position.X-1] += 1
+					myfullpawns = append(myfullpawns, piece.Position)
+				} else {
+					opppawns[piece.Position.X-1] += 1
+					oppfullpawns = append(oppfullpawns, piece.Position)
+				}
+			} else if (piece.Name == 'q' || piece.Name == 'r') && piece.Color == b.Turn*-1 {
+				heavies += 1
 			}
-		} else if (piece.Name == 'q' || piece.Name == 'r') && piece.Color == b.Turn*-1 {
-			heavies += 1
 		}
 	}
 	score += pawnStructureAnalysis(mypawns)
