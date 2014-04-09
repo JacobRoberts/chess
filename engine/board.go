@@ -25,6 +25,7 @@ func (b *Board) PrintBoard() {
 		}
 		fmt.Println()
 	}
+	fmt.Println()
 }
 
 // Checks if a king is in check.
