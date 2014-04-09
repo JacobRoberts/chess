@@ -1,9 +1,30 @@
 package engine
 
+import "fmt"
+
 // array of all pieces on a given board
 type Board struct {
 	Board []*Piece // all of the pieces on the board
 	Turn  int      // 1 : white , -1 : black
+}
+
+func (b *Board) PrintBoard() {
+	boardarr := [8][8]string{}
+	for _, piece := range b.Board {
+		if piece.Position.X != 0 {
+			boardarr[piece.Position.Y-1][piece.Position.X-1] = string(piece.Name)
+		}
+	}
+	for y := 7; y >= 0; y-- {
+		for x := 0; x < 8; x++ {
+			if boardarr[y][x] == "" {
+				fmt.Printf("  ")
+			} else {
+				fmt.Printf("%s ", boardarr[y][x])
+			}
+		}
+		fmt.Println()
+	}
 }
 
 // Checks if a king is in check.

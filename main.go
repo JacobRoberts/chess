@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/jacobroberts/chess/engine"
-	"github.com/jacobroberts/chess/negamax"
 
 	"github.com/gorilla/mux"
 )
@@ -50,9 +49,10 @@ func game() {
 				}
 			}
 			board.Move(move)
-			if m := negamax.NegaMax(board, 4); m != nil {
-				// send move to ajax
-			}
+			board.PrintBoard()
+			// if m := negamax.NegaMax(board, 4); m != nil {
+			// 	// send move to ajax
+			// }
 		case <-quit:
 			board.SetUpPieces()
 			board.Turn = 1
