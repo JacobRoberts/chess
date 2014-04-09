@@ -30,7 +30,11 @@ var onDrop = function(source, target) {
 
   $.ajax({
     url: "move",
-    data: { from: source, to: target, promotion: promote }
+    data: { from: source, to: target, promotion: promote },
+    datatype: 'json',
+    success: function(response) { 
+      game.move(response)
+    }
   })
     .done( function () {
       updateStatus();
