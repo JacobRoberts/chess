@@ -37,8 +37,6 @@ var (
 	ranks    = []byte{'1', '2', '3', '4', '5', '6', '7', '8'}
 )
 
-type Response map[string]string
-
 // Intended to run as a goroutine.
 // Keeps track of the state of a single game, recieving and sending moves through the appropriate channel.
 func game() {
@@ -120,7 +118,7 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	incmoves <- oppmove
 	mymove := <-outmoves
-	mymoveD := Response{"from": squareToString(mymove.Begin), "to": squareToString(mymove.End), "promotion": "q"}
+	mymoveD := map[string]interface{}{"from": squareToString(mymove.Begin), "to": squareToString(mymove.End), "promotion": "q"}
 	mymoveB, _ := json.Marshal(mymoveD)
 	fmt.Fprint(w, string(mymoveB))
 }
