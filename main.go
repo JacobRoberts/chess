@@ -37,6 +37,8 @@ var (
 	ranks    = []byte{'1', '2', '3', '4', '5', '6', '7', '8'}
 )
 
+type Response map[string]string
+
 // Intended to run as a goroutine.
 // Keeps track of the state of a single game, recieving and sending moves through the appropriate channel.
 func game() {
@@ -102,7 +104,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 // Gets a move form from an AJAX request and sends it to the chess program.
 // Waits for a response from the chess program and sends that back to the client.
 func chessHandler(w http.ResponseWriter, r *http.Request) {
-	r.Header.Set("content-type", "application/json")
+	r.Header.Set("Content-Type", "application/json")
 	if err := r.ParseForm(); err != nil {
 		// not sure what to do here
 		panic(err)
@@ -118,8 +120,9 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	incmoves <- oppmove
 	mymove := <-outmoves
-	mymoveB, _ := json.Marshal(map[string]string{"from": squareToString(mymove.Begin), "to": squareToString(mymove.End), "promotion": string(mymove.Promotion)})
-	fmt.Fprint(w, mymoveB)
+	mymoveD := Response{"from": squareToString(mymove.Begin), "to": squareToString(mymove.End), "promotion": "q"}
+	mymoveB, _ := json.Marshal(mymoveD)
+	fmt.Fprint(w, string(mymoveB))
 }
 
 // Listens for HTTP requests and dispatches them to appropriate function

@@ -33,7 +33,10 @@ var onDrop = function(source, target) {
     data: { from: source, to: target, promotion: promote },
     datatype: 'json',
     success: function(response) { 
-      game.move(response)
+      console.log(response);
+      console.log(response["from"]);
+      board.move(response["from"] + "-" + response["to"]);
+      game.move(response);
     }
   })
     .done( function () {
