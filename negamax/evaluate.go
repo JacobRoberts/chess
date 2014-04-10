@@ -57,6 +57,7 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 			}
 		}
 	} else {
+		// optimize this using AttackRay later
 		for x := 1; x <= 8; x++ {
 			for y := 1; y <= 8; y++ {
 				s := &engine.Square{
