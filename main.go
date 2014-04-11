@@ -33,8 +33,6 @@ var (
 	incmoves = make(chan *engine.Move, 1)
 	outmoves = make(chan *engine.Move, 1)
 	quit     = make(chan int, 1)
-	files    = []byte{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}
-	ranks    = []byte{'1', '2', '3', '4', '5', '6', '7', '8'}
 )
 
 // Intended to run as a goroutine.
@@ -54,12 +52,14 @@ func game() {
 			if err := board.Move(oppmove); err != nil {
 				// hope this never happense
 			}
+			fmt.Println(oppmove.ToString())
 			board.PrintBoard()
 			if mymove := negamax.NegaMax(board, 1); mymove != nil {
 				if err := board.Move(mymove); err != nil {
 					// hope this never happens
 				}
 				outmoves <- mymove
+				fmt.Println(mymove.ToString())
 			}
 			board.PrintBoard()
 		case <-quit:
@@ -73,25 +73,19 @@ func game() {
 // Accepts a string such as 'e4' and converts it to the Square struct.
 func stringToSquare(s string) engine.Square {
 	var square engine.Square
-	for i, b := range files {
+	for i, b := range engine.Files {
 		if b == s[0] {
 			square.X = i + 1
 			break
 		}
 	}
-	for i, b := range ranks {
+	for i, b := range engine.Ranks {
 		if b == s[1] {
 			square.Y = i + 1
 			break
 		}
 	}
 	return square
-}
-
-// Takes a Square struct and converts it to common chess notation
-func squareToString(s engine.Square) string {
-	bytearray := [2]byte{files[s.X-1], ranks[s.Y-1]}
-	return string(bytearray[:])
 }
 
 // Serves the index, including relevant JS files.
@@ -118,7 +112,7 @@ func chessHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	incmoves <- oppmove
 	mymove := <-outmoves
-	mymoveD := map[string]interface{}{"from": squareToString(mymove.Begin), "to": squareToString(mymove.End), "promotion": "q"}
+	mymoveD := map[string]interface{}{"from": mymove.Begin.ToString(), "to": mymove.End.ToString(), "promotion": "q"}
 	mymoveB, _ := json.Marshal(mymoveD)
 	fmt.Fprint(w, string(mymoveB))
 }

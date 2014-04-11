@@ -49,6 +49,10 @@ func (m *Move) CopyMove() *Move {
 	return newmove
 }
 
+func (m *Move) ToString() string {
+	return string(m.Piece) + m.Begin.ToString() + "-" + m.End.ToString()
+}
+
 // Modifies a board in-place.
 // Returns an error without modifying board if illegal move.
 // Sets a captured piece's location to (0, 0)
