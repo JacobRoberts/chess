@@ -1,6 +1,9 @@
 package engine
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // array of all pieces on a given board
 type Board struct {
@@ -11,8 +14,12 @@ type Board struct {
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
-		if piece.Position.X != 0 {
-			boardarr[piece.Position.Y-1][piece.Position.X-1] = string(piece.Name)
+		if piece.Position.X != 0 && piece.Position.Y != 0 {
+			if piece.Color == -1 {
+				boardarr[piece.Position.Y-1][piece.Position.X-1] = strings.ToUpper(string(piece.Name))
+			} else {
+				boardarr[piece.Position.Y-1][piece.Position.X-1] = string(piece.Name)
+			}
 		}
 	}
 	for y := 7; y >= 0; y-- {
