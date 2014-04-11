@@ -27,11 +27,11 @@ func (p *Piece) AttackRay(b *Board, dir [2]int) int {
 			X: p.Position.X + dir[0]*n,
 			Y: p.Position.Y + dir[1]*n,
 		}
-		if b.Occupied(s) != 0 {
-			if b.Occupied(s) == p.Color*-1 {
-				return n
+		if occupied := b.Occupied(s); occupied != 0 {
+			if b.Occupied(s) == -2 {
+				return n - 1
 			}
-			return n - 1
+			return n
 		}
 	}
 	return 7

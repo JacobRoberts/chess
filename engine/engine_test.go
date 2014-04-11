@@ -10,15 +10,14 @@ func TestAttackRay(t *testing.T) {
 	board.PlacePiece('r', 1, 4, 1)
 	board.PlacePiece('r', -1, 1, 4)
 	rook := board.Board[0]
-	if num := rook.AttackRay(board, [2]int{1, 0}); num != 2 {
-		t.Errorf("Incorrect number when ray ends on own piece, expected 2, got %d", num)
+	if num := rook.AttackRay(board, [2]int{1, 0}); num != 3 {
+		t.Errorf("Incorrect number when ray ends on own piece, expected 3, got %d", num)
 	}
 	if num := rook.AttackRay(board, [2]int{0, 1}); num != 3 {
 		t.Errorf("Incorrect number when ray ends on opposing piece, expected 3, got %d", num)
 	}
-	board.PlacePiece('r', 1, 1, 2)
-	if num := rook.AttackRay(board, [2]int{0, 1}); num != 0 {
-		t.Errorf("Giving %d instead of 0 value when own piece is directly in front", num)
+	if num := rook.AttackRay(board, [2]int{-1, 0}); num != 0 {
+		t.Errorf("Incorrect number attacking off board, expected 0, got %d", num)
 	}
 }
 
