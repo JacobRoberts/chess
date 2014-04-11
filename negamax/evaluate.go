@@ -43,7 +43,6 @@ http://www.frayn.net/beowulf/theory.html#analysis
 
 // Represents the board as an array of aggression.
 // Each value is how many times the mover attacks the square minus how many times the other player defends it.
-// Not optimized yet. Premature optimization and stuff.
 func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 	if p.Name == 'p' {
 		captures := [2][2]int{{1, 1 * p.Color}, {-1, 1 * p.Color}}
