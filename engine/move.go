@@ -51,7 +51,7 @@ func (m *Move) CopyMove() *Move {
 
 // Modifies a board in-place.
 // Returns an error without modifying board if illegal move.
-// Removes a captured piece entirely from board.
+// Sets a captured piece's location to (0, 0)
 // Changes the turn of the board once move is successfully completed.
 func (b *Board) Move(m *Move) error {
 	if m.Piece == 'k' && m.Begin.X-m.End.X != 1 && m.End.X-m.Begin.X != 1 {
