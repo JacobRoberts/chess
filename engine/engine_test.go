@@ -341,6 +341,13 @@ func TestLegalMoves(t *testing.T) {
 	if castles != 2 {
 		t.Errorf("The wrong amount of valid castles were found. Expected 2, got %d", castles)
 	}
+	board = &Board{Turn: 1}
+	board.PlacePiece('p', 1, 2, 2)
+	board.Board[0].Can_double_move = true
+	board.PlacePiece('p', -1, 2, 3)
+	if numlegalmoves := len(board.Board[0].legalMoves(board, true)); numlegalmoves != 0 {
+		t.Errorf("Blocked pawn still had %d legal move(s)", numlegalmoves)
+	}
 }
 
 func TestCanCastle(t *testing.T) {

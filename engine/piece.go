@@ -225,12 +225,16 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 			}
 		}
 		if p.Can_double_move {
-			s := Square{
+			singlesquare := Square{
+				X: p.Position.X,
+				Y: p.Position.Y + p.Color,
+			}
+			doublesquare := Square{
 				X: p.Position.X,
 				Y: p.Position.Y + 2*p.Color,
 			}
-			if b.Occupied(&s) == 0 {
-				m := p.makeMoveTo(s.X, s.Y)
+			if b.Occupied(&singlesquare) == 0 && b.Occupied(&doublesquare) == 0 {
+				m := p.makeMoveTo(doublesquare.X, doublesquare.Y)
 				if checkcheck {
 					if !moveIsCheck(b, m) {
 						legals = append(legals, m)
