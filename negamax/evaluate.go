@@ -48,24 +48,19 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 	if p.Name == 'p' {
 		captures := [2][2]int{{1, 1 * p.Color}, {-1, 1 * p.Color}}
 		for _, capture := range captures {
-			s := &engine.Square{
-				X: p.Position.X + capture[0],
-				Y: p.Position.Y + capture[1],
-			}
-			if b.Occupied(s) == p.Color*-1 {
-				a[p.Position.X+capture[0]-1][p.Position.Y+capture[1]-1] += p.Color * b.Turn
-			}
+			a[p.Position.X+capture[0]-1][p.Position.Y+capture[1]-1] += p.Color * b.Turn
 		}
 	} else {
-		// optimize this using AttackRay later
-		for x := 1; x <= 8; x++ {
-			for y := 1; y <= 8; y++ {
-				s := &engine.Square{
-					X: x,
-					Y: y,
+		for _, dir := range p.Directions {
+			if p.Infinite_direction {
+				for i := 1; i <= p.AttackRay(b, dir); i++ {
+					a[p.Position.X+dir[0]*i-1][p.Position.Y+dir[1]*i-1] += p.Color * b.Turn
 				}
-				if p.Attacking(s, b) {
-					a[x-1][y-1] += p.Color * b.Turn
+			} else {
+				destx := p.Position.X + dir[0]
+				desty := p.Position.Y + dir[1]
+				if 0 < destx && destx < 9 && 0 < desty && desty < 9 {
+					a[destx-1][desty-1] += p.Color * b.Turn
 				}
 			}
 		}

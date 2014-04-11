@@ -12,6 +12,7 @@ func TestAttackArray(t *testing.T) {
 	board.PlacePiece('r', -1, 1, 8)
 	board.PlacePiece('r', -1, 8, 1)
 	board.PlacePiece('p', 1, 2, 7)
+	board.PlacePiece('b', 1, 5, 5)
 	attackarray := [8][8]int{}
 	for i := 0; i < len(board.Board); i++ {
 		updateAttackArray(board, board.Board[i], &attackarray)
@@ -19,8 +20,11 @@ func TestAttackArray(t *testing.T) {
 	if attackarray[0][0] != -1 {
 		t.Errorf("Expected -1 attack value on square (1, 1), got %d", attackarray[0][0])
 	}
-	if attackarray[7][0] != 1 {
+	if attackarray[0][7] != 1 {
 		t.Errorf("Expected 1 attack value when pawn was threatening capture on square (8, 1), got %d", attackarray[7][0])
+	}
+	if attackarray[4][4] != 0 {
+		t.Errorf("Expected 0 on square piece occupies, got %d", attackarray[4][4])
 	}
 }
 
