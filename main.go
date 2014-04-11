@@ -102,7 +102,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 // Gets a move form from an AJAX request and sends it to the chess program.
 // Waits for a response from the chess program and sends that back to the client.
 func chessHandler(w http.ResponseWriter, r *http.Request) {
-	r.Header.Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	if err := r.ParseForm(); err != nil {
 		// not sure what to do here
 		panic(err)
