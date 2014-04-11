@@ -48,7 +48,11 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 	if p.Name == 'p' {
 		captures := [2][2]int{{1, 1 * p.Color}, {-1, 1 * p.Color}}
 		for _, capture := range captures {
-			a[p.Position.X+capture[0]-1][p.Position.Y+capture[1]-1] += p.Color * b.Turn
+			capx := p.Position.X + capture[0]
+			capy := p.Position.Y + capture[1]
+			if 0 < capx && capx < 9 && 0 < capy && capy < 9 {
+				a[capx-1][capy-1] += p.Color * b.Turn
+			}
 		}
 	} else {
 		for _, dir := range p.Directions {
