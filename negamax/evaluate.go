@@ -53,7 +53,7 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 	} else {
 		for _, dir := range p.Directions {
 			if p.Infinite_direction {
-				for i := 1; i <= p.AttackRay(b, dir); i++ {
+				for i := 1; i <= AttackRay(p, b, dir); i++ {
 					a[p.Position.X+dir[0]*i-1][p.Position.Y+dir[1]*i-1] += p.Color * b.Turn
 				}
 			} else {
@@ -65,6 +65,29 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 			}
 		}
 	}
+}
+
+// Measures how many squares a piece can attack in a given direction
+func AttackRay(p *engine.Piece, b *engine.Board, dir [2]int) int {
+	if p.Position.X == 0 && p.Position.Y == 0 {
+		return 0
+	}
+	if !p.Infinite_direction {
+		return 1
+	}
+	for n := 1; n < 8; n++ {
+		s := &engine.Square{
+			X: p.Position.X + dir[0]*n,
+			Y: p.Position.Y + dir[1]*n,
+		}
+		if occupied := b.Occupied(s); occupied != 0 {
+			if b.Occupied(s) == -2 {
+				return n - 1
+			}
+			return n
+		}
+	}
+	return 7
 }
 
 // Returns the score from the point of view of the person whose turn it is.
@@ -141,7 +164,7 @@ func EvalBoard(b *engine.Board) float64 {
 			case 'b':
 				var numattacking int
 				for _, dir := range piece.Directions {
-					numattacking += piece.AttackRay(b, dir)
+					numattacking += AttackRay(piece, b, dir)
 				}
 				score += float64(piece.Color*b.Turn*numattacking) * BISHOPSQUARES
 			case 'r':

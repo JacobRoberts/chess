@@ -6,6 +6,23 @@ import (
 	"github.com/jacobroberts/chess/engine"
 )
 
+func TestAttackRay(t *testing.T) {
+	board := &engine.Board{Turn: 1}
+	board.PlacePiece('r', 1, 1, 1)
+	board.PlacePiece('r', 1, 4, 1)
+	board.PlacePiece('r', -1, 1, 4)
+	rook := board.Board[0]
+	if num := AttackRay(rook, board, [2]int{1, 0}); num != 3 {
+		t.Errorf("Incorrect number when ray ends on own piece, expected 3, got %d", num)
+	}
+	if num := AttackRay(rook, board, [2]int{0, 1}); num != 3 {
+		t.Errorf("Incorrect number when ray ends on opposing piece, expected 3, got %d", num)
+	}
+	if num := AttackRay(rook, board, [2]int{-1, 0}); num != 0 {
+		t.Errorf("Incorrect number attacking off board, expected 0, got %d", num)
+	}
+}
+
 func TestAttackArray(t *testing.T) {
 	board := &engine.Board{Turn: 1}
 	board.PlacePiece('k', 1, 2, 2)
