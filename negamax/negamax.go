@@ -1,6 +1,8 @@
 package negamax
 
-// First-level negamax search function.
+// import "github.com/jacobroberts/chess/engine"
+
+// // First-level negamax search function.
 // func NegaMax(b *engine.Board, depth int) *engine.Move {
 // 	if b.IsOver() != 0 || depth == 0 {
 // 		return nil
