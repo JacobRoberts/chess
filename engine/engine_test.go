@@ -30,13 +30,13 @@ func TestUndoMove(t *testing.T) {
 	if pos := board.Board[0].Position; pos != m.Begin {
 		t.Errorf("Undone piece should have had position %s instead was on %s", m.Begin.ToString(), pos.ToString())
 	}
-	if captured := board.Board[1].Captured; captured {
+	if captured := board.Board[1].Captured; !captured {
 		t.Error("Did not uncapture correct piece")
 	}
 	if captured := board.Board[2].Captured; captured {
 		t.Error("Undone captured piece still captured")
 	}
-	if captured := board.Board[3].Captured; captured {
+	if captured := board.Board[3].Captured; !captured {
 		t.Error("Uncaptured more than one piece")
 	}
 	if name := board.Board[0].Name; name != 'p' {

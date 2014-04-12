@@ -68,7 +68,7 @@ func (b *Board) UndoMove(m *Move) {
 					}
 				}
 			} else {
-				if p.Name == m.Capture && !pieceadded {
+				if p.Captured && p.Name == m.Capture && !pieceadded {
 					b.Board[i].Captured = false
 					pieceadded = true
 				}
