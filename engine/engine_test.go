@@ -45,15 +45,15 @@ func TestUndoMove(t *testing.T) {
 }
 
 func TestForceMove(t *testing.T) {
-	board := &Board{Turn: 1}
+	board := &Board{Turn: -1}
 	board.PlacePiece('k', 1, 1, 1)
 	m := board.Board[0].makeMoveTo(2, 2)
 	board.ForceMove(m)
 	if board.Board[0].Position.X != 2 || board.Board[0].Position.Y != 2 {
 		t.Errorf("ForceMove didn't move the king, king should be at 2,2 instead at %+v", board.Board[0].Position)
 	}
-	board.PlacePiece('p', 1, 1, 7)
-	m = board.Board[1].makeMoveTo(1, 8)
+	board.PlacePiece('p', -1, 1, 2)
+	m = board.Board[1].makeMoveTo(1, 1)
 	m.Promotion = 'r'
 	board.ForceMove(m)
 	if board.Board[1].Name != 'r' {
@@ -100,10 +100,10 @@ func TestMakeMoveTo(t *testing.T) {
 }
 
 func TestAllLegalMoves(t *testing.T) {
-	board := &Board{Turn: 1}
-	board.PlacePiece('k', 1, 1, 1)
-	board.PlacePiece('k', -1, 8, 8)
-	board.PlacePiece('p', 1, 4, 3)
+	board := &Board{Turn: -1}
+	board.PlacePiece('k', -1, 1, 1)
+	board.PlacePiece('k', 1, 8, 8)
+	board.PlacePiece('p', -1, 4, 3)
 	moves := board.AllLegalMoves()
 	if moveslen := len(moves); moveslen != 4 {
 		t.Errorf("Too many possible moves on the board. 4 moves expected, %d moves recieved", moveslen)
