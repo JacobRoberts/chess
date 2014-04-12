@@ -7,8 +7,9 @@ import (
 
 // array of all pieces on a given board
 type Board struct {
-	Board []*Piece // all of the pieces on the board
-	Turn  int      // 1 : white , -1 : black
+	Board    []*Piece // all of the pieces on the board
+	Turn     int      // 1 : white , -1 : black
+	Lastmove *Move
 }
 
 func (b *Board) PrintBoard() {
@@ -25,7 +26,7 @@ func (b *Board) PrintBoard() {
 	for y := 7; y >= 0; y-- {
 		for x := 0; x < 8; x++ {
 			if boardarr[y][x] == "" {
-				fmt.Printf("  ")
+				fmt.Printf(". ")
 			} else {
 				fmt.Printf("%s ", boardarr[y][x])
 			}
@@ -91,6 +92,7 @@ func (b *Board) NewGen() []*Board {
 	for i, m := range legals {
 		newboard := b.CopyBoard()
 		newboard.Move(m)
+		newboard.Lastmove = m
 		s[i] = newboard
 	}
 	return s
