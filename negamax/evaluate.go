@@ -3,8 +3,8 @@ package negamax
 import "github.com/jacobroberts/chess/engine"
 
 const (
-	WIN             float64 = 255
-	LOSS            float64 = -255
+	WHITEWIN        float64 = 255
+	BLACKWIN        float64 = -255
 	DRAW            float64 = 0
 	HUNGPIECE               = -.4
 	LONGPAWNCHAIN           = .05 // per pawn
@@ -100,7 +100,11 @@ func EvalBoard(b *engine.Board) float64 {
 		if over == 1 {
 			return DRAW
 		} else {
-			return WIN / 2 * float64(over)
+			if over > 0 {
+				return WHITEWIN
+			} else {
+				return BLACKWIN
+			}
 		}
 	}
 	attackarray := [8][8]int{}
