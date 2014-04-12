@@ -9,6 +9,8 @@ import (
 func TestSearch(t *testing.T) {
 	functions := []func(*engine.Board, int, float64, float64) *engine.Move{AlphaBeta}
 	function_names := []string{"AlphaBeta"}
+	child_functions := []func(*engine.Board, int, float64, float64) float64{AlphaBetaChild}
+	child_names := []string{"AlphaBetaChild"}
 	board := &engine.Board{Turn: 1}
 	board.PlacePiece('k', 1, 1, 3)
 	board.PlacePiece('k', -1, 1, 1)
@@ -20,6 +22,11 @@ func TestSearch(t *testing.T) {
 		}
 		if move.Score != WHITEWIN {
 			t.Errorf("Checkmate should have given score %f, instead gave score %f", WHITEWIN, move.Score)
+		}
+	}
+	for i, f := range child_functions {
+		if score := f(board, 2, BLACKWIN*2, WHITEWIN*2); score != WHITEWIN {
+			t.Errorf("%s didn't indicate that white had a won position, returned %f", child_names[i], score)
 		}
 	}
 
@@ -35,6 +42,11 @@ func TestSearch(t *testing.T) {
 		}
 		if move.Score != BLACKWIN {
 			t.Errorf("Checkmate should have given score %f, instead gave score %f", BLACKWIN, move.Score)
+		}
+	}
+	for i, f := range child_functions {
+		if score := f(board, 4, BLACKWIN*2, WHITEWIN*2); score != BLACKWIN {
+			t.Errorf("%s didn't indicate that black had a won position, returned %f", child_names[i], score)
 		}
 	}
 }
