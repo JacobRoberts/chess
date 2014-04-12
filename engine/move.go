@@ -8,6 +8,7 @@ type Move struct {
 	Begin, End Square
 	Score      float64
 	Promotion  byte
+	Capture    byte
 }
 
 func maxInt(x, y int) int {
@@ -47,12 +48,34 @@ func (m *Move) CopyMove() *Move {
 	return newmove
 }
 
+// Translates move to form "nb1-c3"
 func (m *Move) ToString() string {
 	return string(m.Piece) + m.Begin.ToString() + "-" + m.End.ToString()
 }
 
-func (b *Board) UndoMove() {
-
+// Modifies a board in-place to undo a given move
+func (b *Board) UndoMove(m *Move) {
+	var pieceadded bool
+	for i, p := range b.Board {
+		if p.Position == m.End {
+			if p.Color == b.Turn*-1 {
+				b.Board[i].Position = m.Begin
+				if m.Piece == 'p' && b.Board[i].Name != 'p' {
+					b.Board[i].Name = 'p'
+					b.Board[i].Infinite_direction = false
+					b.Board[i].Directions = [][2]int{
+						{0, 1 * p.Color},
+					}
+				}
+			} else {
+				if p.Name == m.Capture && !pieceadded {
+					b.Board[i].Captured = false
+					pieceadded = true
+				}
+			}
+		}
+	}
+	b.Turn *= -1
 }
 
 // Modifies a bord in-place.

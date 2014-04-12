@@ -4,6 +4,36 @@ import (
 	"testing"
 )
 
+func TestUndoMove(t *testing.T) {
+	board := &Board{Turn: -1}
+	board.PlacePiece('q', 1, 1, 8)
+	board.PlacePiece('q', -1, 1, 8)
+	board.Board[1].Captured = true
+	m := &Move{
+		Piece: 'p',
+		Begin: Square{
+			X: 2,
+			Y: 7,
+		},
+		End: Square{
+			X: 1,
+			Y: 8,
+		},
+		Promotion: 'q',
+		Capture:   'q',
+	}
+	board.UndoMove(m)
+	if pos := board.Board[0].Position; pos != m.Begin {
+		t.Errorf("Undone piece should have had position %s instead was on %s", m.Begin.ToString(), pos.ToString())
+	}
+	if captured := board.Board[1].Captured; captured {
+		t.Error("Undone captured piece still captured")
+	}
+	if name := board.Board[0].Name; name != 'p' {
+		t.Errorf("Undoing a promotion gave piece name %s instead of pawn", string(name))
+	}
+}
+
 func TestForceMove(t *testing.T) {
 	board := &Board{Turn: 1}
 	board.PlacePiece('k', 1, 1, 1)
