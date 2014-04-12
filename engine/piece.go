@@ -7,8 +7,7 @@ type Piece struct {
 	Name       byte // p, n, b, r, q, k
 	Can_castle bool // rooks and kings. default true, set to false when piece makes a non-castle move
 
-	Can_en_passant  bool // only applicable
-	Can_double_move bool // for pawns
+	Can_en_passant bool // only applicable
 
 	Directions         [][2]int // slice of {0 or 1, 0 or 1} indicating how piece moves
 	Infinite_direction bool     // if piece can move as far as it wants in given direction
@@ -224,7 +223,7 @@ func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 				}
 			}
 		}
-		if p.Can_double_move {
+		if (p.Color == 1 && p.Position.Y == 2) || (p.Color == -1 && p.Position.Y == 7) {
 			singlesquare := Square{
 				X: p.Position.X,
 				Y: p.Position.Y + p.Color,

@@ -235,7 +235,6 @@ func (b *Board) SetUpPieces() {
 		}
 		for file := 1; file <= 8; file++ {
 			b.PlacePiece('p', color, file, rank)
-			b.Board[len(b.Board)-1].Can_double_move = true
 		}
 	}
 }

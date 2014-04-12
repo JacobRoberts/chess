@@ -214,7 +214,6 @@ func (b *Board) Move(m *Move) error {
 	if capture {
 		b.Board[capturedpiece].Captured = true
 	}
-	b.Board[pieceindex].Can_double_move = false
 	if m.Piece == 'k' || m.Piece == 'r' {
 		b.Board[pieceindex].Can_castle = false
 	}

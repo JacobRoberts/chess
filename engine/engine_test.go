@@ -334,7 +334,6 @@ func TestLegalMoves(t *testing.T) {
 	board := &Board{Turn: 1}
 	board.PlacePiece('r', 1, 2, 1)
 	board.PlacePiece('p', 1, 2, 2)
-	board.Board[1].Can_double_move = true
 	board.PlacePiece('n', -1, 5, 1)
 	board.PlacePiece('p', 1, 1, 3)
 	board.PlacePiece('p', -1, 3, 3)
@@ -401,7 +400,6 @@ func TestLegalMoves(t *testing.T) {
 	}
 	board = &Board{Turn: 1}
 	board.PlacePiece('p', 1, 2, 2)
-	board.Board[0].Can_double_move = true
 	board.PlacePiece('p', -1, 2, 3)
 	if numlegalmoves := len(board.Board[0].legalMoves(board, true)); numlegalmoves != 0 {
 		t.Errorf("Blocked pawn still had %d legal move(s)", numlegalmoves)
