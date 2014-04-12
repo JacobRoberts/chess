@@ -10,6 +10,7 @@ import (
 
 // Standard minmax search with alpha beta pruning.
 // Initial call: alpha set to lowest value, beta set to highest.
+// Top level returns a move.
 func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 	if b.IsOver() != 0 || depth == 0 {
 		return nil
@@ -51,6 +52,7 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 	return bestmove
 }
 
+// Child level returns an evaluation
 func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 	if b.IsOver() != 0 || depth == 0 {
 		return EvalBoard(b)
