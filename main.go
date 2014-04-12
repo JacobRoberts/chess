@@ -54,7 +54,7 @@ func game() {
 			}
 			fmt.Println(oppmove.ToString())
 			board.PrintBoard()
-			if mymove := negamax.NegaMax(board, 1); mymove != nil {
+			if mymove := negamax.AlphaBeta(board, 1, negamax.BLACKWIN*2, negamax.WHITEWIN*2); mymove != nil {
 				if err := board.Move(mymove); err != nil {
 					// hope this never happens
 				}

@@ -228,8 +228,8 @@ func TestMove(t *testing.T) {
 		&Piece{
 			Name: 'n',
 			Position: Square{
-				Y: 0,
-				X: 0,
+				Y: 1,
+				X: 2,
 			},
 			Color: -1,
 			Directions: [][2]int{
@@ -242,9 +242,10 @@ func TestMove(t *testing.T) {
 				{2, -1},
 				{-2, -1},
 			},
+			Captured: true,
 		},
 	}
-	if !(len(board.Board) == len(out) && board.Board[0].Position == out[0].Position && board.Board[1].Position.X == 0) {
+	if !(len(board.Board) == len(out) && board.Board[0].Position == out[0].Position && board.Board[1].Captured) {
 		t.Errorf("Expected: %+v\nGot: %+v", out, board.Board)
 	}
 	board.Turn = 1
@@ -274,8 +275,8 @@ func TestMove(t *testing.T) {
 	if err := board.Move(m); err != nil {
 		t.Errorf("En passant unexpected error: %s", err)
 	}
-	if board.Board[0].Position.X != 0 || board.Board[0].Position.Y != 0 {
-		t.Errorf("After en passant, captured piece not taken off board. Position is %+v", board.Board[0].Position)
+	if !board.Board[0].Captured {
+		t.Error("After en passant, captured piece not taken off board. Captured is still false.")
 	}
 	board = &Board{Turn: 1}
 	board.PlacePiece('p', 1, 1, 7)

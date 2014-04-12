@@ -72,7 +72,7 @@ func updateAttackArray(b *engine.Board, p *engine.Piece, a *[8][8]int) {
 
 // Measures how many squares a piece can attack in a given direction
 func AttackRay(p *engine.Piece, b *engine.Board, dir [2]int) int {
-	if p.Position.X == 0 && p.Position.Y == 0 {
+	if p.Captured {
 		return 0
 	}
 	if !p.Infinite_direction {
@@ -114,7 +114,7 @@ func EvalBoard(b *engine.Board) float64 {
 	blackfullpawns := []engine.Square{}
 	var score float64
 	for _, piece := range b.Board {
-		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
+		if !piece.Captured {
 			score += float64(VALUES[piece.Name] * piece.Color)
 			updateAttackArray(b, piece, &attackarray)
 			if piece.Name == 'p' {
@@ -133,7 +133,7 @@ func EvalBoard(b *engine.Board) float64 {
 	whiterooks := []engine.Square{}
 	blackrooks := []engine.Square{}
 	for _, piece := range b.Board {
-		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
+		if !piece.Captured {
 			if piece.Name != 'q' && piece.Name != 'k' {
 				if attackarray[piece.Position.X-1][piece.Position.Y-1] < 1 {
 					score += float64(piece.Color) * HUNGPIECE

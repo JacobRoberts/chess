@@ -59,58 +59,60 @@ func (b *Board) UndoMove() {
 // Forces a piece to a given square without checking move legality.
 func (b *Board) ForceMove(m *Move) {
 	for i, p := range b.Board {
-		if m.Begin == p.Position {
-			b.Board[i].Position.X, b.Board[i].Position.Y = m.End.X, m.End.Y
-			if m.Piece == 'p' {
-				if (p.Color == 1 && m.End.Y == 8) || (p.Color == -1 && m.End.Y == 1) {
-					if promotion := m.Promotion; promotion == 'q' {
-						b.Board[i].Name = promotion
-						b.Board[i].Directions = [][2]int{
-							{1, 1},
-							{1, 0},
-							{1, -1},
-							{0, 1},
-							{0, -1},
-							{-1, 1},
-							{-1, 0},
-							{-1, -1},
+		if !p.Captured {
+			if m.Begin == p.Position {
+				b.Board[i].Position.X, b.Board[i].Position.Y = m.End.X, m.End.Y
+				if m.Piece == 'p' {
+					if (p.Color == 1 && m.End.Y == 8) || (p.Color == -1 && m.End.Y == 1) {
+						if promotion := m.Promotion; promotion == 'q' {
+							b.Board[i].Name = promotion
+							b.Board[i].Directions = [][2]int{
+								{1, 1},
+								{1, 0},
+								{1, -1},
+								{0, 1},
+								{0, -1},
+								{-1, 1},
+								{-1, 0},
+								{-1, -1},
+							}
+							b.Board[i].Infinite_direction = true
+						} else if promotion == 'r' {
+							b.Board[i].Name = promotion
+							b.Board[i].Directions = [][2]int{
+								{1, 0},
+								{-1, 0},
+								{0, 1},
+								{0, -1},
+							}
+							b.Board[i].Infinite_direction = true
+						} else if promotion == 'n' {
+							b.Board[i].Name = promotion
+							b.Board[i].Directions = [][2]int{
+								{1, 2},
+								{-1, 2},
+								{1, -2},
+								{-1, -2},
+								{2, 1},
+								{-2, 1},
+								{2, -1},
+								{-2, -1},
+							}
+						} else if promotion == 'b' {
+							b.Board[i].Name = promotion
+							b.Board[i].Directions = [][2]int{
+								{1, 1},
+								{1, -1},
+								{-1, 1},
+								{-1, -1},
+							}
+							b.Board[i].Infinite_direction = true
 						}
-						b.Board[i].Infinite_direction = true
-					} else if promotion == 'r' {
-						b.Board[i].Name = promotion
-						b.Board[i].Directions = [][2]int{
-							{1, 0},
-							{-1, 0},
-							{0, 1},
-							{0, -1},
-						}
-						b.Board[i].Infinite_direction = true
-					} else if promotion == 'n' {
-						b.Board[i].Name = promotion
-						b.Board[i].Directions = [][2]int{
-							{1, 2},
-							{-1, 2},
-							{1, -2},
-							{-1, -2},
-							{2, 1},
-							{-2, 1},
-							{2, -1},
-							{-2, -1},
-						}
-					} else if promotion == 'b' {
-						b.Board[i].Name = promotion
-						b.Board[i].Directions = [][2]int{
-							{1, 1},
-							{1, -1},
-							{-1, 1},
-							{-1, -1},
-						}
-						b.Board[i].Infinite_direction = true
 					}
 				}
+			} else if p.Position.X == m.End.X && p.Position.Y == m.End.Y {
+				b.Board[i].Captured = true
 			}
-		} else if p.Position.X == m.End.X && p.Position.Y == m.End.Y {
-			b.Board[i].Position.X, b.Board[i].Position.Y = 0, 0
 		}
 	}
 	b.Turn *= -1
@@ -148,10 +150,10 @@ func (b *Board) Move(m *Move) error {
 	var capture bool
 	var capturedpiece int
 	for i, p := range b.Board {
-		if m.Begin == p.Position && m.Piece == p.Name && b.Turn == p.Color {
+		if m.Begin == p.Position && m.Piece == p.Name && b.Turn == p.Color && !p.Captured {
 			pieceindex = i
 			piecefound = true
-		} else if m.End == p.Position && p.Color == b.Turn*-1 {
+		} else if m.End == p.Position && p.Color == b.Turn*-1 && !p.Captured {
 			capture = true
 			capturedpiece = i
 		}
@@ -187,10 +189,7 @@ func (b *Board) Move(m *Move) error {
 	}
 
 	if capture {
-		b.Board[capturedpiece].Position = Square{
-			X: 0,
-			Y: 0,
-		}
+		b.Board[capturedpiece].Captured = true
 	}
 	b.Board[pieceindex].Can_double_move = false
 	if m.Piece == 'k' || m.Piece == 'r' {

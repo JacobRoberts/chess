@@ -15,7 +15,7 @@ type Board struct {
 func (b *Board) PrintBoard() {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
-		if piece.Position.X != 0 && piece.Position.Y != 0 {
+		if !piece.Captured {
 			if piece.Color == -1 {
 				boardarr[piece.Position.Y-1][piece.Position.X-1] = strings.ToUpper(string(piece.Name))
 			} else {

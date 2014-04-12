@@ -12,13 +12,15 @@ type Piece struct {
 
 	Directions         [][2]int // slice of {0 or 1, 0 or 1} indicating how piece moves
 	Infinite_direction bool     // if piece can move as far as it wants in given direction
+
+	Captured bool
 }
 
 // Returns true if a piece p is attacking a square s.
 // "Attacking" means it could capture an opposing piece on that square;
 // A rook is attacking its own pawn next to it, but a pawn is not attacking a piece directly in front of it.
 func (p *Piece) Attacking(s *Square, b *Board) bool {
-	if p.Position.X == 0 || p.Position.Y == 0 {
+	if p.Captured {
 		return false
 	}
 	if p.Name == 'p' {
@@ -75,23 +77,18 @@ func (p *Piece) Attacking(s *Square, b *Board) bool {
 func moveIsCheck(b *Board, m *Move) bool {
 	var pieceindex int
 	var capture bool
-	var capturedpieceposition Square
 	var capturedpieceindex int
 	for i, p := range b.Board {
-		if p.Position == m.Begin && p.Name == m.Piece && p.Color == b.Turn {
+		if p.Position == m.Begin && p.Name == m.Piece && p.Color == b.Turn && !p.Captured {
 			pieceindex = i
-		} else if p.Position == m.End {
+		} else if p.Position == m.End && !p.Captured {
 			capture = true
-			capturedpieceposition = p.Position
 			capturedpieceindex = i
 		}
 	}
 	b.Board[pieceindex].Position = m.End
 	if capture {
-		b.Board[capturedpieceindex].Position = Square{
-			X: 0,
-			Y: 0,
-		}
+		b.Board[capturedpieceindex].Captured = true
 	}
 	passes := true
 	if !b.IsCheck(b.Turn) {
@@ -99,7 +96,7 @@ func moveIsCheck(b *Board, m *Move) bool {
 	}
 	b.Board[pieceindex].Position = m.Begin
 	if capture {
-		b.Board[capturedpieceindex].Position = capturedpieceposition
+		b.Board[capturedpieceindex].Captured = false
 	}
 	return passes
 }
@@ -110,7 +107,7 @@ func moveIsCheck(b *Board, m *Move) bool {
 //	eg if a pinned piece is giving check
 func (p *Piece) legalMoves(b *Board, checkcheck bool) []*Move {
 	legals := make([]*Move, 0)
-	if p.Position.X == 0 && p.Position.Y == 0 {
+	if p.Captured {
 		return legals
 	}
 	if p.Name == 'k' {
