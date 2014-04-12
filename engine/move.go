@@ -308,7 +308,7 @@ func (b *Board) can_castle(side int) bool {
 			X: i,
 			Y: b.Board[kingindex].Position.Y,
 		}
-		if b.Occupied(s) != 0 {
+		if o, _ := b.Occupied(s); o != 0 {
 			return false
 		}
 		if i != 2 {

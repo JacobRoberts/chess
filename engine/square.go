@@ -13,16 +13,16 @@ var (
 // Returns the color of the piece that occupies a given square.
 // If the square is empty, returns 0.
 // If the square is outside of the bounds of the board, returns -2.
-func (b *Board) Occupied(s *Square) int {
+func (b *Board) Occupied(s *Square) (int, byte) {
 	if !(1 <= s.X && s.X <= 8 && 1 <= s.Y && s.Y <= 8) {
-		return -2
+		return -2, 'x'
 	}
 	for _, p := range b.Board {
 		if p.Position.X == s.X && p.Position.Y == s.Y && !p.Captured {
-			return p.Color
+			return p.Color, p.Name
 		}
 	}
-	return 0
+	return 0, 'x'
 }
 
 // Takes a Square struct and converts it to common chess notation

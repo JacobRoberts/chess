@@ -7,8 +7,12 @@ import (
 func TestUndoMove(t *testing.T) {
 	board := &Board{Turn: -1}
 	board.PlacePiece('q', 1, 1, 8)
+	board.PlacePiece('n', -1, 1, 8)
+	board.PlacePiece('q', -1, 1, 8)
 	board.PlacePiece('q', -1, 1, 8)
 	board.Board[1].Captured = true
+	board.Board[2].Captured = true
+	board.Board[3].Captured = true
 	m := &Move{
 		Piece: 'p',
 		Begin: Square{
@@ -27,7 +31,13 @@ func TestUndoMove(t *testing.T) {
 		t.Errorf("Undone piece should have had position %s instead was on %s", m.Begin.ToString(), pos.ToString())
 	}
 	if captured := board.Board[1].Captured; captured {
+		t.Error("Did not uncapture correct piece")
+	}
+	if captured := board.Board[2].Captured; captured {
 		t.Error("Undone captured piece still captured")
+	}
+	if captured := board.Board[3].Captured; captured {
+		t.Error("Uncaptured more than one piece")
 	}
 	if name := board.Board[0].Name; name != 'p' {
 		t.Errorf("Undoing a promotion gave piece name %s instead of pawn", string(name))
@@ -174,16 +184,16 @@ func TestOccupied(t *testing.T) {
 		X: 10,
 		Y: 10,
 	}
-	if out := b.Occupied(whitesquare); out != 1 {
+	if out, _ := b.Occupied(whitesquare); out != 1 {
 		t.Errorf("expected 1, got %d", out)
 	}
-	if out := b.Occupied(blacksquare); out != -1 {
+	if out, _ := b.Occupied(blacksquare); out != -1 {
 		t.Errorf("expected -1, got %d", out)
 	}
-	if out := b.Occupied(emptysquare); out != 0 {
+	if out, _ := b.Occupied(emptysquare); out != 0 {
 		t.Errorf("expected 0, got %d", out)
 	}
-	if out := b.Occupied(nonsquare); out != -2 {
+	if out, _ := b.Occupied(nonsquare); out != -2 {
 		t.Errorf("expected -2, got %d", out)
 	}
 }
@@ -348,8 +358,8 @@ func TestLegalMoves(t *testing.T) {
 	pawnmoves = append(pawnmoves, m)
 	pawnlegalmoves := board.Board[1].legalMoves(board, false)
 	for i, m := range pawnmoves {
-		if *m != *pawnlegalmoves[i] {
-			t.Error("Pawn legal moves failure")
+		if m.ToString() != pawnlegalmoves[i].ToString() {
+			t.Errorf("Pawn legal moves failure on move %s when should have been %s", m.ToString(), pawnlegalmoves[i].ToString())
 		}
 	}
 	board.PlacePiece('p', 1, 0, 0)

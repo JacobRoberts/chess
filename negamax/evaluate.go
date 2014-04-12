@@ -83,8 +83,8 @@ func AttackRay(p *engine.Piece, b *engine.Board, dir [2]int) int {
 			X: p.Position.X + dir[0]*n,
 			Y: p.Position.Y + dir[1]*n,
 		}
-		if occupied := b.Occupied(s); occupied != 0 {
-			if b.Occupied(s) == -2 {
+		if occupied, _ := b.Occupied(s); occupied != 0 {
+			if occupied == -2 {
 				return n - 1
 			}
 			return n
