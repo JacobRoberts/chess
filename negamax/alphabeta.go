@@ -1,10 +1,6 @@
 package negamax
 
-import (
-	"math"
-
-	"github.com/jacobroberts/chess/engine"
-)
+import "github.com/jacobroberts/chess/engine"
 
 // Reference: http://web.cs.swarthmore.edu/~meeden/cs63/f05/minimax.html
 
@@ -64,8 +60,11 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 	if b.Turn == 1 {
 		for _, move := range b.AllLegalMoves() {
 			b.ForceMove(move)
-			alpha = math.Max(alpha, AlphaBetaChild(b, depth-1, alpha, beta))
+			score := AlphaBetaChild(b, depth-1, alpha, beta)
 			b.UndoMove(move)
+			if score > alpha {
+				alpha = score
+			}
 			if alpha >= beta {
 				return alpha
 			}
@@ -74,12 +73,14 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 	} else {
 		for _, move := range b.AllLegalMoves() {
 			b.ForceMove(move)
-			beta = math.Min(beta, AlphaBetaChild(b, depth-1, alpha, beta))
+			score := AlphaBetaChild(b, depth-1, alpha, beta)
 			b.UndoMove(move)
+			if score < beta {
+				beta = score
+			}
 			if beta <= alpha {
 				return beta
 			}
-
 		}
 		return beta
 	}
