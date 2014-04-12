@@ -18,8 +18,8 @@ const (
 	BISHOPSQUARES           = .025 // per square a bishop attacks
 	ROOKONSEVENTH           = .8   // rook is on the second to last rank relative to color
 	CONNECTEDROOKS          = .5   // both rooks share the same rank or file
-	IMPORTANTSQUARE         = .25  // the central squares
-	WEAKSQUARE              = .07  // outer squares
+	IMPORTANTSQUARE         = .2   // the central squares
+	WEAKSQUARE              = .05  // outer squares
 )
 
 var (
@@ -100,90 +100,83 @@ func EvalBoard(b *engine.Board) float64 {
 		if over == 1 {
 			return DRAW
 		} else {
-			return WIN / 2 * float64(over*b.Turn)
+			return WIN / 2 * float64(over)
 		}
 	}
 	attackarray := [8][8]int{}
-	mypawns := [8]int{}
-	opppawns := [8]int{}
-	myfullpawns := []engine.Square{}
-	oppfullpawns := []engine.Square{}
-	var heavies int // count of opponent's queens and rooks
+	whitepawns := [8]int{}
+	blackpawns := [8]int{}
+	whitefullpawns := []engine.Square{}
+	blackfullpawns := []engine.Square{}
 	var score float64
 	for _, piece := range b.Board {
 		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
-			score += float64(VALUES[piece.Name] * piece.Color * b.Turn)
+			score += float64(VALUES[piece.Name] * piece.Color)
 			updateAttackArray(b, piece, &attackarray)
 			if piece.Name == 'p' {
-				if piece.Color == b.Turn {
-					mypawns[piece.Position.X-1] += 1
-					myfullpawns = append(myfullpawns, piece.Position)
+				if piece.Color == 1 {
+					whitepawns[piece.Position.X-1] += 1
+					whitefullpawns = append(whitefullpawns, piece.Position)
 				} else {
-					opppawns[piece.Position.X-1] += 1
-					oppfullpawns = append(oppfullpawns, piece.Position)
+					blackpawns[piece.Position.X-1] += 1
+					blackfullpawns = append(blackfullpawns, piece.Position)
 				}
-			} else if (piece.Name == 'q' || piece.Name == 'r') && piece.Color == b.Turn*-1 {
-				heavies += 1
 			}
 		}
 	}
-	score += pawnStructureAnalysis(mypawns)
-	score -= pawnStructureAnalysis(opppawns)
-	myrooks := []engine.Square{}
-	opprooks := []engine.Square{}
+	score += pawnStructureAnalysis(whitepawns)
+	score -= pawnStructureAnalysis(blackpawns)
+	whiterooks := []engine.Square{}
+	blackrooks := []engine.Square{}
 	for _, piece := range b.Board {
 		if !(piece.Position.X == 0 && piece.Position.Y == 0) {
 			if piece.Name != 'q' && piece.Name != 'k' {
 				if attackarray[piece.Position.X-1][piece.Position.Y-1] < 1 {
-					score += float64(b.Turn*piece.Color) * HUNGPIECE
+					score += float64(piece.Color) * HUNGPIECE
 				}
 			}
 			switch piece.Name {
 			case 'k':
-				if heavies > 1 {
-					if piece.Color == b.Turn {
-						score += checkKingSafety(piece.Position.X, mypawns)
-					} else {
-						score -= checkKingSafety(piece.Position.X, opppawns)
-					}
+				if piece.Color == 1 {
+					score += checkKingSafety(piece.Position.X, whitepawns)
 				} else {
-					// endgame stuff
+					score -= checkKingSafety(piece.Position.X, blackpawns)
 				}
 			case 'p':
 				// reward passed pawns
-				if piece.Color == b.Turn {
-					if pawnIsPassed(piece, oppfullpawns) {
+				if piece.Color == 1 {
+					if pawnIsPassed(piece, blackfullpawns) {
 						score += PASSEDPAWN
 					}
 				} else {
-					if pawnIsPassed(piece, myfullpawns) {
+					if pawnIsPassed(piece, whitefullpawns) {
 						score -= PASSEDPAWN
 					}
 				}
 			case 'n':
 				if piece.Position.X >= 3 && piece.Position.X <= 6 && piece.Position.Y >= 3 && piece.Position.Y <= 6 {
-					score += float64(b.Turn*piece.Color) * CENTRALKNIGHT
+					score += float64(piece.Color) * CENTRALKNIGHT
 				}
 			case 'b':
 				var numattacking int
 				for _, dir := range piece.Directions {
 					numattacking += AttackRay(piece, b, dir)
 				}
-				score += float64(piece.Color*b.Turn*numattacking) * BISHOPSQUARES
+				score += float64(piece.Color*numattacking) * BISHOPSQUARES
 			case 'r':
 				if (piece.Color == -1 && piece.Position.Y == 2) || (piece.Color == 1 && piece.Position.Y == 7) {
-					score += float64(piece.Color*b.Turn) * ROOKONSEVENTH
+					score += float64(piece.Color) * ROOKONSEVENTH
 				}
-				if piece.Color == b.Turn {
-					myrooks = append(myrooks, piece.Position)
+				if piece.Color == 1 {
+					whiterooks = append(whiterooks, piece.Position)
 				} else {
-					opprooks = append(opprooks, piece.Position)
+					blackrooks = append(blackrooks, piece.Position)
 				}
 			}
 		}
 	}
-	score += rookAnalysis(myrooks)
-	score -= rookAnalysis(opprooks)
+	score += rookAnalysis(whiterooks)
+	score -= rookAnalysis(blackrooks)
 	for x := 0; x < 8; x++ {
 		for y := 0; y < 8; y++ {
 			if attackarray[x][y] > 0 {
