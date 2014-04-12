@@ -9,7 +9,6 @@ import (
 func TestSearch(t *testing.T) {
 	functions := []func(*engine.Board, int, float64, float64) *engine.Move{AlphaBeta}
 	function_names := []string{"AlphaBeta"}
-	child_functions := []func(*engine.Board, int, float64, float64) float64{AlphaBetaChild}
 	board := &engine.Board{Turn: 1}
 	board.PlacePiece('k', 1, 1, 3)
 	board.PlacePiece('k', -1, 1, 1)
@@ -23,9 +22,13 @@ func TestSearch(t *testing.T) {
 			t.Errorf("Checkmate should have given score %f, instead gave score %f", WHITEWIN, move.Score)
 		}
 	}
-	for i, f := range child_functions {
-		if score := f(board, 2, BLACKWIN*2, WHITEWIN*2); score != WHITEWIN {
-			t.Errorf("%s didn't indicate that white had a won position, returned %f", function_names[i]+"Child", score)
+	b := &engine.Board{Turn: 1}
+	b.PlacePiece('k', 1, 1, 3)
+	b.PlacePiece('k', -1, 1, 1)
+	b.PlacePiece('r', 1, 3, 3)
+	for i, p := range b.Board {
+		if p.Position != board.Board[i].Position {
+			t.Errorf("Piece was modified during search. Expected %s got %s", board.Board[i].Position.ToString(), p.Position.ToString())
 		}
 	}
 
@@ -43,9 +46,14 @@ func TestSearch(t *testing.T) {
 			t.Errorf("Checkmate should have given score %f, instead gave score %f", BLACKWIN, move.Score)
 		}
 	}
-	for i, f := range child_functions {
-		if score := f(board, 4, BLACKWIN*2, WHITEWIN*2); score != BLACKWIN {
-			t.Errorf("%s didn't indicate that black had a won position, returned %f", function_names[i]+"Child", score)
+	b = &engine.Board{Turn: -1}
+	b.PlacePiece('k', -1, 8, 8)
+	b.PlacePiece('k', 1, 2, 1)
+	b.PlacePiece('r', -1, 3, 7)
+	b.PlacePiece('r', -1, 4, 8)
+	for i, p := range b.Board {
+		if p.Position != board.Board[i].Position {
+			t.Errorf("Piece was modified during search. Expected %s got %s", board.Board[i].Position.ToString(), p.Position.ToString())
 		}
 	}
 }

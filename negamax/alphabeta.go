@@ -17,15 +17,17 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 	}
 	var bestmove *engine.Move = nil
 	if b.Turn == 1 {
-		for _, child := range b.NewGen() {
+		for _, move := range b.AllLegalMoves() {
+			b.ForceMove(move)
 			result := AlphaBetaChild(b, depth-1, alpha, beta)
+			b.UndoMove(move)
 			if result > alpha {
 				alpha = result
-				bestmove = child.Lastmove
+				bestmove = move
 				bestmove.Score = alpha
 			}
 			if alpha >= beta {
-				bestmove = child.Lastmove
+				bestmove = move
 				bestmove.Score = alpha
 				return bestmove
 			}
@@ -33,15 +35,17 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		bestmove.Score = alpha
 		return bestmove
 	} else {
-		for _, child := range b.NewGen() {
+		for _, move := range b.AllLegalMoves() {
+			b.ForceMove(move)
 			result := AlphaBetaChild(b, depth-1, alpha, beta)
+			b.UndoMove(move)
 			if result < beta {
 				beta = result
-				bestmove = child.Lastmove
+				bestmove = move
 				bestmove.Score = beta
 			}
 			if beta <= alpha {
-				bestmove = child.Lastmove
+				bestmove = move
 				bestmove.Score = beta
 				return bestmove
 			}
@@ -58,16 +62,20 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 		return EvalBoard(b)
 	}
 	if b.Turn == 1 {
-		for _, child := range b.NewGen() {
-			alpha = math.Max(alpha, AlphaBetaChild(child, depth-1, alpha, beta))
+		for _, move := range b.AllLegalMoves() {
+			b.ForceMove(move)
+			alpha = math.Max(alpha, AlphaBetaChild(b, depth-1, alpha, beta))
+			b.UndoMove(move)
 			if alpha >= beta {
 				return alpha
 			}
 		}
 		return alpha
 	} else {
-		for _, child := range b.NewGen() {
-			beta = math.Min(beta, AlphaBetaChild(child, depth-1, alpha, beta))
+		for _, move := range b.AllLegalMoves() {
+			b.ForceMove(move)
+			beta = math.Min(beta, AlphaBetaChild(b, depth-1, alpha, beta))
+			b.UndoMove(move)
 			if beta <= alpha {
 				return beta
 			}
