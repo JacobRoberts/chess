@@ -10,8 +10,8 @@ func TestSearch(t *testing.T) {
 	functions := []func(*engine.Board, int, float64, float64) *engine.Move{AlphaBeta}
 	function_names := []string{"AlphaBeta"}
 	board := &engine.Board{Turn: -1}
-	board.PlacePiece('k', -1, 1, 3)
 	board.PlacePiece('k', 1, 1, 1)
+	board.PlacePiece('k', -1, 1, 3)
 	board.PlacePiece('r', -1, 3, 3)
 	for i, f := range functions {
 		move := f(board, 2, -1000, 1000)
@@ -26,8 +26,8 @@ func TestSearch(t *testing.T) {
 		}
 	}
 	b := &engine.Board{Turn: -1}
-	b.PlacePiece('k', -1, 1, 3)
 	b.PlacePiece('k', 1, 1, 1)
+	b.PlacePiece('k', -1, 1, 3)
 	b.PlacePiece('r', -1, 3, 3)
 	for i, p := range b.Board {
 		if p.Position != board.Board[i].Position {
