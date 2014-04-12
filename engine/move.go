@@ -1,8 +1,6 @@
 package engine
 
-import (
-	"errors"
-)
+import "errors"
 
 // piece name + beginning and ending squares
 type Move struct {
@@ -51,6 +49,71 @@ func (m *Move) CopyMove() *Move {
 
 func (m *Move) ToString() string {
 	return string(m.Piece) + m.Begin.ToString() + "-" + m.End.ToString()
+}
+
+func (b *Board) UndoMove() {
+
+}
+
+// Modifies a bord in-place.
+// Forces a piece to a given square without checking move legality.
+func (b *Board) ForceMove(m *Move) {
+	for i, p := range b.Board {
+		if m.Begin == p.Position {
+			b.Board[i].Position.X, b.Board[i].Position.Y = m.End.X, m.End.Y
+			if m.Piece == 'p' {
+				if (p.Color == 1 && m.End.Y == 8) || (p.Color == -1 && m.End.Y == 1) {
+					if promotion := m.Promotion; promotion == 'q' {
+						b.Board[i].Name = promotion
+						b.Board[i].Directions = [][2]int{
+							{1, 1},
+							{1, 0},
+							{1, -1},
+							{0, 1},
+							{0, -1},
+							{-1, 1},
+							{-1, 0},
+							{-1, -1},
+						}
+						b.Board[i].Infinite_direction = true
+					} else if promotion == 'r' {
+						b.Board[i].Name = promotion
+						b.Board[i].Directions = [][2]int{
+							{1, 0},
+							{-1, 0},
+							{0, 1},
+							{0, -1},
+						}
+						b.Board[i].Infinite_direction = true
+					} else if promotion == 'n' {
+						b.Board[i].Name = promotion
+						b.Board[i].Directions = [][2]int{
+							{1, 2},
+							{-1, 2},
+							{1, -2},
+							{-1, -2},
+							{2, 1},
+							{-2, 1},
+							{2, -1},
+							{-2, -1},
+						}
+					} else if promotion == 'b' {
+						b.Board[i].Name = promotion
+						b.Board[i].Directions = [][2]int{
+							{1, 1},
+							{1, -1},
+							{-1, 1},
+							{-1, -1},
+						}
+						b.Board[i].Infinite_direction = true
+					}
+				}
+			}
+		} else if p.Position.X == m.End.X && p.Position.Y == m.End.Y {
+			b.Board[i].Position.X, b.Board[i].Position.Y = 0, 0
+		}
+	}
+	b.Turn *= -1
 }
 
 // Modifies a board in-place.
@@ -153,7 +216,7 @@ func (b *Board) Move(m *Move) error {
 					{-1, -1},
 				}
 				b.Board[pieceindex].Infinite_direction = true
-			} else if promotion == 'q' {
+			} else if promotion == 'r' {
 				b.Board[pieceindex].Name = promotion
 				b.Board[pieceindex].Directions = [][2]int{
 					{1, 0},

@@ -4,6 +4,23 @@ import (
 	"testing"
 )
 
+func TestForceMove(t *testing.T) {
+	board := &Board{Turn: 1}
+	board.PlacePiece('k', 1, 1, 1)
+	m := board.Board[0].makeMoveTo(2, 2)
+	board.ForceMove(m)
+	if board.Board[0].Position.X != 2 || board.Board[0].Position.Y != 2 {
+		t.Errorf("ForceMove didn't move the king, king should be at 2,2 instead at %+v", board.Board[0].Position)
+	}
+	board.PlacePiece('p', 1, 1, 7)
+	m = board.Board[1].makeMoveTo(1, 8)
+	m.Promotion = 'r'
+	board.ForceMove(m)
+	if board.Board[1].Name != 'r' {
+		t.Errorf("Promotion didn't go through, promoted pawn's name is %s instead of rook", string(board.Board[1].Name))
+	}
+}
+
 func TestAttacking(t *testing.T) {
 	board := &Board{Turn: 1}
 	board.PlacePiece('k', 1, 1, 1)
