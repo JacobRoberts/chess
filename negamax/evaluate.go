@@ -7,19 +7,19 @@ const (
 	BLACKWIN        float64 = -255
 	DRAW            float64 = 0
 	HUNGPIECE               = -.4
-	LONGPAWNCHAIN           = .05 // per pawn
-	ISOLATEDPAWN            = -.15
-	DOUBLEDPAWN             = -.4  // increases for tripled, etc. pawns
-	KINGINCORNER            = .3   // king in a castled position
-	KINGONOPENFILE          = -.5  // king not protected by a pawn
-	KINGPROTECTED           = .2   // king protected by a pawn, applies to pawns on files near king
-	PASSEDPAWN              = .75  // pawn has no opposing pawns blocking it from promoting
-	CENTRALKNIGHT           = .3   // knight close to center of board
-	BISHOPSQUARES           = .025 // per square a bishop attacks
-	ROOKONSEVENTH           = .8   // rook is on the second to last rank relative to color
-	CONNECTEDROOKS          = .5   // both rooks share the same rank or file
-	IMPORTANTSQUARE         = .2   // the central squares
-	WEAKSQUARE              = .05  // outer squares
+	LONGPAWNCHAIN           = .06 // per pawn
+	ISOLATEDPAWN            = -.25
+	DOUBLEDPAWN             = -.4 // increases for tripled, etc. pawns
+	KINGINCORNER            = .4  // king in a castled position
+	KINGONOPENFILE          = -.6 // king not protected by a pawn
+	KINGPROTECTED           = .3  // king protected by a pawn, applies to pawns on files near king
+	PASSEDPAWN              = .75 // pawn has no opposing pawns blocking it from promoting
+	CENTRALKNIGHT           = .3  // knight close to center of board
+	BISHOPSQUARES           = .05 // per square a bishop attacks
+	ROOKONSEVENTH           = .8  // rook is on the second to last rank relative to color
+	CONNECTEDROOKS          = .5  // both rooks share the same rank or file
+	IMPORTANTSQUARE         = .25 // the central squares
+	WEAKSQUARE              = .05 // outer squares
 )
 
 var (
