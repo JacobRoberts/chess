@@ -361,7 +361,8 @@ func TestLegalMoves(t *testing.T) {
 			t.Errorf("Pawn legal moves failure on move %s when should have been %s", m.ToString(), pawnlegalmoves[i].ToString())
 		}
 	}
-	board.PlacePiece('p', 1, 0, 0)
+	board.PlacePiece('p', 1, 6, 6)
+	board.Board[len(board.Board)-1].Captured = true
 	if moves := board.Board[len(board.Board)-1].legalMoves(board, false); len(moves) != 0 {
 		t.Error("Captured piece has legal moves")
 	}
