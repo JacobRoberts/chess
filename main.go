@@ -50,16 +50,18 @@ func game() {
 				}
 			}
 			if err := board.Move(oppmove); err != nil {
-				// hope this never happense
+				panic(err)
 			}
 			fmt.Println(oppmove.ToString())
 			board.PrintBoard()
-			if mymove := negamax.AlphaBeta(board, 1, negamax.BLACKWIN*2, negamax.WHITEWIN*2); mymove != nil {
+			if mymove := negamax.AlphaBeta(board, 2, negamax.BLACKWIN*2, negamax.WHITEWIN*2); mymove != nil {
 				if err := board.Move(mymove); err != nil {
-					// hope this never happens
+					panic(err)
 				}
 				outmoves <- mymove
 				fmt.Println(mymove.ToString())
+			} else {
+				quit <- 1
 			}
 			board.PrintBoard()
 		case <-quit:
