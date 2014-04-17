@@ -405,6 +405,47 @@ func TestLegalMoves(t *testing.T) {
 	if numlegalmoves := len(board.Board[0].legalMoves(board, true)); numlegalmoves != 0 {
 		t.Errorf("Blocked pawn still had %d legal move(s)", numlegalmoves)
 	}
+	board = &Board{Turn: 1}
+	board.PlacePiece('b', 1, 1, 1)
+	board.PlacePiece('n', -1, 3, 3)
+	if m := board.Board[0].legalMoves(board, true)[1]; m.Capture != 'n' {
+		t.Errorf("Bishop capturing knight had capture %s", string(m.Capture))
+	}
+	board.PlacePiece('p', 1, 1, 2)
+	board.Turn = -1
+	for _, m := range board.Board[1].legalMoves(board, true) {
+		if m.End.X == 1 && m.End.Y == 2 {
+			if m.Capture == 'p' {
+				break
+			} else {
+				t.Errorf("Knight capturing pawn gave capture %s", string(m.Capture))
+				break
+			}
+		}
+	}
+	board.Board[2].Captured = true
+	for _, m := range board.Board[1].legalMoves(board, true) {
+		if m.End.X == 1 && m.End.Y == 2 {
+			if m.Capture != 0 {
+				break
+				t.Errorf("Capturing a previously captured piece gave capture %s", string(m.Capture))
+			} else {
+				break
+			}
+		}
+	}
+	board.Board[2].Captured = false
+	board.Turn = 1
+	board.PlacePiece('q', -1, 2, 3)
+	for _, m := range board.Board[2].legalMoves(board, true) {
+		if m.End.X == 2 && m.End.Y == 3 {
+			if m.Capture == 'q' {
+				break
+			} else {
+				t.Errorf("Pawn capturing queen gave capture %s", string(m.Capture))
+			}
+		}
+	}
 }
 
 func TestCanCastle(t *testing.T) {
