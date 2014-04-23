@@ -8,7 +8,7 @@ At Marlboro College, seniors devote most of their year to a plan of concentratio
 - Handles the game engine such as game state storage and piece movement.
 - Also contains helper functions that are entirely reliant on the rules of Chess, such as whether a given square on a board is occupied.
 
-### negamax/
+### search/
 
 - Handles everything related to the AI, including negamax search and board evaluation.
 
