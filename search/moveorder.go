@@ -19,7 +19,7 @@ func (s ByScore) Swap(i, j int) {
 
 // Reversed to order moves from greatest to least
 func (s ByScore) Less(i, j int) bool {
-	return s[i].Score > s[j].Score
+	return s[i].Score < s[j].Score
 }
 
 // Roughly orders moves in order of most likely to be good to least.
@@ -45,7 +45,7 @@ func orderedMoves(b *engine.Board) []*engine.Move {
 		}
 		b.UndoMove(move)
 	}
-	sort.Sort(ByScore(rest))
+	sort.Sort(sort.Reverse(ByScore(rest)))
 	orderedmoves := make([]*engine.Move, 0)
 	for _, l := range [][]*engine.Move{checks, captures, rest} {
 		for _, m := range l {
