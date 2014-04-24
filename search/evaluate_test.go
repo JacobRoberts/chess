@@ -6,6 +6,14 @@ import (
 	"github.com/jacobroberts/chess/engine"
 )
 
+func TestEval(t *testing.T) {
+	board := &engine.Board{Turn: 1}
+	board.SetUpPieces()
+	if eval := EvalBoard(board); eval != 0 {
+		t.Errorf("Initial position has evaluation of %f", eval)
+	}
+}
+
 func TestAttackRay(t *testing.T) {
 	board := &engine.Board{Turn: 1}
 	board.PlacePiece('r', 1, 1, 1)
