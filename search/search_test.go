@@ -1,4 +1,4 @@
-package negamax
+package search
 
 import (
 	"testing"
@@ -14,7 +14,7 @@ func TestSearch(t *testing.T) {
 	board.PlacePiece('k', -1, 1, 3)
 	board.PlacePiece('r', -1, 3, 3)
 	for i, f := range functions {
-		move := f(board, 2, -1000, 1000)
+		move := f(board, 2, BLACKWIN, WHITEWIN)
 		if move.Begin.X != 3 || move.End.Y != 1 {
 			t.Errorf("\nFunction %s gave move %s when Rc3-c1 was expected\n Unable to solve one move checkmate\n Full returned move: %+v", function_names[i], move.ToString(), move)
 		}
@@ -44,7 +44,7 @@ func TestSearch(t *testing.T) {
 	board.PlacePiece('r', 1, 3, 7)
 	board.PlacePiece('r', 1, 4, 8)
 	for i, f := range functions {
-		move := f(board, 4, -1000, 1000)
+		move := f(board, 4, BLACKWIN, WHITEWIN)
 		if move.Begin.X != 4 || move.End.X != 2 || move.End.Y != 8 {
 			t.Errorf("\nFunction %s gave move %s when Rd8-b8 was expected\n Unable to solve two move checkmate\n Full returned move: %+v", function_names[i], move.ToString(), move)
 		}

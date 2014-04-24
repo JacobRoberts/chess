@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/jacobroberts/chess/engine"
-	"github.com/jacobroberts/chess/negamax"
+	"github.com/jacobroberts/chess/search"
 
 	"github.com/gorilla/mux"
 )
@@ -54,7 +54,7 @@ func game() {
 			}
 			fmt.Println(oppmove.ToString())
 			board.PrintBoard()
-			if mymove := negamax.AlphaBeta(board, 2, negamax.BLACKWIN*2, negamax.WHITEWIN*2); mymove != nil {
+			if mymove := search.AlphaBeta(board, 2, search.BLACKWIN, search.WHITEWIN); mymove != nil {
 				if err := board.Move(mymove); err != nil {
 					panic(err)
 				}
