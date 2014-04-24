@@ -152,6 +152,15 @@ func TestIsOver(t *testing.T) {
 	if result := board.IsOver(); result != 1 {
 		t.Errorf("Expected stalemate, got a result of %d", result)
 	}
+	board = &Board{Turn: -1}
+	board.PlacePiece('k', 1, 1, 1)
+	board.PlacePiece('k', -1, 8, 8)
+	board.PlacePiece('b', 1, 6, 6)
+	board.PlacePiece('r', -1, 8, 7)
+	board.PlacePiece('r', -1, 7, 8)
+	if over := board.IsOver(); over != 0 {
+		t.Errorf("Black is in check but can block, IsOver still returned %d", over)
+	}
 }
 
 func TestOccupied(t *testing.T) {
