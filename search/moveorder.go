@@ -1,6 +1,10 @@
 package search
 
-import "github.com/jacobroberts/chess/engine"
+import (
+	"sort"
+
+	"github.com/jacobroberts/chess/engine"
+)
 
 type ByScore []*engine.Move
 
@@ -34,7 +38,7 @@ func orderedMoves(b *engine.Board) []*engine.Move {
 		}
 		b.UndoMove(move)
 	}
-	// sort.Sort(ByScore(rest))
+	sort.Sort(ByScore(rest))
 	orderedmoves := make([]*engine.Move, 0)
 	for _, l := range [][]*engine.Move{checks, captures, rest} {
 		for _, m := range l {
