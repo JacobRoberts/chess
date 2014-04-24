@@ -73,19 +73,11 @@ func (b *Board) AllLegalMoves() []*Move {
 // Checks if the game has ended.
 // Returns 2 if white wins, -2 if black wins, 1 if it's stalemate, 0 if the game is still going.
 func (b *Board) IsOver() int {
-	var kingindex int
-	if b.Turn == 1 {
-		kingindex = 0
-	} else if b.Turn == -1 {
-		kingindex = 1
-	}
-	if len(b.Board[kingindex].legalMoves(b, true)) == 0 {
+	if len(b.AllLegalMoves()) == 0 {
 		if b.IsCheck(b.Turn) {
 			return -2 * b.Turn
 		}
-		if len(b.AllLegalMoves()) == 0 {
-			return 1
-		}
+		return 1
 	}
 	return 0
 }
