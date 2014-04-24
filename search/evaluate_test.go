@@ -1,4 +1,4 @@
-package negamax
+package search
 
 import (
 	"testing"
