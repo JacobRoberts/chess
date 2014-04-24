@@ -46,7 +46,7 @@ func TestSearch(t *testing.T) {
 	for i, f := range functions {
 		move := f(board, 4, BLACKWIN, WHITEWIN)
 		if move.Begin.X != 4 || move.End.X != 2 || move.End.Y != 8 {
-			t.Errorf("\nFunction %s gave move %s when Rd8-b8 was expected\n Unable to solve two move checkmate\n Full returned move: %+v", function_names[i], move.ToString(), move)
+			t.Errorf("\nFunction %s gave move %s when rd8-b8 was expected\n Unable to solve two move checkmate\n Full returned move: %+v", function_names[i], move.ToString(), move)
 		}
 		if move.Score != WHITEWIN {
 			t.Errorf("Checkmate should have given score %f, instead gave score %f", WHITEWIN, move.Score)
