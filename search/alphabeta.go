@@ -1,10 +1,6 @@
 package search
 
-import (
-	"fmt"
-
-	"github.com/jacobroberts/chess/engine"
-)
+import "github.com/jacobroberts/chess/engine"
 
 // Reference: http://web.cs.swarthmore.edu/~meeden/cs63/f05/minimax.html
 
@@ -38,7 +34,6 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		for _, move := range orderedMoves(b) {
 			b.ForceMove(move)
 			result := AlphaBetaChild(b, depth-1, alpha, beta)
-			fmt.Println(move.ToString(), result)
 			b.UndoMove(move)
 			if result < beta {
 				beta = result
