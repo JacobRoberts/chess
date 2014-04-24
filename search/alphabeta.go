@@ -1,4 +1,4 @@
-package negamax
+package search
 
 import "github.com/jacobroberts/chess/engine"
 
@@ -13,7 +13,7 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 	}
 	var bestmove *engine.Move = nil
 	if b.Turn == 1 {
-		for _, move := range b.AllLegalMoves() {
+		for _, move := range orderedMoves(b) {
 			b.ForceMove(move)
 			result := AlphaBetaChild(b, depth-1, alpha, beta)
 			b.UndoMove(move)
@@ -31,7 +31,7 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		bestmove.Score = alpha
 		return bestmove
 	} else {
-		for _, move := range b.AllLegalMoves() {
+		for _, move := range orderedMoves(b) {
 			b.ForceMove(move)
 			result := AlphaBetaChild(b, depth-1, alpha, beta)
 			b.UndoMove(move)
@@ -58,7 +58,7 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 		return EvalBoard(b)
 	}
 	if b.Turn == 1 {
-		for _, move := range b.AllLegalMoves() {
+		for _, move := range orderedMoves(b) {
 			b.ForceMove(move)
 			score := AlphaBetaChild(b, depth-1, alpha, beta)
 			b.UndoMove(move)
@@ -71,7 +71,7 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 		}
 		return alpha
 	} else {
-		for _, move := range b.AllLegalMoves() {
+		for _, move := range orderedMoves(b) {
 			b.ForceMove(move)
 			score := AlphaBetaChild(b, depth-1, alpha, beta)
 			b.UndoMove(move)
