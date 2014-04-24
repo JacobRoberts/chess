@@ -140,17 +140,6 @@ func TestCopyMove(t *testing.T) {
 	}
 }
 
-func TestCopyBoard(t *testing.T) {
-	board := &Board{Turn: 1}
-	board.PlacePiece('k', 1, 1, 1)
-	boardcopy := board.CopyBoard()
-	m := board.Board[0].makeMoveTo(2, 2)
-	boardcopy.Move(m)
-	if board.Board[0].Position.X != 1 || boardcopy.Board[0].Position.Y != 2 {
-		t.Errorf("Copied board did not move independently of master board. Master had %d %d, copy had %d %d", board.Board[0].Position.X, board.Board[0].Position.Y, boardcopy.Board[0].Position.X, boardcopy.Board[0].Position.Y)
-	}
-}
-
 func TestIsOver(t *testing.T) {
 	board := &Board{Turn: 1}
 	board.PlacePiece('k', 1, 1, 1)

@@ -70,32 +70,6 @@ func (b *Board) AllLegalMoves() []*Move {
 	return legals
 }
 
-// Returns a deep copy of a given board
-func (b *Board) CopyBoard() *Board {
-	newboard := new(Board)
-	s := make([]*Piece, len(b.Board))
-	newboard.Turn = b.Turn
-	for i, _ := range b.Board {
-		p := new(Piece)
-		*p = *b.Board[i]
-		s[i] = p
-	}
-	newboard.Board = s
-	return newboard
-}
-
-// Returns a slice of pointers to all possible boards
-func (b *Board) NewGen() []*Board {
-	legals := b.AllLegalMoves()
-	s := make([]*Board, len(legals))
-	for i, m := range legals {
-		newboard := b.CopyBoard()
-		newboard.Move(m)
-		s[i] = newboard
-	}
-	return s
-}
-
 // Checks if the game has ended.
 // Returns 2 if white wins, -2 if black wins, 1 if it's stalemate, 0 if the game is still going.
 func (b *Board) IsOver() int {
