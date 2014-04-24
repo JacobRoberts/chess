@@ -42,6 +42,24 @@ func TestUndoMove(t *testing.T) {
 	if name := board.Board[0].Name; name != 'p' {
 		t.Errorf("Undoing a promotion gave piece name %s instead of pawn", string(name))
 	}
+	board = &Board{Turn: -1}
+	board.PlacePiece('k', 1, 7, 1)
+	board.PlacePiece('r', 1, 6, 1)
+	m = &Move{
+		Piece: 'k',
+		Begin: Square{
+			X: 5,
+			Y: 1,
+		},
+		End: Square{
+			X: 7,
+			Y: 1,
+		},
+	}
+	board.UndoMove(m)
+	if board.Board[1].Position.X != 8 || board.Board[1].Position.Y != 1 {
+		t.Errorf("Undoing castle should have left rook at (8, 1), instead at %+v", board.Board[1].Position)
+	}
 }
 
 func TestForceMove(t *testing.T) {
@@ -58,6 +76,16 @@ func TestForceMove(t *testing.T) {
 	board.ForceMove(m)
 	if board.Board[1].Name != 'r' {
 		t.Errorf("Promotion didn't go through, promoted pawn's name is %s instead of rook", string(board.Board[1].Name))
+	}
+	board = &Board{Turn: 1}
+	board.PlacePiece('k', 1, 5, 1)
+	board.PlacePiece('r', 1, 8, 1)
+	for i, _ := range board.Board {
+		board.Board[i].Can_castle = true
+	}
+	board.ForceMove(board.Board[0].makeMoveTo(7, 1))
+	if board.Board[1].Position.X != 6 || board.Board[1].Position.Y != 1 {
+		t.Errorf("Forced castling left rook on %+v", board.Board[1].Position)
 	}
 }
 

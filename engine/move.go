@@ -66,6 +66,21 @@ func (b *Board) UndoMove(m *Move) {
 					b.Board[i].Directions = [][2]int{
 						{0, 1 * p.Color},
 					}
+				} else if m.Piece == 'k' {
+					// undo castle
+					if m.Begin.X == 5 && (m.End.X == 3 || m.End.X == 7) && ((p.Color == 1 && m.Begin.Y == 1) || (p.Color == -1 && m.Begin.Y == 8)) {
+						for i, p := range b.Board {
+							if p.Name == 'r' && p.Color == b.Turn*-1 && !p.Captured && p.Position.Y == m.Begin.Y {
+								if m.End.X == 3 && p.Position.X == 4 {
+									b.Board[i].Position.X = 1
+									break
+								} else if m.End.X == 7 && p.Position.X == 6 {
+									b.Board[i].Position.X = 8
+									break
+								}
+							}
+						}
+					}
 				}
 			} else {
 				if p.Captured && p.Name == m.Capture && !pieceadded {
@@ -130,6 +145,21 @@ func (b *Board) ForceMove(m *Move) {
 								{-1, -1},
 							}
 							b.Board[i].Infinite_direction = true
+						}
+					}
+				} else if m.Piece == 'k' {
+					if m.Begin.X == 5 && (m.End.X == 3 || m.End.X == 7) && ((p.Color == 1 && m.Begin.Y == 1) || (p.Color == -1 && m.Begin.Y == 8)) {
+						// if king is trying to castle
+						for i, p := range b.Board {
+							if p.Name == 'r' && p.Color == b.Turn && !p.Captured && p.Position.Y == m.Begin.Y {
+								if m.End.X == 3 && p.Position.X == 1 {
+									b.Board[i].Position.X = 4
+									break
+								} else if m.End.X == 7 && p.Position.X == 8 {
+									b.Board[i].Position.X = 6
+									break
+								}
+							}
 						}
 					}
 				}
