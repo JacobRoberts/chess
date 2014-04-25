@@ -9,8 +9,8 @@ import (
 func TestEval(t *testing.T) {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
-	if eval := EvalBoard(board); eval != 0 {
-		t.Errorf("Initial position has evaluation of %f", eval)
+	if eval := EvalBoard(board); eval >= .01 || eval <= -.01 { // the exact value is expected to be -0.000000... which isn't 0
+		t.Errorf("Initial position has evaluation of %f, expecting %f", eval, DRAW)
 	}
 }
 
