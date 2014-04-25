@@ -29,6 +29,7 @@ func orderedMoves(b *engine.Board) []*engine.Move {
 	checks := make([]*engine.Move, 0)
 	captures := make([]*engine.Move, 0)
 	rest := make([]*engine.Move, 0)
+	parentscore := EvalBoard(b)
 	for _, move := range b.AllLegalMoves() {
 		b.ForceMove(move)
 		if b.IsCheck(b.Turn) {
@@ -37,8 +38,10 @@ func orderedMoves(b *engine.Board) []*engine.Move {
 			captures = append(captures, move)
 		} else {
 			childscore := EvalBoard(b) * float64(b.Turn*-1)
-			move.Score = childscore
-			rest = append(rest, move)
+			if (b.Turn == -1 && childscore > parentscore) || (b.Turn == 1 && childscore < parentscore) {
+				move.Score = childscore
+				rest = append(rest, move)
+			}
 		}
 		b.UndoMove(move)
 	}
