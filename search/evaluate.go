@@ -6,7 +6,7 @@ const (
 	WHITEWIN        float64 = 255
 	BLACKWIN        float64 = -255
 	DRAW            float64 = 0
-	HUNGPIECE               = -.4
+	HUNGPIECE               = -.05
 	LONGPAWNCHAIN           = .06 // per pawn
 	ISOLATEDPAWN            = -.25
 	DOUBLEDPAWN             = -.4 // increases for tripled, etc. pawns
