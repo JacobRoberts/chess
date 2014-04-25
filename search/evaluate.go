@@ -135,7 +135,7 @@ func EvalBoard(b *engine.Board) float64 {
 	for _, piece := range b.Board {
 		if !piece.Captured {
 			if piece.Name != 'q' && piece.Name != 'k' {
-				if attackarray[piece.Position.X-1][piece.Position.Y-1] < 1 {
+				if attackarray[piece.Position.X-1][piece.Position.Y-1]*piece.Color < 1 {
 					score += float64(piece.Color) * HUNGPIECE
 				}
 			}
