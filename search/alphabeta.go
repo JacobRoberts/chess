@@ -28,7 +28,9 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 				return bestmove
 			}
 		}
-		bestmove.Score = alpha
+		if bestmove == nil {
+			return b.AllLegalMoves()[0]
+		}
 		return bestmove
 	} else {
 		for _, move := range orderedMoves(b) {
@@ -46,8 +48,13 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 				return bestmove
 			}
 		}
-		bestmove.Score = beta
+		if bestmove == nil {
+			return b.AllLegalMoves()[0]
+		}
 		return bestmove
+	}
+	if bestmove == nil {
+		return b.AllLegalMoves()[0]
 	}
 	return bestmove
 }
