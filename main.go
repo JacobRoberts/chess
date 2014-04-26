@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os/exec"
 
 	"github.com/jacobroberts/chess/engine"
 	"github.com/jacobroberts/chess/search"
@@ -27,6 +28,7 @@ const (
 </body>
 </html>
 `
+	port = ":9999"
 )
 
 var (
@@ -40,6 +42,11 @@ var (
 func game() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
+	url := fmt.Sprintf("http://localhost%s", port)
+	cmd := exec.Command("open", url)
+	if _, err := cmd.Output(); err != nil {
+		panic(err)
+	}
 	for {
 		select {
 		case oppmove := <-incmoves:
@@ -49,15 +56,11 @@ func game() {
 					break
 				}
 			}
-			if err := board.Move(oppmove); err != nil {
-				panic(err)
-			}
+			board.ForceMove(oppmove)
 			fmt.Println(oppmove.ToString())
 			board.PrintBoard()
 			if mymove := search.AlphaBeta(board, 2, search.BLACKWIN, search.WHITEWIN); mymove != nil {
-				if err := board.Move(mymove); err != nil {
-					panic(err)
-				}
+				board.ForceMove(mymove)
 				outmoves <- mymove
 				fmt.Println(mymove.ToString())
 			} else {
@@ -127,5 +130,5 @@ func main() {
 	r.HandleFunc("/move", chessHandler)
 	http.Handle("/", r)
 
-	http.ListenAndServe(":9999", nil)
+	http.ListenAndServe(port, nil)
 }
