@@ -36,6 +36,7 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		for _, move := range orderedMoves(b) {
 			b.ForceMove(move)
 			result := AlphaBetaChild(b, depth-1, alpha, beta)
+			// fmt.Println(move.ToString(), result)
 			b.UndoMove(move)
 			if result < beta {
 				beta = result
@@ -61,7 +62,7 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 
 // Child level returns an evaluation
 func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
-	if b.IsOver() != 0 || depth == 0 {
+	if depth == 0 || b.IsOver() != 0 {
 		return EvalBoard(b)
 	}
 	if b.Turn == 1 {
