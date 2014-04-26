@@ -18,8 +18,8 @@ const (
 	BISHOPSQUARES           = .05 // per square a bishop attacks
 	ROOKONSEVENTH           = .8  // rook is on the second to last rank relative to color
 	CONNECTEDROOKS          = .5  // both rooks share the same rank or file
-	IMPORTANTSQUARE         = .25 // the central squares
-	WEAKSQUARE              = .05 // outer squares
+	IMPORTANTSQUARE         = .28 // the central squares
+	WEAKSQUARE              = .03 // outer squares
 )
 
 var (
