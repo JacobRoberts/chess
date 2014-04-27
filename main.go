@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	index = `
+	INDEX = `
 <html>
 <head>
 	<title>Play Chess</title>
@@ -28,7 +28,8 @@ const (
 </body>
 </html>
 `
-	port = ":9999"
+	PORT = ":9999"
+	LOG  = false
 )
 
 var (
@@ -42,7 +43,7 @@ var (
 func game() {
 	board := &engine.Board{Turn: 1}
 	board.SetUpPieces()
-	url := fmt.Sprintf("http://localhost%s", port)
+	url := fmt.Sprintf("http://localhost%s", PORT)
 	cmd := exec.Command("open", url)
 	if _, err := cmd.Output(); err != nil {
 		panic(err)
@@ -57,16 +58,22 @@ func game() {
 				}
 			}
 			board.ForceMove(oppmove)
-			fmt.Println(oppmove.ToString())
-			board.PrintBoard()
+			if LOG {
+				fmt.Println(oppmove.ToString())
+				board.PrintBoard()
+			}
 			if mymove := search.AlphaBeta(board, 4, search.BLACKWIN, search.WHITEWIN); mymove != nil {
 				board.ForceMove(mymove)
 				outmoves <- mymove
-				fmt.Println(mymove.ToString())
+				if LOG {
+					fmt.Println(mymove.ToString())
+				}
 			} else {
 				quit <- 1
 			}
-			board.PrintBoard()
+			if LOG {
+				board.PrintBoard()
+			}
 		case <-quit:
 			board.SetUpPieces()
 			board.Turn = 1
@@ -95,7 +102,7 @@ func stringToSquare(s string) engine.Square {
 
 // Serves the index, including relevant JS files.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, index)
+	fmt.Fprint(w, INDEX)
 }
 
 // Gets a move form from an AJAX request and sends it to the chess program.
@@ -130,5 +137,5 @@ func main() {
 	r.HandleFunc("/move", chessHandler)
 	http.Handle("/", r)
 
-	http.ListenAndServe(port, nil)
+	http.ListenAndServe(PORT, nil)
 }
