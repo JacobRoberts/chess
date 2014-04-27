@@ -4,15 +4,19 @@ I'm Jacob Roberts, I'm a senior at Marlboro College, and this is the culmination
 
 At Marlboro College, seniors devote most of their year to a plan of concentration, which is comparable to a graduate thesis. The work on this repository accounts for 60% of my total plan grade, with the remaining 40% coming from other academic endeavors.
 
-### engine/
+#### [For more in-depth discussion, see the wiki](https://github.com/JacobRoberts/chess/wiki/)
+
+### Project Organization
+
+#### engine/
 - Handles the game engine such as game state storage and piece movement.
 - Also contains helper functions that are entirely reliant on the rules of Chess, such as whether a given square on a board is occupied.
 
-### search/
+#### search/
 
 - Handles everything related to the AI, including alphabeta search and board evaluation.
 
-### web/
+#### web/
 
 - Contains all of the files needed to host this program remotely.
 - Currently, I host everything in this directory on [csmarlboro](http://csmarlboro.org/). The files are duplicated here for posterity.
