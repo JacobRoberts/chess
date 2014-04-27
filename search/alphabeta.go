@@ -2,7 +2,11 @@
 // Handles both search and board evaluation.
 package search
 
-import "github.com/jacobroberts/chess/engine"
+import (
+	"fmt"
+
+	"github.com/jacobroberts/chess/engine"
+)
 
 // Reference: http://web.cs.swarthmore.edu/~meeden/cs63/f05/minimax.html
 
@@ -14,10 +18,16 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		return nil
 	}
 	var bestmove *engine.Move = nil
+	var result float64
+	movelist := orderedMoves(b, false)
 	if b.Turn == 1 {
-		for _, move := range orderedMoves(b) {
+		for _, move := range movelist {
 			b.ForceMove(move)
-			result := AlphaBetaChild(b, depth-1, alpha, beta)
+			if move.Capture != 0 || b.IsCheck(b.Turn) {
+				result = AlphaBetaChild(b, depth-1, alpha, beta, true)
+			} else {
+				result = AlphaBetaChild(b, depth-1, alpha, beta, false)
+			}
 			b.UndoMove(move)
 			if result > alpha {
 				alpha = result
@@ -35,10 +45,14 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 		}
 		return bestmove
 	} else {
-		for _, move := range orderedMoves(b) {
+		for _, move := range movelist {
 			b.ForceMove(move)
-			result := AlphaBetaChild(b, depth-1, alpha, beta)
-			// fmt.Println(move.ToString(), result)
+			if move.Capture != 0 || b.IsCheck(b.Turn) {
+				result = AlphaBetaChild(b, depth-1, alpha, beta, true)
+			} else {
+				result = AlphaBetaChild(b, depth-1, alpha, beta, false)
+			}
+			fmt.Println(move.ToString(), result)
 			b.UndoMove(move)
 			if result < beta {
 				beta = result
@@ -63,14 +77,28 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 }
 
 // Child level returns an evaluation
-func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
-	if depth == 0 || b.IsOver() != 0 {
+func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64, volatile bool) float64 {
+	var movelist []*engine.Move
+	if b.IsOver() != 0 {
 		return EvalBoard(b)
+	} else if depth == 0 {
+		if !volatile {
+			return EvalBoard(b)
+		}
+		depth += 1
+		movelist = orderedMoves(b, true)
+	} else {
+		movelist = orderedMoves(b, false)
 	}
+	var score float64
 	if b.Turn == 1 {
-		for _, move := range orderedMoves(b) {
+		for _, move := range movelist {
 			b.ForceMove(move)
-			score := AlphaBetaChild(b, depth-1, alpha, beta)
+			if move.Capture != 0 || b.IsCheck(b.Turn) {
+				score = AlphaBetaChild(b, depth-1, alpha, beta, true)
+			} else {
+				score = AlphaBetaChild(b, depth-1, alpha, beta, false)
+			}
 			b.UndoMove(move)
 			if score > alpha {
 				alpha = score
@@ -81,9 +109,13 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64) float64 {
 		}
 		return alpha
 	} else {
-		for _, move := range orderedMoves(b) {
+		for _, move := range movelist {
 			b.ForceMove(move)
-			score := AlphaBetaChild(b, depth-1, alpha, beta)
+			if move.Capture != 0 || b.IsCheck(b.Turn) {
+				score = AlphaBetaChild(b, depth-1, alpha, beta, true)
+			} else {
+				score = AlphaBetaChild(b, depth-1, alpha, beta, false)
+			}
 			b.UndoMove(move)
 			if score < beta {
 				beta = score
