@@ -1,3 +1,5 @@
+// Package search is a Chess AI using the engine package.
+// Handles both search and board evaluation.
 package search
 
 import "github.com/jacobroberts/chess/engine"
