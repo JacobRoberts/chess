@@ -1,8 +1,6 @@
 package engine
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestUndoMove(t *testing.T) {
 	board := &Board{Turn: -1}
@@ -59,6 +57,23 @@ func TestUndoMove(t *testing.T) {
 	board.UndoMove(m)
 	if board.Board[1].Position.X != 8 || board.Board[1].Position.Y != 1 {
 		t.Errorf("Undoing castle should have left rook at (8, 1), instead at %+v", board.Board[1].Position)
+	}
+	board = &Board{Turn: 1}
+	board.PlacePiece('q', 1, 1, 1)
+	board.PlacePiece('r', -1, 8, 8)
+	board.PlacePiece('r', -1, 8, 7)
+	m1 := board.Board[0].makeMoveTo(8, 8)
+	m1.Capture = 'r'
+	m2 := board.Board[2].makeMoveTo(8, 8)
+	m2.Capture = 'q'
+	board.ForceMove(m1)
+	board.ForceMove(m2)
+	board.UndoMove(m2)
+	board.UndoMove(m1)
+	for i, p := range board.Board {
+		if p.Captured {
+			t.Errorf("Double capture erased piece at index %d", i)
+		}
 	}
 }
 

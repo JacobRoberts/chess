@@ -56,27 +56,32 @@ func (m *Move) ToString() string {
 // Modifies a board in-place to undo a given move
 func (b *Board) UndoMove(m *Move) {
 	var pieceadded bool
+	var piecemoved bool
 	for i, p := range b.Board {
 		if p.Position == m.End {
 			if p.Color == b.Turn*-1 {
-				b.Board[i].Position = m.Begin
-				if m.Piece == 'p' && b.Board[i].Name != 'p' {
-					b.Board[i].Name = 'p'
-					b.Board[i].Infinite_direction = false
-					b.Board[i].Directions = [][2]int{
-						{0, 1 * p.Color},
-					}
-				} else if m.Piece == 'k' {
-					// undo castle
-					if m.Begin.X == 5 && (m.End.X == 3 || m.End.X == 7) && ((p.Color == 1 && m.Begin.Y == 1) || (p.Color == -1 && m.Begin.Y == 8)) {
-						for i, p := range b.Board {
-							if p.Name == 'r' && p.Color == b.Turn*-1 && !p.Captured && p.Position.Y == m.Begin.Y {
-								if m.End.X == 3 && p.Position.X == 4 {
-									b.Board[i].Position.X = 1
-									break
-								} else if m.End.X == 7 && p.Position.X == 6 {
-									b.Board[i].Position.X = 8
-									break
+				if !piecemoved && !p.Captured {
+					b.Board[i].Position = m.Begin
+					piecemoved = true
+					if m.Piece == 'p' && b.Board[i].Name != 'p' {
+						// undo pawn promotion
+						b.Board[i].Name = 'p'
+						b.Board[i].Infinite_direction = false
+						b.Board[i].Directions = [][2]int{
+							{0, 1 * p.Color},
+						}
+					} else if m.Piece == 'k' {
+						// undo castle
+						if m.Begin.X == 5 && (m.End.X == 3 || m.End.X == 7) && ((p.Color == 1 && m.Begin.Y == 1) || (p.Color == -1 && m.Begin.Y == 8)) {
+							for i, p := range b.Board {
+								if p.Name == 'r' && p.Color == b.Turn*-1 && !p.Captured && p.Position.Y == m.Begin.Y {
+									if m.End.X == 3 && p.Position.X == 4 {
+										b.Board[i].Position.X = 1
+										break
+									} else if m.End.X == 7 && p.Position.X == 6 {
+										b.Board[i].Position.X = 8
+										break
+									}
 								}
 							}
 						}
