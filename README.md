@@ -10,7 +10,7 @@ At Marlboro College, seniors devote most of their year to a plan of concentratio
 
 ### search/
 
-- Handles everything related to the AI, including negamax search and board evaluation.
+- Handles everything related to the AI, including alphabeta search and board evaluation.
 
 ### web/
 

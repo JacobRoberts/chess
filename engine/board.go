@@ -1,6 +1,5 @@
 // Package engine implements the rules for playing chess.
-// Also exported are helper functions that are objectively determined by
-// 	the rules of chess, such as whether a square is occupied.
+// Also exported are helper functions that are objectively determined by the rules of chess, such as whether a square is occupied.
 package engine
 
 import (
