@@ -56,15 +56,11 @@ func game() {
 					break
 				}
 			}
-			if err := board.Move(oppmove); err != nil {
-				fmt.Println(err)
-			}
+			board.ForceMove(oppmove)
 			fmt.Println(oppmove.ToString())
 			board.PrintBoard()
 			if mymove := search.AlphaBeta(board, 4, search.BLACKWIN, search.WHITEWIN); mymove != nil {
-				if err := board.Move(mymove); err != nil {
-					fmt.Println(err)
-				}
+				board.ForceMove(mymove)
 				outmoves <- mymove
 				fmt.Println(mymove.ToString())
 			} else {
