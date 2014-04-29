@@ -24,7 +24,8 @@ func (s ByScore) Less(i, j int) bool {
 
 // Roughly orders moves in order of most likely to be good to least.
 // Examines all checks first, followed by captures, followed by good moves.
-// Does not include moves that don't immediately improve the user's position.
+// "Good moves" are sorted by their board evaluation after they are played.
+// If quiescence is set to true, then only checks and captures are returned.
 func orderedMoves(b *engine.Board, quiescence bool) []*engine.Move {
 	checks := make([]*engine.Move, 0)
 	captures := make([]*engine.Move, 0)
