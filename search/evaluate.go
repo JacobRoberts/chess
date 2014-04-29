@@ -7,7 +7,8 @@ const (
 	BLACKWIN        float64 = -255
 	DRAW            float64 = 0
 	HUNGPIECE               = 0
-	LONGPAWNCHAIN           = .03 // per pawn
+	ADVANCEDPAWN            = .075 // how far a pawn is from its starting rank
+	LONGPAWNCHAIN           = .03  // per pawn
 	ISOLATEDPAWN            = -.3
 	DOUBLEDPAWN             = -.4  // increases for tripled, etc. pawns
 	KINGINCORNER            = .15  // king in a castled position
@@ -108,10 +109,8 @@ func EvalBoard(b *engine.Board) float64 {
 		}
 	}
 	attackarray := [8][8]int{}
-	whitepawns := [8]int{}
-	blackpawns := [8]int{}
-	whitefullpawns := []engine.Square{}
-	blackfullpawns := []engine.Square{}
+	whitepawns := []engine.Square{}
+	blackpawns := []engine.Square{}
 	var score float64
 	for _, piece := range b.Board {
 		if !piece.Captured {
@@ -119,17 +118,15 @@ func EvalBoard(b *engine.Board) float64 {
 			updateAttackArray(b, piece, &attackarray)
 			if piece.Name == 'p' {
 				if piece.Color == 1 {
-					whitepawns[piece.Position.X-1] += 1
-					whitefullpawns = append(whitefullpawns, piece.Position)
+					whitepawns = append(whitepawns, piece.Position)
 				} else {
-					blackpawns[piece.Position.X-1] += 1
-					blackfullpawns = append(blackfullpawns, piece.Position)
+					blackpawns = append(blackpawns, piece.Position)
 				}
 			}
 		}
 	}
-	score += pawnStructureAnalysis(whitepawns)
-	score -= pawnStructureAnalysis(blackpawns)
+	score += pawnStructureAnalysis(whitepawns, 1)
+	score -= pawnStructureAnalysis(blackpawns, -1)
 	whiterooks := []engine.Square{}
 	blackrooks := []engine.Square{}
 	for _, piece := range b.Board {
@@ -149,11 +146,11 @@ func EvalBoard(b *engine.Board) float64 {
 			case 'p':
 				// reward passed pawns
 				if piece.Color == 1 {
-					if pawnIsPassed(piece, blackfullpawns) {
+					if pawnIsPassed(piece, blackpawns) {
 						score += PASSEDPAWN
 					}
 				} else {
-					if pawnIsPassed(piece, whitefullpawns) {
+					if pawnIsPassed(piece, whitepawns) {
 						score -= PASSEDPAWN
 					}
 				}
@@ -235,8 +232,17 @@ func updatePawnChainScore(pawnchain int) float64 {
 }
 
 // Returns appropriate penalties for doubled and isolated pawns
-func pawnStructureAnalysis(pawnarray [8]int) float64 {
+func pawnStructureAnalysis(pawns []engine.Square, color int) float64 {
+	pawnarray := [8]int{}
 	var score float64
+	for _, p := range pawns {
+		pawnarray[p.X-1] += 1
+		if color == 1 {
+			score += float64((p.Y - 2)) * ADVANCEDPAWN
+		} else {
+			score += float64((7 - p.Y)) * ADVANCEDPAWN
+		}
+	}
 	var pawnchain int
 	for _, count := range pawnarray {
 		if count >= 2 {
@@ -254,7 +260,11 @@ func pawnStructureAnalysis(pawnarray [8]int) float64 {
 }
 
 // Rewards players for protecting their king with pawns and being in a corner
-func checkKingSafety(file int, pawnarray [8]int) float64 {
+func checkKingSafety(file int, pawns []engine.Square) float64 {
+	pawnarray := [8]int{}
+	for _, p := range pawns {
+		pawnarray[p.X-1] += 1
+	}
 	var score float64
 	for i := -1; i < 2; i++ {
 		if location := file + i; location > -1 && location < 8 {

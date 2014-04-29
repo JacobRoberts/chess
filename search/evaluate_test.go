@@ -54,19 +54,15 @@ func TestAttackArray(t *testing.T) {
 }
 
 func TestPawnStructureAnalysis(t *testing.T) {
-	pawnarray := [8]int{}
-	if score := pawnStructureAnalysis(pawnarray); score != 0 {
+	pawnarray := []engine.Square{}
+	if score := pawnStructureAnalysis(pawnarray, 1); score != 0 {
 		t.Errorf("Empty pawn array expected to give score 0, gave score %f", score)
 	}
-	for i := range pawnarray {
-		pawnarray[i] = 1
+	for i := 1; i <= 8; i++ {
+		pawnarray = append(pawnarray, engine.Square{X: i, Y: 2})
 	}
-	if score := pawnStructureAnalysis(pawnarray); score != float64(8)*LONGPAWNCHAIN {
+	if score := pawnStructureAnalysis(pawnarray, 1); score != float64(8)*LONGPAWNCHAIN {
 		t.Errorf("Straight pawn chain expected to give score .4, gave score %f", score)
-	}
-	pawnarray = [8]int{2, 0, 2, 0, 2, 0, 2, 0}
-	if score := pawnStructureAnalysis(pawnarray); score > 0 {
-		t.Errorf("Awful pawn structure gave positive score of %f", score)
 	}
 }
 
@@ -91,7 +87,7 @@ func TestPawnIsPassed(t *testing.T) {
 }
 
 func TestCheckKingSafety(t *testing.T) {
-	if score := checkKingSafety(1, [8]int{}); score > 0 {
+	if score := checkKingSafety(1, []engine.Square{}); score > 0 {
 		t.Errorf("Isolated king in corner gives positive score of %f", score)
 	}
 }
