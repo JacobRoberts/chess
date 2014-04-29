@@ -29,7 +29,7 @@ const (
 </html>
 `
 	PORT = ":9999"
-	LOG  = false
+	LOG  = true
 )
 
 var (

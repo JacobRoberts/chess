@@ -8,6 +8,10 @@ import (
 	"github.com/jacobroberts/chess/engine"
 )
 
+const (
+	LOG = true
+)
+
 // Reference: http://web.cs.swarthmore.edu/~meeden/cs63/f05/minimax.html
 
 // Standard minmax search with alpha beta pruning.
@@ -52,7 +56,9 @@ func AlphaBeta(b *engine.Board, depth int, alpha, beta float64) *engine.Move {
 			} else {
 				result = AlphaBetaChild(b, depth-1, alpha, beta, false)
 			}
-			fmt.Println(move.ToString(), result)
+			if LOG {
+				fmt.Println(move.ToString(), result)
+			}
 			b.UndoMove(move)
 			if result < beta {
 				beta = result
@@ -94,7 +100,7 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64, volatile bo
 	if b.Turn == 1 {
 		for _, move := range movelist {
 			b.ForceMove(move)
-			if move.Capture != 0 || b.IsCheck(b.Turn) {
+			if !volatile && (move.Capture != 0 || b.IsCheck(b.Turn)) {
 				score = AlphaBetaChild(b, depth-1, alpha, beta, true)
 			} else {
 				score = AlphaBetaChild(b, depth-1, alpha, beta, false)
@@ -111,7 +117,7 @@ func AlphaBetaChild(b *engine.Board, depth int, alpha, beta float64, volatile bo
 	} else {
 		for _, move := range movelist {
 			b.ForceMove(move)
-			if move.Capture != 0 || b.IsCheck(b.Turn) {
+			if !volatile && (move.Capture != 0 || b.IsCheck(b.Turn)) {
 				score = AlphaBetaChild(b, depth-1, alpha, beta, true)
 			} else {
 				score = AlphaBetaChild(b, depth-1, alpha, beta, false)
