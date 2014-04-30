@@ -49,11 +49,13 @@ func orderedMoves(b *engine.Board, quiescence bool) []*engine.Move {
 	if !quiescence {
 		sort.Sort(sort.Reverse(ByScore(rest)))
 	}
-	orderedmoves := make([]*engine.Move, 0)
+	orderedmoves := make([]*engine.Move, len(checks)+len(captures)+len(rest))
+	index := 0
 	for _, l := range [][]*engine.Move{checks, captures, rest} {
 		for _, m := range l {
 			m.Score = 0
-			orderedmoves = append(orderedmoves, m)
+			orderedmoves[index] = m
+			index++
 		}
 	}
 	return orderedmoves
