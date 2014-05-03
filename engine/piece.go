@@ -7,7 +7,7 @@ type Piece struct {
 	Name       byte // p, n, b, r, q, k
 	Can_castle bool // rooks and kings. default true, set to false when piece makes a non-castle move
 
-	Can_en_passant bool // only applicable
+	Can_en_passant bool // only applicable to pawns
 
 	Directions         [][2]int // slice of {0 or 1, 0 or 1} indicating how piece moves
 	Infinite_direction bool     // if piece can move as far as it wants in given direction
