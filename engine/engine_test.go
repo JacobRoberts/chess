@@ -529,3 +529,26 @@ func TestCanCastle(t *testing.T) {
 		t.Error("Error when making a legal castle")
 	}
 }
+
+func TestToFen(t *testing.T) {
+	board := &Board{Turn: 1}
+	board.SetUpPieces()
+	if fen := board.ToFen(); fen != "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w" {
+		t.Errorf("Initial position expected fen:\n%s\nInstead got:\n%s\n", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w", fen)
+	}
+	m := &Move{
+		Piece: 'p',
+		Begin: Square{
+			X: 5,
+			Y: 2,
+		},
+		End: Square{
+			X: 5,
+			Y: 4,
+		},
+	}
+	board.ForceMove(m)
+	if fen := board.ToFen(); fen != "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b" {
+		t.Errorf("After 1.e4 expected fen:\n%s\nInstead got:\n%s\n", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b", fen)
+	}
+}

@@ -4,6 +4,7 @@ package engine
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -13,17 +14,23 @@ type Board struct {
 	Turn  int      // 1 : white , -1 : black
 }
 
-func (b *Board) PrintBoard() {
+// Converts the board to an array of strings, ready for printing or conversion to FEN.
+func (b *Board) ToArray() [8][8]string {
 	boardarr := [8][8]string{}
 	for _, piece := range b.Board {
 		if !piece.Captured {
-			if piece.Color == -1 {
+			if piece.Color == 1 {
 				boardarr[piece.Position.Y-1][piece.Position.X-1] = strings.ToUpper(string(piece.Name))
 			} else {
 				boardarr[piece.Position.Y-1][piece.Position.X-1] = string(piece.Name)
 			}
 		}
 	}
+	return boardarr
+}
+
+func (b *Board) PrintBoard() {
+	boardarr := b.ToArray()
 	for y := 7; y >= 0; y-- {
 		for x := 0; x < 8; x++ {
 			if boardarr[y][x] == "" {
@@ -35,6 +42,40 @@ func (b *Board) PrintBoard() {
 		fmt.Println()
 	}
 	fmt.Println()
+}
+
+// Converts the position to FEN, only including position and turn.
+// See: http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+func (b *Board) ToFen() string {
+	boardarr := b.ToArray()
+	fen := ""
+	empty := 0
+	for y := 7; y >= 0; y-- {
+		for x := 0; x < 8; x++ {
+			if boardarr[y][x] == "" {
+				empty += 1
+			} else {
+				if empty != 0 {
+					fen += strconv.Itoa(empty)
+					empty = 0
+				}
+				fen += boardarr[y][x]
+			}
+		}
+		if empty != 0 {
+			fen += strconv.Itoa(empty)
+			empty = 0
+		}
+		if y != 0 {
+			fen += "/"
+		}
+	}
+	if b.Turn == 1 {
+		fen += " w"
+	} else {
+		fen += " b"
+	}
+	return string(fen)
 }
 
 // Checks if a king is in check.
