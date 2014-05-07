@@ -51,7 +51,6 @@ func game() {
 		panic(err)
 	}
 	rand.Seed(time.Now().UTC().UnixNano())
-	moves := ""
 	for {
 		select {
 		case oppmove := <-incmoves:
@@ -61,15 +60,14 @@ func game() {
 					break
 				}
 			}
-			moves += oppmove.ToString()
 			board.ForceMove(oppmove)
 			if LOG {
 				fmt.Println(oppmove.ToString())
 				board.PrintBoard()
 			}
 			var mymove *engine.Move
-			if s, ok := search.Book[moves]; ok {
-				mymove = stringToMove(s[rand.Intn(len(s))])
+			if moves, ok := search.Book[board.ToFen()]; ok {
+				mymove = stringToMove(moves[rand.Intn(len(moves))])
 			} else {
 				if m := search.AlphaBeta(board, 4, search.BLACKWIN, search.WHITEWIN); m != nil {
 					mymove = m
@@ -78,7 +76,6 @@ func game() {
 					break
 				}
 			}
-			moves += mymove.ToString()
 			board.ForceMove(mymove)
 			outmoves <- mymove
 			if LOG {
