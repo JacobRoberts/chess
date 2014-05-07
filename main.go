@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os/exec"
+	"time"
 
 	"github.com/jacobroberts/chess/engine"
 	"github.com/jacobroberts/chess/search"
@@ -48,6 +50,8 @@ func game() {
 	if _, err := cmd.Output(); err != nil {
 		panic(err)
 	}
+	rand.Seed(time.Now().UTC().UnixNano())
+	moves := ""
 	for {
 		select {
 		case oppmove := <-incmoves:
@@ -57,21 +61,28 @@ func game() {
 					break
 				}
 			}
+			moves += oppmove.ToString()
 			board.ForceMove(oppmove)
 			if LOG {
 				fmt.Println(oppmove.ToString())
 				board.PrintBoard()
 			}
-			if mymove := search.AlphaBeta(board, 4, search.BLACKWIN, search.WHITEWIN); mymove != nil {
-				board.ForceMove(mymove)
-				outmoves <- mymove
-				if LOG {
-					fmt.Println(mymove.ToString())
-				}
+			var mymove *engine.Move
+			if s, ok := search.Book[moves]; ok {
+				mymove = stringToMove(s[rand.Intn(len(s))])
 			} else {
-				quit <- 1
+				if m := search.AlphaBeta(board, 4, search.BLACKWIN, search.WHITEWIN); m != nil {
+					mymove = m
+				} else {
+					quit <- 1
+					break
+				}
 			}
+			moves += mymove.ToString()
+			board.ForceMove(mymove)
+			outmoves <- mymove
 			if LOG {
+				fmt.Println(mymove.ToString())
 				board.PrintBoard()
 			}
 		case <-quit:
@@ -82,7 +93,16 @@ func game() {
 	}
 }
 
-// Accepts a string such as 'e4' and converts it to the Square struct.
+// Accepts a string such as "pe2-e4" and converts it to the Move struct.
+func stringToMove(s string) *engine.Move {
+	var move engine.Move
+	move.Begin = stringToSquare(s[1:3])
+	move.End = stringToSquare(s[4:])
+	move.Piece = s[0]
+	return &move
+}
+
+// Accepts a string such as "e4'"and converts it to the Square struct.
 func stringToSquare(s string) engine.Square {
 	var square engine.Square
 	for i, b := range engine.Files {
