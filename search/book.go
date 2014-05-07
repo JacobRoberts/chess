@@ -22,13 +22,13 @@ var Book = map[string][]string{
 	// B00 King's Pawn Opening
 	"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b": []string{"pe7-e5", "pc7-c5", "pe7-e6"},
 
-	// B20 Sicilian Defense
+	// B20 Sicilian Defence
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3"},
 
-	// B27 Sicilian Defense
+	// B27 Sicilian Defence
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b": []string{"pd7-d6", "pe7-e6"},
 
-	// B40 Sicilian Defense
+	// B40 Sicilian Defence
 	"rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"pd2-d4"},
 	"rnbqkbnr/pp1p1ppp/4p3/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"pc5-d4"},
 	"rnbqkbnr/pp1p1ppp/4p3/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":   []string{"nf3-d4"},
