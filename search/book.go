@@ -25,6 +25,20 @@ var Book = map[string][]string{
 	// B20 Sicilian Defence
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3"},
 
+	// B23 Sicilian, Closed
+	"rnbqkbnr/pp1ppppp/8/2p5/4P3/2N5/PPPP1PPP/R1BQKBNR b":       []string{"nb8-c6"},
+	"r1bqkbnr/pp1ppppp/2n5/2p5/4P3/2N5/PPPP1PPP/R1BQKBNR w":     []string{"pf2-f4", "pg2-g3"},
+	"r1bqkbnr/pp1ppppp/2n5/2p5/4PP2/2N5/PPPP2PP/R1BQKBNR b":     []string{"pg7-g6"},
+	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4PP2/2N5/PPPP2PP/R1BQKBNR w":   []string{"ng1-f3"},
+	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4PP2/2N2N2/PPPP2PP/R1BQKB1R b": []string{"bf1-g7"},
+
+	// B24 Sicilian, Closed
+	"r1bqkbnr/pp1ppppp/2n5/2p5/4P3/2N3P1/PPPP1P1P/R1BQKBNR b":   []string{"pg7-g6"},
+	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4P3/2N3P1/PPPP1P1P/R1BQKBNR w": []string{"bf1-g2"},
+	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4P3/2N3P1/PPPP1PBP/R1BQK1NR b": []string{"bf8-g7"},
+	"r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2N3P1/PPPP1PBP/R1BQK1NR w": []string{"pd2-d3"},
+	"r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2NP2P1/PPP2PBP/R1BQK1NR b": []string{"pd7-d6"},
+
 	// B27 Sicilian Defence
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b": []string{"pd7-d6", "pe7-e6"},
 
@@ -59,8 +73,12 @@ var Book = map[string][]string{
 	"rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b": []string{"bf8-b5", "ng8-f6"},
 
 	// C11 French Defense
-	"rnbqkb1r/ppp2ppp/4pn2/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR w":  []string{"bc1-g5", "pe4-e5"},
-	"rnbqkb1r/ppp2ppp/4pn2/3p2B1/3PP3/2N5/PPP2PPP/R2QKBNR b": []string{"pd5-e4", "bf8-e7"},
+	"rnbqkb1r/ppp2ppp/4pn2/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR w":   []string{"bc1-g5", "pe4-e5"},
+	"rnbqkb1r/ppp2ppp/4pn2/3p2B1/3PP3/2N5/PPP2PPP/R2QKBNR b":  []string{"pd5-e4", "bf8-e7"},
+	"rnbqkb1r/ppp2ppp/4pn2/3pP3/3P4/2N5/PPP2PPP/R1BQKBNR b":   []string{"nf6-d7"},
+	"rnbqkb1r/pppn1ppp/4p3/3pP3/3P4/2N5/PPP2PPP/R1BQKBNR w":   []string{"pf2-f4"},
+	"rnbqkb1r/pppn1ppp/4p3/3pP3/3P1P2/2N5/PPP3PP/R1BQKBNR b":  []string{"pc7-c5"},
+	"rnbqkb1r/pp1n1ppp/4p3/2ppP3/3P1P2/2N5/PPP3PP/R1BQKBNR w": []string{"ng1-f3"},
 
 	// C15 French, Winawer, Nimzovich Variation
 	"rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPP2PPP/R1BQKBNR w": []string{"pe4-e5"},
@@ -118,6 +136,14 @@ var Book = map[string][]string{
 
 	// D31 Queen's Gambit Declined
 	"rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR b": []string{"ng8-f6", "pc7-c6"},
+
+	// D35 Queen's Gambit Declined
+	"rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "pc4-d5"},
+
+	// D37 Queen's Gambit Declined
+	"rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b":  []string{"Bf8-e7", "pc7-c6"},
+	"rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w":  []string{"Bc1-g5"},
+	"rnbqk2r/ppp1bppp/4pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b": []string{"ke8-g8"},
 
 	// E00 Queen's Pawn Game
 	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
