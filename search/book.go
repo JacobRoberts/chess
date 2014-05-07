@@ -22,6 +22,27 @@ var Book = map[string][]string{
 	// B00 King's Pawn Opening
 	"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b": []string{"pe7-e5", "pc7-c5", "pe7-e6"},
 
+	// B20 Sicilian Defense
+	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3"},
+
+	// B27 Sicilian Defense
+	"rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b": []string{"pd7-d6", "pe7-e6"},
+
+	// B40 Sicilian Defense
+	"rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"pd2-d4"},
+	"rnbqkbnr/pp1p1ppp/4p3/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"pc5-d4"},
+	"rnbqkbnr/pp1p1ppp/4p3/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":   []string{"nf3-d4"},
+	"rnbqkbnr/pp1p1ppp/4p3/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":   []string{"pa7-a6", "nb8-c6", "ng8-f6"},
+
+	// B50 Sicilian
+	"nbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w":  []string{"pd2-d4"},
+	"rnbqkbnr/pp2pppp/3p4/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"pc5-d4"},
+	"nbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":    []string{"nf3-d4"},
+
+	// B54 Sicilian
+	"rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b":   []string{"ng8-f6"},
+	"rnbqkb1r/pp2pppp/3p1n2/8/3NP3/8/PPP2PPP/RNBQKB1R w": []string{"nb1-c3"},
+
 	// C00 French Defense
 	"rnbqkbnr/pppp1ppp/4p3/8/4P3/8/PPPP1PPP/RNBQKBNR w":  []string{"pd2-d4"},
 	"rnbqkbnr/pppp1ppp/4p3/8/3PP3/8/PPP2PPP/RNBQKBNR b":  []string{"pd7-d5"},
@@ -60,12 +81,18 @@ var Book = map[string][]string{
 	"r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b": []string{"ng8-f6", "bf8-c5"},
 
 	// C60 Ruy Lopez
-	"r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b":  []string{"pa7-a6"},
+	"r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b":  []string{"pa7-a6", "ng8-f6"},
 	"r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w": []string{"bb5-c6", "bb5-a4"},
+
+	// C65 Ruy Lopez, Berlin Defence
+	"r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w": []string{"ke1-g1"},
 
 	// C68 Ruy Lopez, Exchange Variation
 	"r1bqkbnr/1ppp1ppp/p1B5/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b": []string{"pd7-c6"},
 	"r1bqkbnr/1pp2ppp/p1p5/4p3/4P3/5N2/PPPP1PPP/RNBQK2R w":  []string{"ke1-g1"},
+
+	// C69 Ruy Lopez, Exchange Variation
+	"r1bqkbnr/1pp2ppp/p1p5/4p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b": []string{"pf7-f6", "bc8-g4"},
 
 	// D00 Queen's Pawn Game
 	"rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w": []string{"pc2-c4"},
@@ -96,7 +123,7 @@ var Book = map[string][]string{
 	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
 	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b": []string{"bf8-b4", "pc7-c5"},
 
-	// E20 Nimzo-Indian Defense
+	// E20 Nimzo-Indian Defence
 	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "qd1-c2"},
 
 	// E21 Nimzo-Indian, Three Knights Variation
