@@ -101,9 +101,9 @@ var Book = map[string][]string{
 	"rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b": []string{"pe7-e6", "nb8-c6"},
 
 	// B15 Caro-Kann Defense
-	"nbqkbnr/pp2pppp/2p5/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b": []string{"pd5-e4"},
-	"rnbqkbnr/pp2pppp/2p5/8/3Pp3/2N5/PPP2PPP/R1BQKBNR w":  []string{"nc3-e4"},
-	"rnbqkbnr/pp2pppp/2p5/8/3PN3/8/PPP2PPP/R1BQKBNR b":    []string{"bc8-f5"},
+	"rnbqkbnr/pp2pppp/2p5/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b": []string{"pd5-e4"},
+	"rnbqkbnr/pp2pppp/2p5/8/3Pp3/2N5/PPP2PPP/R1BQKBNR w":   []string{"nc3-e4"},
+	"rnbqkbnr/pp2pppp/2p5/8/3PN3/8/PPP2PPP/R1BQKBNR b":     []string{"bc8-f5"},
 
 	// B18 Caro-Kann, Classical Variation
 	"rn1qkbnr/pp2pppp/2p5/5b2/3PN3/8/PPP2PPP/R1BQKBNR w": []string{"ne4-g3"},
