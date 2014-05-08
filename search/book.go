@@ -63,8 +63,8 @@ var Book = map[string][]string{
 	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R w":  []string{"pg2-g3"},
 	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N2NP1/PP2PP1P/R1BQKB1R b": []string{"ke8-g8"},
 
-	"nbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":   []string{"ng1-f3", "pg2-g3"},
-	"nbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"bf8-b4", "pd7-d5", "bf8-e7"},
+	"rnbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":   []string{"ng1-f3", "pg2-g3"},
+	"rnbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"bf8-b4", "pd7-d5", "bf8-e7"},
 
 	// A86 Dutch, Leningrad Variation
 	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR b": []string{"pg7-g6"},
@@ -80,7 +80,34 @@ var Book = map[string][]string{
 	"rnbqk2r/ppppb1pp/4pn2/5p2/2PP4/5NP1/PP2PPBP/RNBQK2R b": []string{"ke8-g8"},
 
 	// B00 King's Pawn Opening
-	"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b": []string{"pe7-e5", "pc7-c5", "pe7-e6"},
+	"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b": []string{"pe7-e5", "pc7-c5", "pe7-e6", "pc7-c6"},
+
+	// B10 Caro-Kann Defense
+	"rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"pd2-d4"},
+
+	// B12 Caro-Kann Defense
+	"rnbqkbnr/pp1ppppp/2p5/8/3PP3/8/PPP2PPP/RNBQKBNR b":     []string{"pd7-d5"},
+	"rnbqkbnr/pp2pppp/2p5/3p4/3PP3/8/PPP2PPP/RNBQKBNR w":    []string{"nb1-c3", "pe4-d5", "pe4-e5"},
+	"rnbqkbnr/pp2pppp/2p5/3pP3/3P4/8/PPP2PPP/RNBQKBNR b":    []string{"bc8-f5"},
+	"rn1qkbnr/pp2pppp/2p5/3pPb2/3P4/8/PPP2PPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
+	"rn1qkbnr/pp2pppp/2p5/3pPb2/3P4/2N5/PPP2PPP/R1BQKBNR b": []string{"pe7-e6"},
+	"rn1qkbnr/pp2pppp/2p5/3pPb2/3P4/5N2/PPP2PPP/RNBQKB1R b": []string{"pe7-e6"},
+
+	// B13 Caro-Kann, Exchange Variation
+	"rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b":   []string{"pc6-d5"},
+	"rnbqkbnr/pp2pppp/8/3p4/3P4/8/PPP2PPP/RNBQKBNR w":     []string{"pc2-c4"},
+	"rnbqkbnr/pp2pppp/8/3p4/2PP4/8/PP3PPP/RNBQKBNR b":     []string{"ng8-f6"},
+	"rnbqkb1r/pp2pppp/5n2/3p4/2PP4/8/PP3PPP/RNBQKBNR w":   []string{"nb1-c3"},
+	"rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b": []string{"pe7-e6", "nb8-c6"},
+
+	// B15 Caro-Kann Defense
+	"nbqkbnr/pp2pppp/2p5/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b": []string{"pd5-e4"},
+	"rnbqkbnr/pp2pppp/2p5/8/3Pp3/2N5/PPP2PPP/R1BQKBNR w":  []string{"nc3-e4"},
+	"rnbqkbnr/pp2pppp/2p5/8/3PN3/8/PPP2PPP/R1BQKBNR b":    []string{"bc8-f5"},
+
+	// B18 Caro-Kann, Classical Variation
+	"rn1qkbnr/pp2pppp/2p5/5b2/3PN3/8/PPP2PPP/R1BQKBNR w": []string{"ne4-g3"},
+	"n1qkbnr/pp2pppp/2p5/5b2/3P4/6N1/PPP2PPP/R1BQKBNR b": []string{"bf5-g6"},
 
 	// B20 Sicilian Defense
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3"},
