@@ -16,7 +16,7 @@ const (
 	KINGPROTECTED           = .1   // king protected by a pawn, applies to pawns on files near king
 	PASSEDPAWN              = .75  // pawn has no opposing pawns blocking it from promoting
 	CENTRALKNIGHT           = .5   // knight close to center of board
-	BISHOPSQUARES           = .075 // per square a bishop attacks
+	BISHOPSQUARES           = .125 // per square a bishop attacks
 	ROOKONSEVENTH           = .8   // rook is on the second to last rank relative to color
 	CONNECTEDROOKS          = .5   // both rooks share the same rank or file
 	IMPORTANTSQUARE         = .28  // the central squares
