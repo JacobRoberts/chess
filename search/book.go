@@ -56,7 +56,7 @@ var Book = map[string][]string{
 	// A85 Dutch Defense
 	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR b":   []string{"pg7-g6", "pe7-e6"},
 	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":   []string{"pg2-g3", "ng1-f3"},
-	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR b": []string{"bf1-g7"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR b": []string{"bf8-g7"},
 	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR w": []string{"bf1-g2"},
 
 	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b":  []string{"bf8-g7"},
@@ -286,7 +286,7 @@ var Book = map[string][]string{
 	"rnbqkb1r/pp1p1ppp/5n2/2pP4/8/2N5/PP2PPPP/R1BQKBNR b":    []string{"pd7-d6"},
 
 	// E10 Queen's Pawn Game
-	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R b":   []string{"pd7-d5", "pc7-c5"},
+	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R b":   []string{"pc7-c5"},
 	"rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w":  []string{"nb1-c3"},
 	"rnbqkb1r/pp1p1ppp/4pn2/2p5/2PP4/5N2/PP2PPPP/RNBQKB1R w": []string{"pd4-d5"},
 	"rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/5N2/PP2PPPP/RNBQKB1R b": []string{"pe6-d5"},
@@ -294,8 +294,26 @@ var Book = map[string][]string{
 	"rnbqkb1r/pp1p1ppp/5n2/2pP4/8/5N2/PP2PPPP/RNBQKB1R b":    []string{"pd7-d6"},
 
 	// E20 Nimzo-Indian Defense
-	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "qd1-c2"},
+	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "qd1-c2", "pe2-e3"},
 
 	// E21 Nimzo-Indian, Three Knights Variation
 	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"pc7-c5", "pd7-d5"},
+
+	// E32 Nimzo-Indian, Classical Variation
+	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b":   []string{"ke8-g8", "pc7-c5"},
+	"rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR w":  []string{"pa2-a3"},
+	"rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/P1N5/1PQ1PPPP/R1B1KBNR b": []string{"bb4-c3"},
+
+	// E38 Nimzo-Indian, Classical Variation, 4...c5
+	"rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N5/PPQ1PPPP/R1B1KBNR w": []string{"pd4-c5"},
+	"rnbqk2r/pp1p1ppp/4pn2/2P5/1bP5/2N5/PPQ1PPPP/R1B1KBNR b":  []string{"ke8-g8", "bb4-c5"},
+
+	// E40 Nimzo-Indian, 4. e3
+	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b": []string{"ke8-g8", "pc7-c5"},
+
+	// E46 Nimzo-Indian, 4. e3 O-O
+	"rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR w": []string{"bf1-d3"},
+
+	// E47 Nimzo-Indian, 4. e3 O-O 5. Bd3
+	"rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/2NBP3/PP3PPP/R1BQK1NR b": []string{"pc7-c5", "pd7-d5"},
 }
