@@ -11,7 +11,9 @@ var Book = map[string][]string{
 	"rnbqkb1r/pppppppp/5n2/8/2P5/8/PP1PPPPP/RNBQKBNR w": []string{"ng1-f3", "pd2-d4"},
 
 	// A40 Queen's Pawn
-	"rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b": []string{"pd7-d5", "ng8-f6"},
+	"rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b":   []string{"pd7-d5", "ng8-f6", "pe7-e6", "pf7-f5"},
+	"rnbqkbnr/pppp1ppp/4p3/8/3P4/8/PPP1PPPP/RNBQKBNR w": []string{"pc2-c4", "pe2-e4"},
+	"rnbqkbnr/pppp1ppp/4p3/8/2PP4/8/PP2PPPP/RNBQKBNR b": []string{"ng8-f6", "pd7-d5"},
 
 	// A45 Queen's Pawn Game
 	"rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w": []string{"pc2-c4"},
@@ -19,10 +21,68 @@ var Book = map[string][]string{
 	// A50 Queen's Pawn Game
 	"rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b": []string{"pe7-e6"},
 
+	// A80 Dutch
+	"rnbqkbnr/ppppp1pp/8/5p2/3P4/8/PPP1PPPP/RNBQKBNR w": []string{"pg2-g3", "pc2-c4"},
+
+	// A81 Dutch Defense
+	"rnbqkbnr/ppppp1pp/8/5p2/3P4/6P1/PPP1PP1P/RNBQKBNR b":    []string{"ng8-f6"},
+	"nbqkb1r/ppppp1pp/5n2/5p2/3P4/6P1/PPP1PP1P/RNBQKBNR w":   []string{"bf1-g2"},
+	"rnbqkb1r/ppppp1pp/5n2/5p2/3P4/6P1/PPP1PPBP/RNBQK1NR b":  []string{"pg7-g6", "pe7-e6"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/3P4/6P1/PPP1PPBP/RNBQK1NR w":  []string{"ng1-f3", "pc2-c4"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/3P4/5NP1/PPP1PPBP/RNBQK2R b":  []string{"bf8-g7"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/3P4/5NP1/PPP1PPBP/RNBQK2R w":  []string{"ke1-g1"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/3P4/5NP1/PPP1PPBP/RNBQ1RK1 b": []string{"ke8-g8"},
+
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR b":   []string{"bf8-g7"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR w":   []string{"nb1-c3"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PPBP/R1BQK1NR b": []string{"ke8-g8"},
+
+	"rnbqkb1r/pppp2pp/4pn2/5p2/3P4/6P1/PPP1PPBP/RNBQK1NR w":  []string{"ng1-f3", "pc2-c4"},
+	"rnbqkb1r/pppp2pp/4pn2/5p2/3P4/5NP1/PPP1PPBP/RNBQK2R b":  []string{"bf8-e7", "pd7-d5"},
+	"rnbqk2r/ppppb1pp/4pn2/5p2/3P4/5NP1/PPP1PPBP/RNBQK2R w":  []string{"ke1-g1"},
+	"rnbqk2r/ppppb1pp/4pn2/5p2/3P4/5NP1/PPP1PPBP/RNBQ1RK1 b": []string{"ke8-g8"},
+
+	"rnbqkb1r/ppp3pp/4pn2/3p1p2/3P4/5NP1/PPP1PPBP/RNBQK2R w":  []string{"ke1-g1"},
+	"rnbqkb1r/ppp3pp/4pn2/3p1p2/3P4/5NP1/PPP1PPBP/RNBQ1RK1 b": []string{"bf8-d6"},
+
+	// A84 Dutch Defense
+	"rnbqkbnr/ppppp1pp/8/5p2/2PP4/8/PP2PPPP/RNBQKBNR b":   []string{"ng8-f6"},
+	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/8/PP2PPPP/RNBQKBNR w": []string{"nb1-c3", "pg2-g3"},
+
+	// A85 Dutch Defense
+	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR b":   []string{"pg7-g6", "pe7-e6"},
+	"nbqkb1r/ppppp2p/5np1/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":    []string{"pg2-g3", "ng1-f3"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR b": []string{"bf1-g7"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR w": []string{"bf1-g2"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PPBP/R1BQK1NR b": []string{"ke8-g8"},
+
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b":  []string{"bf8-g7"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R w":  []string{"pg2-g3"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N2NP1/PP2PP1P/R1BQKB1R b": []string{"ke8-g8"},
+
+	"nbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":   []string{"ng1-f3", "pg2-g3"},
+	"nbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"bf8-b4", "pd7-d5", "bf8-e7"},
+
+	// A86 Dutch, Leningrad Variation
+	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR b":   []string{"pg7-g6"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR w":   []string{"bf1-g2"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR b":   []string{"bf8-g7"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR w":   []string{"nb1-c3"},
+	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PPBP/R1BQK1NR b": []string{"ke8-g8"},
+
+	// A90 Dutch Defense
+	"rnbqkb1r/pppp2pp/4pn2/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR b":  []string{"bf8-e7", "pd7-d5", "pc7-c6"},
+	"rnbqkb1r/ppp3pp/4pn2/3p1p2/2PP4/6P1/PP2PPBP/RNBQK1NR w": []string{"ng1-f3"},
+	"rnbqkb1r/ppp3pp/4pn2/3p1p2/2PP4/5NP1/PP2PPBP/RNBQK2R b": []string{"pc7-c6"},
+
+	// A91 Dutch Defense
+	"rnbqk2r/ppppb1pp/4pn2/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR w": []string{"ng1-f3"},
+	"rnbqk2r/ppppb1pp/4pn2/5p2/2PP4/5NP1/PP2PPBP/RNBQK2R b": []string{"ke8-g8"},
+
 	// B00 King's Pawn Opening
 	"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b": []string{"pe7-e5", "pc7-c5", "pe7-e6"},
 
-	// B20 Sicilian Defence
+	// B20 Sicilian Defense
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3"},
 
 	// B23 Sicilian, Closed
@@ -39,17 +99,17 @@ var Book = map[string][]string{
 	"r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2N3P1/PPPP1PBP/R1BQK1NR w": []string{"pd2-d3"},
 	"r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2NP2P1/PPP2PBP/R1BQK1NR b": []string{"pd7-d6"},
 
-	// B27 Sicilian Defence
+	// B27 Sicilian Defense
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b": []string{"pd7-d6", "pe7-e6"},
 
-	// B40 Sicilian Defence
+	// B40 Sicilian Defense
 	"rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"pd2-d4"},
 	"rnbqkbnr/pp1p1ppp/4p3/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"pc5-d4"},
 	"rnbqkbnr/pp1p1ppp/4p3/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":   []string{"nf3-d4"},
 	"rnbqkbnr/pp1p1ppp/4p3/8/3NP3/8/PPP2PPP/RNBQKB1R b":     []string{"pa7-a6", "nb8-c6", "ng8-f6"},
 
 	// B50 Sicilian
-	"nbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w":  []string{"pd2-d4"},
+	"rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"pd2-d4"},
 	"rnbqkbnr/pp2pppp/3p4/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"pc5-d4"},
 	"nbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":    []string{"nf3-d4"},
 
@@ -102,7 +162,7 @@ var Book = map[string][]string{
 	"r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b":  []string{"pa7-a6", "ng8-f6"},
 	"r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w": []string{"bb5-c6", "bb5-a4"},
 
-	// C65 Ruy Lopez, Berlin Defence
+	// C65 Ruy Lopez, Berlin Defense
 	"r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w": []string{"ke1-g1"},
 
 	// C68 Ruy Lopez, Exchange Variation
@@ -149,7 +209,7 @@ var Book = map[string][]string{
 	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
 	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b": []string{"bf8-b4", "pc7-c5"},
 
-	// E20 Nimzo-Indian Defence
+	// E20 Nimzo-Indian Defense
 	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "qd1-c2"},
 
 	// E21 Nimzo-Indian, Three Knights Variation
