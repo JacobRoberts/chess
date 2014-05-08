@@ -54,7 +54,6 @@ var Book = map[string][]string{
 	"nbqkb1r/ppppp2p/5np1/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":    []string{"pg2-g3", "ng1-f3"},
 	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR b": []string{"bf1-g7"},
 	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR w": []string{"bf1-g2"},
-	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PPBP/R1BQK1NR b": []string{"ke8-g8"},
 
 	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b":  []string{"bf8-g7"},
 	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R w":  []string{"pg2-g3"},
@@ -64,11 +63,8 @@ var Book = map[string][]string{
 	"nbqkb1r/pppp2pp/4pn2/5p2/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"bf8-b4", "pd7-d5", "bf8-e7"},
 
 	// A86 Dutch, Leningrad Variation
-	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR b":   []string{"pg7-g6"},
-	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR w":   []string{"bf1-g2"},
-	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR b":   []string{"bf8-g7"},
-	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR w":   []string{"nb1-c3"},
-	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PPBP/R1BQK1NR b": []string{"ke8-g8"},
+	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR b": []string{"pg7-g6"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/6P1/PP2PP1P/RNBQKBNR w": []string{"bf1-g2"},
 
 	// A90 Dutch Defense
 	"rnbqkb1r/pppp2pp/4pn2/5p2/2PP4/6P1/PP2PPBP/RNBQK1NR b":  []string{"bf8-e7", "pd7-d5", "pc7-c6"},
