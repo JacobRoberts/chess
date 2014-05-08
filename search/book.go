@@ -177,10 +177,44 @@ var Book = map[string][]string{
 	"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3"},
 
 	// C40 King's Knight Opening
-	"rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b": []string{"nb8-c6"},
+	"rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b": []string{"nb8-c6", "ng8-f6"},
+
+	// C42 Petrov's Defense
+	"rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"nf3-e5", "pd2-d4", "nb1-c3"},
+	"rnbqkb1r/pppp1ppp/5n2/4N3/4P3/8/PPPP1PPP/RNBQKB1R b":   []string{"pd7-d6"},
+	"rnbqkb1r/ppp2ppp/3p1n2/4N3/4P3/8/PPPP1PPP/RNBQKB1R w":  []string{"ne5-f3"},
+	"rnbqkb1r/ppp2ppp/3p1n2/8/4P3/5N2/PPPP1PPP/RNBQKB1R b":  []string{"nf6-e4"},
+	"rnbqkb1r/ppp2ppp/3p4/8/4n3/5N2/PPPP1PPP/RNBQKB1R w":    []string{"pd2-d4"},
+	"rnbqkb1r/ppp2ppp/3p4/8/3Pn3/5N2/PPP2PPP/RNBQKB1R b":    []string{"pd6-d5"},
+
+	"rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R b": []string{"nb8-c6"},
+
+	// C43 Petrov's Defense, Modern Attack
+	"rnbqkb1r/pppp1ppp/5n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"nf6-e4"},
+	"rnbqkb1r/pppp1ppp/8/4p3/3Pn3/5N2/PPP2PPP/RNBQKB1R w":   []string{"bf1-d3"},
+	"rnbqkb1r/pppp1ppp/8/4p3/3Pn3/3B1N2/PPP2PPP/RNBQK2R b":  []string{"pd7-d5"},
+	"rnbqkb1r/ppp2ppp/8/3pp3/3Pn3/3B1N2/PPP2PPP/RNBQK2R w":  []string{"nf3-e5"},
+	"rnbqkb1r/ppp2ppp/8/3pN3/3Pn3/3B4/PPP2PPP/RNBQK2R b":    []string{"nb8-d7"},
+	"r1bqkb1r/pppn1ppp/8/3pN3/3Pn3/3B4/PPP2PPP/RNBQK2R w":   []string{"ne5-d7"},
+	"r1bqkb1r/pppN1ppp/8/3p4/3Pn3/3B4/PPP2PPP/RNBQK2R b":    []string{"bc8-d7"},
 
 	// C44 King's Pawn Game
 	"r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"bf1-c5", "bf1-b5"},
+
+	// C46 Four Knight's Game
+	"r1bqkb1r/pppp1ppp/2n2n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R w": []string{"bf1-b5", "pd2-d4"},
+
+	// C48 Four Knights, Spanish Variation
+	"r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/2N2N2/PPPP1PPP/R1BQK2R b": []string{"bf8-b4", "nc6-d4"},
+	"r1bqkb1r/pppp1ppp/5n2/1B2p3/3nP3/2N2N2/PPPP1PPP/R1BQK2R w":  []string{"bb5-a4", "nf3-d4"},
+	"r1bqkb1r/pppp1ppp/5n2/4p3/B2nP3/2N2N2/PPPP1PPP/R1BQK2R b":   []string{"bf8-c5"},
+
+	"r1bqkb1r/pppp1ppp/5n2/1B2p3/3NP3/2N5/PPPP1PPP/R1BQK2R b": []string{"pe5-d4"},
+	"r1bqkb1r/pppp1ppp/5n2/1B6/3pP3/2N5/PPPP1PPP/R1BQK2R w":   []string{"pe4-e5"},
+
+	// C49 Four Knights, Double Ruy Lopez
+	"r1bqk2r/pppp1ppp/2n2n2/1B2p3/1b2P3/2N2N2/PPPP1PPP/R1BQK2R w": []string{"ke1-g1"},
+	"1bqk2r/pppp1ppp/2n2n2/1B2p3/1b2P3/2N2N2/PPPP1PPP/R1BQ1RK1 b": []string{"ke8-g8"},
 
 	// C50 King's Pawn Game
 	"r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b": []string{"ng8-f6", "bf8-c5"},
