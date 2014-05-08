@@ -30,7 +30,7 @@ var Book = map[string][]string{
 
 	// A81 Dutch Defense
 	"rnbqkbnr/ppppp1pp/8/5p2/3P4/6P1/PPP1PP1P/RNBQKBNR b":    []string{"ng8-f6"},
-	"nbqkb1r/ppppp1pp/5n2/5p2/3P4/6P1/PPP1PP1P/RNBQKBNR w":   []string{"bf1-g2"},
+	"rnbqkb1r/ppppp1pp/5n2/5p2/3P4/6P1/PPP1PP1P/RNBQKBNR w":  []string{"bf1-g2"},
 	"rnbqkb1r/ppppp1pp/5n2/5p2/3P4/6P1/PPP1PPBP/RNBQK1NR b":  []string{"pg7-g6", "pe7-e6"},
 	"rnbqkb1r/ppppp2p/5np1/5p2/3P4/6P1/PPP1PPBP/RNBQK1NR w":  []string{"ng1-f3", "pc2-c4"},
 	"rnbqkb1r/ppppp2p/5np1/5p2/3P4/5NP1/PPP1PPBP/RNBQK2R b":  []string{"bf8-g7"},
@@ -55,7 +55,7 @@ var Book = map[string][]string{
 
 	// A85 Dutch Defense
 	"rnbqkb1r/ppppp1pp/5n2/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR b":   []string{"pg7-g6", "pe7-e6"},
-	"nbqkb1r/ppppp2p/5np1/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":    []string{"pg2-g3", "ng1-f3"},
+	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w":   []string{"pg2-g3", "ng1-f3"},
 	"rnbqkb1r/ppppp2p/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR b": []string{"bf1-g7"},
 	"rnbqk2r/ppppp1bp/5np1/5p2/2PP4/2N3P1/PP2PP1P/R1BQKBNR w": []string{"bf1-g2"},
 
@@ -138,7 +138,7 @@ var Book = map[string][]string{
 	// B50 Sicilian
 	"rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w": []string{"pd2-d4"},
 	"rnbqkbnr/pp2pppp/3p4/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b": []string{"pc5-d4"},
-	"nbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":    []string{"nf3-d4"},
+	"rnbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w":   []string{"nf3-d4"},
 
 	// B54 Sicilian
 	"rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b":   []string{"ng8-f6"},
