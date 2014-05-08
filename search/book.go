@@ -110,7 +110,25 @@ var Book = map[string][]string{
 	"rn1qkbnr/pp2pppp/2p5/5b2/3P4/6N1/PPP2PPP/R1BQKBNR b": []string{"bf5-g6"},
 
 	// B20 Sicilian Defense
-	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3"},
+	"rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w": []string{"ng1-f3", "nb1-c3", "pc2-c3"},
+
+	// B22 Sicilian, Alapin Variation
+	"rnbqkbnr/pp1ppppp/8/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR b":   []string{"ng8-f6", "pd7-d5"},
+	"rnbqkb1r/pp1ppppp/5n2/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR w": []string{"pe4-e5"},
+	"rnbqkb1r/pp1ppppp/5n2/2p1P3/8/2P5/PP1P1PPP/RNBQKBNR b": []string{"nf6-d5"},
+	"rnbqkb1r/pp1ppppp/8/2pnP3/8/2P5/PP1P1PPP/RNBQKBNR w":   []string{"pd2-d4", "ng1-f3"},
+	"rnbqkb1r/pp1ppppp/8/2pnP3/3P4/2P5/PP3PPP/RNBQKBNR b":   []string{"pc5-d4"},
+	"rnbqkb1r/pp1ppppp/8/3nP3/3p4/2P5/PP3PPP/RNBQKBNR w":    []string{"ng1-f3"},
+	"rnbqkb1r/pp1ppppp/8/3nP3/3p4/2P2N2/PP3PPP/RNBQKB1R b":  []string{"nb8-c6", "pe7-e6"},
+
+	"rnbqkb1r/pp1ppppp/8/2pnP3/8/2P2N2/PP1P1PPP/RNBQKB1R b": []string{"nb8-c6", "pe7-e6"},
+
+	"rnbqkbnr/pp2pppp/8/2pp4/4P3/2P5/PP1P1PPP/RNBQKBNR w":   []string{"pe4-d5"},
+	"rnbqkbnr/pp2pppp/8/2pP4/8/2P5/PP1P1PPP/RNBQKBNR b":     []string{"qd8-d5"},
+	"rnb1kbnr/pp2pppp/8/2pq4/8/2P5/PP1P1PPP/RNBQKBNR w":     []string{"pd2-d4"},
+	"rnb1kbnr/pp2pppp/8/2pq4/3P4/2P5/PP3PPP/RNBQKBNR b":     []string{"ng8-f6"},
+	"rnb1kb1r/pp2pppp/5n2/2pq4/3P4/2P5/PP3PPP/RNBQKBNR w":   []string{"ng1-f3"},
+	"rnb1kb1r/pp2pppp/5n2/2pq4/3P4/2P2N2/PP3PPP/RNBQKB1R b": []string{"bc8-g4", "pe7-e6"},
 
 	// B23 Sicilian, Closed
 	"rnbqkbnr/pp1ppppp/8/2p5/4P3/2N5/PPPP1PPP/R1BQKBNR b":       []string{"nb8-c6"},
