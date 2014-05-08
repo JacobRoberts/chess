@@ -215,17 +215,53 @@ var Book = map[string][]string{
 	"rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w": []string{"nb1-c3"},
 
 	// D15 Queen's Gambit Declined Slav
-	"rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"pe7-e6"},
+	"rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"pe7-e6", "pd5-c4"},
+	"rnbqkb1r/pp2pppp/2p2n2/8/2pP4/2N2N2/PP2PPPP/R1BQKB1R w":   []string{"pa2-a4"},
+
+	// D16 Queen's Gambit Declind Slav Accepted, Alapin Variation
+	"rnbqkb1r/pp2pppp/2p2n2/8/P1pP4/2N2N2/1P2PPPP/R1BQKB1R b": []string{"bc8-f5"},
+
+	// D17 Queen's Gambit Declined Slav, Czech Defense
+	"rn1qkb1r/pp2pppp/2p2n2/5b2/P1pP4/2N2N2/1P2PPPP/R1BQKB1R w": []string{"pe2-e3", "nf3-e5"},
+
+	// D20 Queen's Gambit Accepted
+	"rnbqkbnr/ppp1pppp/8/8/2pP4/8/PP2PPPP/RNBQKBNR w":    []string{"ng1-f3", "pe2-e3"},
+	"rnbqkbnr/ppp1pppp/8/8/2pP4/4P3/PP3PPP/RNBQKBNR b":   []string{"ng8-f6"},
+	"rnbqkb1r/ppp1pppp/5n2/8/2pP4/4P3/PP3PPP/RNBQKBNR w": []string{"bf1-c4"},
+	"rnbqkb1r/ppp1pppp/5n2/8/2BP4/4P3/PP3PPP/RNBQK1NR b": []string{"pe7-e6"},
+	"rnbqkb1r/ppp2ppp/4pn2/8/2BP4/4P3/PP3PPP/RNBQK1NR w": []string{"ng1-f3"},
+
+	// D21 Queen's Gambit Accepted, 3. Nf3
+	"rnbqkbnr/ppp1pppp/8/8/2pP4/5N2/PP2PPPP/RNBQKB1R b": []string{"ng8-f6"},
+
+	// D23 Queen's Gambit Accepted
+	"rnbqkb1r/ppp1pppp/5n2/8/2pP4/5N2/PP2PPPP/RNBQKB1R w": []string{"pe2-e3", "nb1-c3"},
+
+	// D24 Queen's Gambit Accepted 4. Nc3
+	"rnbqkb1r/ppp1pppp/5n2/8/2pP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"pc7-c6"},
+
+	// D25 Queen's Gambit Accepted, 4. e3
+	"rnbqkb1r/ppp1pppp/5n2/8/2pP4/4PN2/PP3PPP/RNBQKB1R b": []string{"pe7-e6"},
+
+	// D26 Queen's Gambit Accepted, 4... e6
+	"rnbqkb1r/ppp2ppp/4pn2/8/2pP4/4PN2/PP3PPP/RNBQKB1R w": []string{"bf1-c4"},
+	"rnbqkb1r/ppp2ppp/4pn2/8/2BP4/4PN2/PP3PPP/RNBQK2R b":  []string{"pc7-c5"},
 
 	// D30 Queen's Gambit Declined
 	"rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
 	"rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R b": []string{"ng8-f6", "pc7-c6"},
 
 	// D31 Queen's Gambit Declined
-	"rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR b": []string{"ng8-f6", "pc7-c6"},
+	"rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR b":    []string{"ng8-f6", "pc7-c6"},
+	"rnbqkbnr/pp3ppp/2p1p3/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w":   []string{"ng1-f3", "pe2-e3"},
+	"rnbqkbnr/pp3ppp/2p1p3/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"ng8-f6"},
+	"rnbqkbnr/pp3ppp/2p1p3/3p4/2PP4/2N1P3/PP3PPP/R1BQKBNR b":  []string{"ng8-f6"},
 
 	// D35 Queen's Gambit Declined
 	"rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "pc4-d5"},
+	"rnbqkb1r/ppp2ppp/4pn2/3P4/3P4/2N5/PP2PPPP/R1BQKBNR b":  []string{"pe6-d5"},
+	"rnbqkb1r/ppp2ppp/5n2/3p4/3P4/2N5/PP2PPPP/R1BQKBNR w":   []string{"bc1-g5"},
+	"rnbqkb1r/ppp2ppp/5n2/3p2B1/3P4/2N5/PP2PPPP/R2QKBNR b":  []string{"pc7-c6", "bf8-e7"},
 
 	// D37 Queen's Gambit Declined
 	"rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b":  []string{"Bf8-e7", "pc7-c6"},
@@ -237,7 +273,9 @@ var Book = map[string][]string{
 	"rnbqkb1r/pp3ppp/2p1pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b":   []string{"ph7-h6", "nb8-d7"},
 	"rnbqkb1r/pp3pp1/2p1pn1p/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R w":  []string{"bg5-f6", "bg5-h4"},
 	"r1bqkb1r/pp1n1ppp/2p1pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R w": []string{"pe2-e3"},
-	"rnbqkb1r/pp3ppp/2p1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R b":    []string{"nb8-d7"},
+
+	// D45 Queen's Gambit Declined Semi-Slav
+	"rnbqkb1r/pp3ppp/2p1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R b": []string{"nb8-d7"},
 
 	// E00 Queen's Pawn Game
 	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w":     []string{"nb1-c3", "ng1-f3"},
