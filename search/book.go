@@ -117,7 +117,7 @@ var Book = map[string][]string{
 	"r1bqkbnr/pp1ppppp/2n5/2p5/4P3/2N5/PPPP1PPP/R1BQKBNR w":     []string{"pf2-f4", "pg2-g3"},
 	"r1bqkbnr/pp1ppppp/2n5/2p5/4PP2/2N5/PPPP2PP/R1BQKBNR b":     []string{"pg7-g6"},
 	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4PP2/2N5/PPPP2PP/R1BQKBNR w":   []string{"ng1-f3"},
-	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4PP2/2N2N2/PPPP2PP/R1BQKB1R b": []string{"bf1-g7"},
+	"r1bqkbnr/pp1ppp1p/2n3p1/2p5/4PP2/2N2N2/PPPP2PP/R1BQKB1R b": []string{"bf8-g7"},
 
 	// B24 Sicilian, Closed
 	"r1bqkbnr/pp1ppppp/2n5/2p5/4P3/2N3P1/PPPP1P1P/R1BQKBNR b":   []string{"pg7-g6"},
