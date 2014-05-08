@@ -16,7 +16,11 @@ var Book = map[string][]string{
 	"rnbqkbnr/pppp1ppp/4p3/8/2PP4/8/PP2PPPP/RNBQKBNR b": []string{"ng8-f6", "pd7-d5"},
 
 	// A45 Queen's Pawn Game
-	"rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w": []string{"pc2-c4"},
+	"rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w": []string{"pc2-c4", "ng1-f3"},
+
+	// A46 Queen's Pawn Game
+	"rnbqkb1r/pppppppp/5n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R b":  []string{"pe7-e6"},
+	"rnbqkb1r/pppp1ppp/4pn2/8/3P4/5N2/PPP1PPPP/RNBQKB1R w": []string{"pc2-c4"},
 
 	// A50 Queen's Pawn Game
 	"rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b": []string{"pe7-e6"},
@@ -184,7 +188,7 @@ var Book = map[string][]string{
 	"rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w": []string{"nb1-c3"},
 
 	// D15 Queen's Gambit Declined Slav
-	"rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b ": []string{"pe7-e6"},
+	"rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b": []string{"pe7-e6"},
 
 	// D30 Queen's Gambit Declined
 	"rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
@@ -201,9 +205,28 @@ var Book = map[string][]string{
 	"rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w":  []string{"Bc1-g5"},
 	"rnbqk2r/ppp1bppp/4pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b": []string{"ke8-g8"},
 
+	// D43 Queen's Gambit Declined Semi-Slav
+	"rnbqkb1r/pp3ppp/2p1pn2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w":    []string{"bc1-g5", "pe2-e3"},
+	"rnbqkb1r/pp3ppp/2p1pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b":   []string{"ph7-h6", "nb8-d7"},
+	"rnbqkb1r/pp3pp1/2p1pn1p/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R w":  []string{"bg5-f6", "bg5-h4"},
+	"r1bqkb1r/pp1n1ppp/2p1pn2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R w": []string{"pe2-e3"},
+	"rnbqkb1r/pp3ppp/2p1pn2/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R b":    []string{"nb8-d7"},
+
 	// E00 Queen's Pawn Game
-	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w":   []string{"nb1-c3", "ng1-f3"},
-	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b": []string{"bf8-b4", "pc7-c5"},
+	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w":     []string{"nb1-c3", "ng1-f3"},
+	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b":   []string{"bf8-b4", "pc7-c5", "pd7-d5"},
+	"rnbqkb1r/pp1p1ppp/4pn2/2p5/2PP4/2N5/PP2PPPP/R1BQKBNR w": []string{"pd4-d5"},
+	"rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/2N5/PP2PPPP/R1BQKBNR b": []string{"pe6-d5"},
+	"rnbqkb1r/pp1p1ppp/5n2/2pp4/2P5/2N5/PP2PPPP/R1BQKBNR w":  []string{"pc4-d5"},
+	"rnbqkb1r/pp1p1ppp/5n2/2pP4/8/2N5/PP2PPPP/R1BQKBNR b":    []string{"pd7-d6"},
+
+	// E10 Queen's Pawn Game
+	"rnbqkb1r/pppp1ppp/4pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R b":   []string{"pd7-d5", "pc7-c5"},
+	"rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w":  []string{"nb1-c3"},
+	"rnbqkb1r/pp1p1ppp/4pn2/2p5/2PP4/5N2/PP2PPPP/RNBQKB1R w": []string{"pd4-d5"},
+	"rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/5N2/PP2PPPP/RNBQKB1R b": []string{"pe6-d5"},
+	"rnbqkb1r/pp1p1ppp/5n2/2pp4/2P5/5N2/PP2PPPP/RNBQKB1R w":  []string{"pc4-d5"},
+	"rnbqkb1r/pp1p1ppp/5n2/2pP4/8/5N2/PP2PPPP/RNBQKB1R b":    []string{"pd7-d6"},
 
 	// E20 Nimzo-Indian Defense
 	"rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PP2PPPP/R1BQKBNR w": []string{"ng1-f3", "qd1-c2"},
