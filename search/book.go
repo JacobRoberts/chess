@@ -193,7 +193,7 @@ var Book = map[string][]string{
 	"r1bqkbnr/pp3ppp/2n1p3/2ppP3/3P4/2P2N2/PP3PPP/RNBQKB1R b": []string{"bc8-d7", "qd8-b6"},
 
 	// C10 French, Paulsen Variation
-	"rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b": []string{"bf8-b5", "ng8-f6"},
+	"rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b": []string{"bf8-b4", "ng8-f6"},
 
 	// C11 French Defense
 	"rnbqkb1r/ppp2ppp/4pn2/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR w":   []string{"bc1-g5", "pe4-e5"},
